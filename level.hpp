@@ -10,6 +10,7 @@ const sf::Vector2<float> UP     = sf::Vector2<float>(0, 1.0);
 const sf::Vector2<float> DOWN   = sf::Vector2<float>(0, -1.0);
 const sf::Vector2<float> RIGHT  = sf::Vector2<float>(1.0, 0);
 const sf::Vector2<float> LEFT   = sf::Vector2<float>(-1.0, 0);
+const sf::Vector2<float> STILL  = sf::Vector2<float>(0, 0);
 
 class Level {
 
@@ -41,6 +42,11 @@ class Level {
          * into a wall would just set the velocity to (0, 0).
          */
         void handle_collisions();
+
+        /*
+         * Adds the player velocity scaled by the speed
+         */
+        void update_player_position();
 };
 
 #endif /* ifndef LEVEL */
