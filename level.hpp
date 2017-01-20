@@ -2,6 +2,9 @@
 #define LEVEL
 
 #include <SFML/Graphics.hpp>
+#include <string>
+#include <vector>
+//#include <cAudio/cAudio.h>
 
 const float DEFAULT_PLAYER_X = 0.0;
 const float DEFAULT_PLAYER_Y = 0.0;
@@ -11,6 +14,17 @@ const sf::Vector2<float> DOWN   = sf::Vector2<float>(0, -1.0);
 const sf::Vector2<float> RIGHT  = sf::Vector2<float>(1.0, 0);
 const sf::Vector2<float> LEFT   = sf::Vector2<float>(-1.0, 0);
 const sf::Vector2<float> STILL  = sf::Vector2<float>(0, 0);
+
+const std::string DEFAULT_MAP = "images/map-default";
+const std::string DEFAULT_AUDIO_MAP = "data/test_audio.json";
+
+struct AudioSource {
+
+    sf::Vector2<float> pos;
+
+ //   cAudio::IAudioSource* audio;
+
+};
 
 class Level {
 
@@ -24,6 +38,8 @@ class Level {
         void update();
     
     private:
+
+        std::vector<AudioSource> audio_sources;
 
         sf::Vector2<float> player_pos;
         sf::Vector2<float> player_velocity;
@@ -49,6 +65,8 @@ class Level {
          * Adds the player velocity scaled by the speed
          */
         void update_player_position();
+
+        void load_audio_sources();
 };
 
 #endif /* ifndef LEVEL */
