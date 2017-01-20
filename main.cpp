@@ -1,8 +1,13 @@
 #include <iostream>
-#include <cAudio/cAudio.h>
 #include <cstdlib>
 #include <cmath>
 #include <ctime>
+#include <unistd.h>
+
+#include <cAudio/cAudio.h>
+#include <SFML/Graphics.hpp>
+
+#include "level.hpp"
 
 void init() {
     srand(time(NULL));
@@ -21,58 +26,62 @@ int generate_random_index(int last_index, unsigned int length) {
     return rand() % (length - 1);
 }
 
-void test_audio() {
+int main() {
+    // Create the main window
+    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window");
+
+    Level level;
+
+    float rot = 0.0f;
+
     cAudio::IAudioManager* audio_mgr = cAudio::createAudioManager(true);
     if (!audio_mgr) {
         std::cerr << "ERROR: Could not create audio manager" << std::endl;
         exit(EXIT_FAILURE);
     }
 
+    cAudio::IAudioSource* my_sound = audio_mgr->create("water", "audio/wood/wood1.ogg", true);
+    if (!my_sound) {
+        std::cerr << "ERROR: Could not load water.ogg" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
     cAudio::IListener* listener = audio_mgr->getListener();
     listener->setPosition(cAudio::cVector3(0, 0, 0));
-
-    if (!listener) {
-        std::cerr << "ERROR: Could not create listener" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    cAudio::IAudioSource* my_sound = audio_mgr->create("roger", "Roger.ogg", true);
-    if (!my_sound) {
-        std::cerr << "ERROR: Could not load Roger.ogg" << std::endl;
-        exit(EXIT_FAILURE);
-    }
 
     my_sound->play3d(cAudio::cVector3(0, 0, 0), 2.0f, true);
     my_sound->setVolume(1.0f);
     my_sound->setMinDistance(1.0f);
     my_sound->setMaxAttenuationDistance(100.0f);
 
-    const int ticksToPlay = 10000;
-    int currentTick = 0;
-    int currentSecTick = 0;
-    float rot = 0.0f;
+    // Start the game loop
+    while (window.isOpen())
+    {
+        // Process events
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            // Close window: exit
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
 
-    while (my_sound->isPlaying() && currentTick < ticksToPlay) {
+        // Move the audio source
         rot += 0.1f * 0.017453293f;
-
         float x = 5.0f * cosf(rot);
         float z = 5.0f * sinf(rot);
         my_sound->move(cAudio::cVector3(x, 0.0f, z));
 
-        currentTick++;
+        // Clear screen
+        window.clear();
 
-        if (currentTick / 1000 > currentSecTick) {
-            currentSecTick++;
-            std::cout << ".";
-        }
+        level.update();
+        usleep(1000);
 
-        cAudio::cAudioSleep(1);
+        // Update the window
+        window.display();
     }
-    std::cout << std::endl;
 
     cAudio::destroyAudioManager(audio_mgr);
-}
-
-int main() {
-    return 0;
+    return EXIT_SUCCESS;
 }
