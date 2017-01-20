@@ -22,16 +22,20 @@ void Level::update() {
 }
 
 void Level::handle_input() {
+
+    this->player_velocity = STILL;
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+        this->player_velocity += UP;
+    }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-        this->player_velocity = LEFT;
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        this->player_velocity = RIGHT;
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        this->player_velocity = UP;
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        this->player_velocity = DOWN;
-    } else {
-        this->player_velocity = STILL;
+        this->player_velocity += LEFT;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        this->player_velocity += DOWN;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        this->player_velocity += RIGHT;
     }
 }
 
@@ -41,5 +45,5 @@ void Level::handle_collisions() {
 
 void Level::update_player_position() {
     this->player_pos += this->player_velocity * this->player_speed;
-    //std::cout << "X: " << player_pos.x << " Y: " << player_pos.y << std::endl;
+    std::cout << "X: " << player_pos.x << " Y: " << player_pos.y << std::endl;
 }
