@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.3)
 project(OhCrapImBlind)
 
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS} -g -ftest-coverage -fprofile-arcs -Wall -Wextra -Wno-unused -pedantic")
-# set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 file(GLOB OhCrapImBlind_SRC
     "*.cpp"
@@ -10,7 +9,7 @@ file(GLOB OhCrapImBlind_SRC
     )
 
 
-set(EXECUTABLE_NAME "duck")
+set(EXECUTABLE_NAME "imblind")
 
 add_executable(${EXECUTABLE_NAME} ${OhCrapImBlind_SRC})
 
