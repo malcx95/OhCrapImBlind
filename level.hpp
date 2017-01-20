@@ -29,6 +29,8 @@ class Level {
         sf::Vector2<float> player_velocity;
 
         float player_speed;
+        
+        sf::Image sound_map;
 
         /*
          * Reads keyboard input and updates the

@@ -41,6 +41,12 @@ void Level::handle_input() {
 
 void Level::handle_collisions() {
     // TODO implement
+    /*sf::Vector2<float> next_pos = player_velocity * player_speed;
+    sf::Color next_color = sound_map.getPixel(next_pos.x, next_pos.y);
+    if (next_color == sf::Color::Black) {
+        player_velocity.x = 0.f;
+        player_velocity.y = 0.f;
+    }*/
 }
 
 void Level::update_player_position() {
