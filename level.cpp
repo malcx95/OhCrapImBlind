@@ -1,10 +1,17 @@
 #include "level.hpp"
 #include <iostream>
+#include "json.hpp"
+
+using namespace nlohmann;
 
 Level::Level() {
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
     this->player_speed = 1;
+    if (!this->sound_map.loadFromFile(DEFAULT_MAP)) {
+        std::cerr << "\"" << DEFAULT_MAP << "\" doesn't exist!" << std::endl;
+    }
+    load_audio_sources();
 }
 
 sf::Vector2<float> Level::get_player_pos() const {
@@ -52,4 +59,9 @@ void Level::handle_collisions() {
 void Level::update_player_position() {
     this->player_pos += this->player_velocity * this->player_speed;
     std::cout << "X: " << player_pos.x << " Y: " << player_pos.y << std::endl;
+}
+
+void Level::load_audio_sources() {
+    json json_data;
+
 }

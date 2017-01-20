@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.3)
 project(OhCrapImBlind)
 
-set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS} -lsfml-graphics -lsfml-window -lsfml-system -g -ftest-coverage -fprofile-arcs -Wall -Wextra -Wno-unused -pedantic")
+set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS} -g -ftest-coverage -fprofile-arcs -Wall -Wextra -Wno-unused -pedantic")
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 file(GLOB OhCrapImBlind_SRC
     "*.cpp"
@@ -12,8 +12,6 @@ file(GLOB OhCrapImBlind_SRC
 set(EXECUTABLE_NAME "imblind")
 
 add_executable(${EXECUTABLE_NAME} ${OhCrapImBlind_SRC})
-
-add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
 
 # Detect and add SFML
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
