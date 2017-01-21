@@ -65,6 +65,8 @@ private:
     cAudio::IAudioManager* audio_manager;
     cAudio::IListener* listener;
 
+    void play_audio_sources();
+
     /*
      * Reads keyboard input and updates the
      * player velocities.
@@ -89,6 +91,8 @@ private:
      * Draws the current position of the player for debugging
      */
     void debug_draw_player(sf::RenderTarget* target);
+
+    void debug_draw_audio_sources(sf::RenderTarget* target);
 };
 
 #endif /* ifndef LEVEL_H */
