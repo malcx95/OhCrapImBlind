@@ -59,7 +59,7 @@ void Level::handle_collisions() {
 
 void Level::update_player_position() {
     this->player_pos += this->player_velocity * this->player_speed;
-    std::cout << "X: " << player_pos.x << " Y: " << player_pos.y << std::endl;
+    //std::cout << "X: " << player_pos.x << " Y: " << player_pos.y << std::endl;
 }
 
 void Level::load_audio_sources() {
