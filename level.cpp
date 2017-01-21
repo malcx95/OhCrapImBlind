@@ -41,6 +41,7 @@ Level::Level() {
     
     this->step_delay = 0.5f;
     this->step_timer = 0;
+    this->roads = std::vector<CarRoad>();
 }
 
 Level::~Level() {
@@ -67,6 +68,8 @@ void Level::update(float dt) {
     handle_collisions(dt);
     update_player_position(dt);
     handle_steps(dt);
+    update_car();
+    maybe_spawn_car();
     if (has_reached_goal()) {
         std::cout << "Reached Goal" << std::endl;
     }
@@ -77,8 +80,48 @@ void Level::maybe_spawn_car() {
         int r = rand() % CAR_SPAWN_RATE;
 
         if (r == 0) {
-            // spawn car
-            //this->current_car = 
+            // select a road to spawn a car on
+            int i = rand() % this->roads.size();
+            CarRoad road = this->roads[i];
+            
+            float d = (float)(rand() % 3) - 1;
+
+            sf::Vector2<float> pos;
+            sf::Vector2<float> vel;
+            
+            if (road.direction == HORIZONTAL) {
+                vel = sf::Vector2<float>(d, 0);
+                if (d == -1.0) {
+                    pos = sf::Vector2<float>(WIDTH - 1, road.pos);
+                } else {
+                    pos = sf::Vector2<float>(0, road.pos);
+                }
+            } else {
+                vel = sf::Vector2<float>(0, d);
+                if (d == -1.0) {
+                    pos = sf::Vector2<float>(road.pos, HEIGHT - 1);
+                } else {
+                    pos = sf::Vector2<float>(road.pos, 0);
+                }
+            }
+
+            this->current_car = new Car(pos, vel, 
+                    this->car_engine, this->car_honk);
+            this->current_car->start();
+        }
+    }
+}
+
+void Level::update_car() {
+    if (this->current_car != nullptr) {
+        this->current_car->update_position();
+        if (this->current_car->out_of_bounds(WIDTH - 1, HEIGHT - 1)) {
+            this->current_car->stop();
+            delete this->current_car;
+            this->current_car = nullptr;
+        } else {
+            this->current_car->honk_if_close_to(
+                    this->player_pos, HONKING_DISTANCE);
         }
     }
 }
@@ -228,6 +271,21 @@ void Level::load_json_data() {
             sound, source[2]
         };
         audio_sources.push_back(as);
+    }
+
+    this->roads.clear();
+
+    if (json_data["map_list"][level_num].count("cars") != 0) {
+        for (auto car : json_data["map_list"][level_num]["cars"]) {
+            CarRoad road;
+            if (car[0] == "horizontal") {
+                road.direction = HORIZONTAL;
+            } else {
+                road.direction = VERTICAL;
+            }
+            road.pos = car[1];
+            this->roads.push_back(road);
+        }
     }
 }
 

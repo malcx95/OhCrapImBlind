@@ -5,8 +5,12 @@
             [[60, 10], "../audio/water/water2.ogg", 5.0]
         ],
         "goal": [15,100],
+        "cars": [
+            ["horizontal", 500]
+        ],
         "start_positions":[[0,0], [100, 50], [20, 10]],
-        "path": "../maps/map-default.png"},
+        "path": "../maps/map-default.png"
+        },
         
         {"audio": [
             [[500, 10], "../audio/water_dripping/water_dripping1.ogg", 10.0],

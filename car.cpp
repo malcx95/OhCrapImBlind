@@ -41,7 +41,15 @@ bool Car::collides_with(sf::Vector2<float> pos, float width) const {
 }
 
 void Car::start() {
-    this->honk_audio_source->play3d(
+    this->audio_source->play3d(
             util::sf_to_caudio_vect(this->pos), ENGINE_NOISE_STRENGTH, true);
+}
+
+void Car::stop() {
+    this->audio_source->stop();
+}
+
+bool Car::out_of_bounds(int width, int height) const {
+    return pos.x < 0 || pos.y < 0 || pos.x > width || pos.y > height;
 }
 

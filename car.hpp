@@ -48,6 +48,8 @@ public:
      */
     bool collides_with(sf::Vector2<float> pos, float width) const;
 
+    bool out_of_bounds(int width, int height) const;
+
 private:
 
     sf::Vector2<float> pos;

@@ -36,11 +36,23 @@ const int HEIGHT = 1000;
 
 // lower number = more cars
 const int CAR_SPAWN_RATE = 100;
+const float CAR_SPEED = 50;
+const float HONKING_DISTANCE = 200;
 
 struct AudioSource {
     sf::Vector2<float> pos;
     cAudio::IAudioSource* audio;
     float attenuation;
+};
+
+enum RoadDirection {VERTICAL, HORIZONTAL};
+
+struct CarRoad {
+    
+    RoadDirection direction;
+
+    float pos;
+
 };
 
 class Level {
@@ -99,6 +111,8 @@ private:
 
     Car* current_car;
 
+    std::vector<CarRoad> roads;
+
     void maybe_spawn_car();
 
     void play_audio_sources();
@@ -150,6 +164,8 @@ private:
     void load_collision_audio();
 
     void play_collision_sound();
+
+    void update_car();
 
 };
 
