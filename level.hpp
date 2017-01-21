@@ -15,8 +15,13 @@ const sf::Vector2<float> RIGHT  = sf::Vector2<float>(1.0, 0);
 const sf::Vector2<float> LEFT   = sf::Vector2<float>(-1.0, 0);
 const sf::Vector2<float> STILL  = sf::Vector2<float>(0, 0);
 
-const std::string DEFAULT_MAP = "images/map-default";
+const std::string DEFAULT_MAP = "maps/map-default.png";
 const std::string DEFAULT_AUDIO_MAP = "data/test_audio.json";
+
+const sf::Color WOOD = sf::Color(0x60,0x32,0x00, 255);
+const sf::Color GRAVEL = sf::Color(0x4b, 0x4b, 0x4b, 255);
+const sf::Color GRASS = sf::Color(0x00, 0xff, 0x00, 255);
+const sf::Color PUDDLE = sf::Color(0x00, 0x00, 0xff, 255);
 
 struct AudioSource {
 
@@ -36,7 +41,7 @@ class Level {
         sf::Vector2<float> get_player_velocity() const;
 
         void update();
-    
+
     private:
 
         std::vector<AudioSource> audio_sources;
@@ -45,7 +50,7 @@ class Level {
         sf::Vector2<float> player_velocity;
 
         float player_speed;
-        
+
         sf::Image sound_map;
 
         cAudio::IAudioManager* audio_manager;
@@ -57,7 +62,7 @@ class Level {
         void handle_input();
 
         /*
-         * Sets the player velocity such that it doesn't 
+         * Sets the player velocity such that it doesn't
          * walk through a wall. For example, walking straight
          * into a wall would just set the velocity to (0, 0).
          */
