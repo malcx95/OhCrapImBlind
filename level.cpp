@@ -69,6 +69,7 @@ void Level::update(float dt) {
     handle_steps(dt);
     if (has_reached_goal()) {
         std::cout << "Reached Goal" << std::endl;
+        change();
     }
 }
 
@@ -120,7 +121,6 @@ bool Level::has_reached_goal() {
 }
 
 void Level::handle_collisions(float dt) {
-    // TODO implement
     sf::Vector2<float> next_pos = player_pos + player_velocity * player_speed * dt;
     if ( next_pos.x <= WIDTH && next_pos.x >= 0 && next_pos.y <= HEIGHT && next_pos.y >= 0 ) {
         sf::Color next_color = sound_map.getPixel(next_pos.x, next_pos.y);
@@ -298,11 +298,30 @@ void Level::change() {
     std::cout << " CHANGING LEVEL \n\n\n";
     level_num ++;
     load_json_data();//WOW SUCH FUNCTION
+    
+    play_audio_sources();
+
+    ground = new Ground(this->audio_manager);
+
+    this->load_collision_audio();
+
+    this->car_engine = this->audio_manager->create(CAR_ENGINE.data(), 
+            CAR_ENGINE.data(), false);
+    this->car_honk = this->audio_manager->create(CAR_HONK.data(), 
+            CAR_HONK.data(), false);
+    this->current_car = nullptr;
+    
+    this->step_delay = 0.5f;
+    this->step_timer = 0;
 }
 
 
 Mat::Material Level::ground_under_player() {
-    return Mat::WOOD;
+    sf::Color ground_col = sound_map.getPixel(player_pos.x, player_pos.y);
+    if (ground_col == WOOD) return Mat::WOOD;
+    if (ground_col == GRAVEL) return Mat::GRAVEL;
+    if (ground_col == GRASS) return Mat::GRASS;
+    return Mat::PUDDLE;    
 }
 
 void Level::handle_steps(float dt) {
