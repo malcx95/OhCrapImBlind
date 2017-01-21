@@ -16,7 +16,7 @@ const sf::Vector2<float> LEFT   = sf::Vector2<float>(-1.0, 0);
 const sf::Vector2<float> STILL  = sf::Vector2<float>(0, 0);
 
 const std::string DEFAULT_MAP = "../maps/map-default.png";
-const std::string DEFAULT_AUDIO_MAP = "data/test_audio.json";
+const std::string DEFAULT_AUDIO_MAP = "../data/test_audio.json";
 
 const sf::Color WOOD = sf::Color(0x60,0x32,0x00, 255);
 const sf::Color GRAVEL = sf::Color(0x4b, 0x4b, 0x4b, 255);

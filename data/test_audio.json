@@ -1,4 +1,4 @@
 [
-    [[10, 10], "audio/water/water1.ogg"],
-    [[60, 10], "audio/water/water2.ogg"]
+    [[10, 10], "../audio/water/water1.ogg"],
+    [[60, 10], "../audio/water/water2.ogg"]
 ]
