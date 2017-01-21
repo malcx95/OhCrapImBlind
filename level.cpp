@@ -2,6 +2,7 @@
 #include <iostream>
 #include "json.hpp"
 #include <fstream>
+#include "util.hpp"
 
 using namespace nlohmann;
 
@@ -21,7 +22,7 @@ Level::Level() {
     this->level_sprite = sf::Sprite(this->level_texture);
 
     std::cout << "Loading audio" << std::endl;
-    load_audio_sources();
+    load_json_data();
 }
 
 Level::~Level() {
@@ -80,10 +81,13 @@ void Level::handle_collisions() {
 
 void Level::update_player_position() {
     this->player_pos += this->player_velocity * this->player_speed;
+    this->listener->setPosition(util::sf_to_caudio_vect(this->player_pos));
+    this->listener->setVelocity(util::sf_to_caudio_vect(this->player_pos));
+
     std::cout << "X: " << player_pos.x << " Y: " << player_pos.y << std::endl;
 }
 
-void Level::load_audio_sources() {
+void Level::load_json_data() {
     std::cout << "Loading " << DEFAULT_AUDIO_MAP << std::endl;
     json json_data;
     std::ifstream file(DEFAULT_AUDIO_MAP);
@@ -95,7 +99,10 @@ void Level::load_audio_sources() {
     this->listener = this->audio_manager->getListener();
 
     int c = 0;
-    for (auto source : json_data) {
+
+    // load the audio sources sources
+    auto audio_data = json_data["audio"];
+    for (auto source : audio_data) {
         auto position = source[0];
         std::string file_name = source[1];
 
