@@ -59,7 +59,6 @@ public:
     
     void change();
     
-    
 private:
 
     bool in_dev_mode;
