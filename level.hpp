@@ -9,8 +9,8 @@
 const float DEFAULT_PLAYER_X = 0.0;
 const float DEFAULT_PLAYER_Y = 0.0;
 
-const sf::Vector2<float> UP     = sf::Vector2<float>(0, 1.0);
-const sf::Vector2<float> DOWN   = sf::Vector2<float>(0, -1.0);
+const sf::Vector2<float> UP     = sf::Vector2<float>(0, -1.0);
+const sf::Vector2<float> DOWN   = sf::Vector2<float>(0, 1.0);
 const sf::Vector2<float> RIGHT  = sf::Vector2<float>(1.0, 0);
 const sf::Vector2<float> LEFT   = sf::Vector2<float>(-1.0, 0);
 const sf::Vector2<float> STILL  = sf::Vector2<float>(0, 0);
