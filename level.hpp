@@ -47,6 +47,7 @@ const float HONKING_DISTANCE = 200;
 const float DOPPLER_FACTOR = 0.1;
 
 const float AUDIO_SOURCE_ANIMATION_SPEED = 0.25;
+const float COLLISION_SOUND_INTERVAL = 0.5;
 
 struct AudioSource {
     sf::Vector2<float> pos;
@@ -109,6 +110,8 @@ private:
 
     float step_delay;
     float step_timer;
+
+    float time_since_collision_sound = 0;
 
     Ground* ground;
 
