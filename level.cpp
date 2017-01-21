@@ -4,6 +4,7 @@
 #include <fstream>
 #include "util.hpp"
 #include <math.h>
+#include <cstdlib>
 
 using namespace nlohmann;
 
@@ -12,7 +13,15 @@ Level::Level() {
 
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
-    this->player_speed = 1;
+    this->player_speed = 30;
+
+    std::cout << "Loading map texture" << std::endl;
+    if (!this->sound_map.loadFromFile(DEFAULT_MAP)) {
+        std::cerr << "\"" << DEFAULT_MAP << "\" doesn't exist!" << std::endl;
+    }
+
+    this->level_texture.loadFromImage(this->sound_map);
+    this->level_sprite = sf::Sprite(this->level_texture);
     
     map_path = DEFAULT_MAP;
 
@@ -23,10 +32,15 @@ Level::Level() {
     ground = new Ground(this->audio_manager);
 
     this->load_collision_audio();
+
+    this->car_engine = this->audio_manager->create(CAR_ENGINE.data(), 
+            CAR_ENGINE.data(), false);
+    this->car_honk = this->audio_manager->create(CAR_HONK.data(), 
+            CAR_HONK.data(), false);
+    this->current_car = nullptr;
     
     this->step_delay = 0.5f;
     this->step_timer = 0;
-
 }
 
 Level::~Level() {
@@ -50,11 +64,22 @@ void Level::play_audio_sources() {
 
 void Level::update(float dt) {
     handle_input();
-    handle_collisions();
-    update_player_position();
+    handle_collisions(dt);
+    update_player_position(dt);
     handle_steps(dt);
     if (has_reached_goal()) {
-      std::cout << "Reached Goal" << std::endl;
+        std::cout << "Reached Goal" << std::endl;
+    }
+}
+
+void Level::maybe_spawn_car() {
+    if (this->current_car != nullptr) {
+        int r = rand() % CAR_SPAWN_RATE;
+
+        if (r == 0) {
+            // spawn car
+            //this->current_car = 
+        }
     }
 }
 
@@ -94,8 +119,9 @@ bool Level::has_reached_goal() {
     return GOAL_RADIUS >= util::distance(this->player_pos, this->goal_position);
 }
 
-void Level::handle_collisions() {
-    sf::Vector2<float> next_pos = player_pos + player_velocity * player_speed;
+void Level::handle_collisions(float dt) {
+    // TODO implement
+    sf::Vector2<float> next_pos = player_pos + player_velocity * player_speed * dt;
     if ( next_pos.x <= WIDTH && next_pos.x >= 0 && next_pos.y <= HEIGHT && next_pos.y >= 0 ) {
         sf::Color next_color = sound_map.getPixel(next_pos.x, next_pos.y);
         if (next_color == sf::Color::Black) {
@@ -112,12 +138,13 @@ void Level::handle_collisions() {
     }
 }
 
-void Level::update_player_position() {
-    this->player_pos += this->player_velocity * this->player_speed;
+void Level::update_player_position(float dt) {
+    sf::Vector2<float> v = this->player_velocity * this->player_speed * dt;
+    this->player_pos += v;
 
     // update the audio listener
     this->listener->setPosition(util::sf_to_caudio_vect(this->player_pos));
-    sf::Vector2<float> v = this->player_velocity * this->player_speed;
+    //sf::Vector2<float> v = this->player_velocity * this->player_speed;
     this->listener->setVelocity(util::sf_to_caudio_vect(v));
 
     //std::cout << "X: " << player_pos.x << " Y: " << player_pos.y << std::endl;
@@ -188,7 +215,7 @@ void Level::load_json_data() {
 
         std::cout << "Loading " << file_name << std::endl;
         cAudio::IAudioSource* sound = this->audio_manager->create(
-            std::to_string(c).data(), file_name.data(), true
+            std::to_string(c).data(), file_name.data(), false 
         );
 
         if (!sound) {

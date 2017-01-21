@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <cAudio/cAudio.h>
+#include "car.hpp"
 
 const float DEFAULT_PLAYER_X = 0.0;
 const float DEFAULT_PLAYER_Y = 0.0;
@@ -18,6 +19,8 @@ const sf::Vector2<float> STILL  = sf::Vector2<float>(0, 0);
 
 const int GOAL_RADIUS           = 50;
 
+const std::string CAR_ENGINE = "";
+const std::string CAR_HONK = "";
 
 const std::string DEFAULT_MAP = "../maps/map-default.png";
 const std::string DEFAULT_AUDIO_MAP = "../data/test_audio.json";
@@ -30,6 +33,9 @@ const sf::Color PUDDLE = sf::Color(0x00, 0x00, 0xff, 255);
 
 const int WIDTH = 1000;
 const int HEIGHT = 1000;
+
+// lower number = more cars
+const int CAR_SPAWN_RATE = 100;
 
 struct AudioSource {
     sf::Vector2<float> pos;
@@ -52,7 +58,6 @@ public:
     void draw(sf::RenderTarget* target);
     
     void change();
-    
     
 private:
 
@@ -89,6 +94,13 @@ private:
     
     
 
+    cAudio::IAudioSource* car_engine;
+    cAudio::IAudioSource* car_honk;
+
+    Car* current_car;
+
+    void maybe_spawn_car();
+
     void play_audio_sources();
 
     /*
@@ -102,7 +114,7 @@ private:
      * walk through a wall. For example, walking straight
      * into a wall would just set the velocity to (0, 0).
      */
-    void handle_collisions();
+    void handle_collisions(float dt);
 
   /*
    * Returns true if the player is within the radius of the
@@ -113,7 +125,7 @@ private:
     /*
      * Adds the player velocity scaled by the speed
      */
-    void update_player_position();
+    void update_player_position(float dt);
 
     
     void load_json_data();
