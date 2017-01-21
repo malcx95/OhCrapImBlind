@@ -176,7 +176,6 @@ void Level::load_json_data() {
       std::cerr << "\"" << GOAL_SPRITE << "\" doesn't exist!" << std::endl;
     }
     
-    this->goal_texture.loadFromFile(GOAL_SPRITE);
     this->goal_sprite = sf::Sprite(this->goal_texture);
     std::cout << "goal_position: " << goal_position.x << " "<< goal_position.y << std::endl;
     goal_sprite.setPosition(goal_position.x, goal_position.x);
