@@ -112,6 +112,8 @@ void Level::update(float dt) {
     {
         source.update(dt);
     }
+
+    time_since_collision_sound += dt;
 }
 
 void Level::maybe_spawn_car() {
@@ -506,12 +508,16 @@ void Level::handle_steps(float dt) {
 }
 
 void Level::play_collision_sound() {
-    auto selected_sound = rand() % this->wall_collision_sources.size();
+    if (time_since_collision_sound > COLLISION_SOUND_INTERVAL)
+    {
+        auto selected_sound = rand() % this->wall_collision_sources.size();
 
-    this->wall_collision_sources[selected_sound]->play2d(false);
+        this->wall_collision_sources[selected_sound]->play2d(false);
 
-    std::cout << "Wall collision" << std::endl;
+        std::cout << "Wall collision" << std::endl;
 
+        time_since_collision_sound = 0;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

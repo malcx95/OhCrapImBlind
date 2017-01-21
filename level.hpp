@@ -49,6 +49,7 @@ const float SWEAR_DISTANCE = 100;
 const float DOPPLER_FACTOR = 0.1;
 
 const float AUDIO_SOURCE_ANIMATION_SPEED = 0.25;
+const float COLLISION_SOUND_INTERVAL = 0.5;
 
 const int NUM_SWEARS = 11;
 
@@ -127,6 +128,8 @@ private:
 
     float step_delay;
     float step_timer;
+
+    float time_since_collision_sound = 0;
 
     Ground* ground;
 
