@@ -209,7 +209,7 @@ void Level::load_json_data() {
     // load the audio sources sources
     auto audio_data = json_data["map_list"][level_num]["audio"];
     for (auto source : audio_data) {
-        auto position = source[0];
+        auto position_list = source[0];
         std::string file_name = source[1];
 
         std::cout << "Loading " << file_name << std::endl;
@@ -222,9 +222,24 @@ void Level::load_json_data() {
             exit(EXIT_FAILURE);
         }
 
+        sf::Vector2<float> position(position_list[0], position_list[1]);
+        auto sprite_paths = source[3];
+        std::vector<std::pair<sf::Texture, sf::Sprite>> sprites;
+        for (auto path : sprite_paths)
+        {
+            sf::Texture texture;
+            texture.loadFromFile(path);
+            sf::Sprite sprite(texture);
+            sprite.setPosition(position);
+
+            sprites.push_back(std::pair<sf::Texture, sf::Sprite>(texture, sprite));
+        }
+
         AudioSource as = {
-            sf::Vector2<float>(position[0], position[1]),
-            sound, source[2]
+            position,
+            sound, 
+            source[2],
+            sprites
         };
         audio_sources.push_back(as);
     }
