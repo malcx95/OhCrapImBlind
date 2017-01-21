@@ -435,7 +435,7 @@ void Level::change() {
 
     ground = new Ground(this->audio_manager);
 
-    this->load_collision_audio();
+    //this->load_collision_audio();
 
     this->car_engine = this->audio_manager->create(CAR_ENGINE.data(),
             CAR_ENGINE.data(), false);
