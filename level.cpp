@@ -15,17 +15,7 @@ Level::Level() {
     this->player_velocity = sf::Vector2<float>(0, 0);
     this->player_speed = 50;
 
-    std::cout << "Loading map texture" << std::endl;
-    if (!this->sound_map.loadFromFile(DEFAULT_MAP)) {
-        std::cerr << "\"" << DEFAULT_MAP << "\" doesn't exist!" << std::endl;
-    }
-
-    this->level_texture.loadFromImage(this->sound_map);
-    this->level_sprite = sf::Sprite(this->level_texture);
-    
-    map_path = DEFAULT_MAP;
-
-    std::cout << "Loading audio" << std::endl;
+    std::cout << "Loading world from Json" << std::endl;
     load_json_data();
     play_audio_sources();
 
