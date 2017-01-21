@@ -1,4 +1,4 @@
-#ifndef LEVEL
+#ifndef LEVEL_H
 #define LEVEL
 
 #include <SFML/Graphics.hpp>
@@ -83,7 +83,7 @@ private:
      */
     void update_player_position();
 
-    void load_audio_sources();
+    void load_json_data();
 
     /*
      * Draws the current position of the player for debugging
@@ -91,4 +91,4 @@ private:
     void debug_draw_player(sf::RenderTarget* target);
 };
 
-#endif /* ifndef LEVEL */
+#endif /* ifndef LEVEL_H */
