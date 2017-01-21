@@ -19,8 +19,8 @@ const sf::Vector2<float> STILL  = sf::Vector2<float>(0, 0);
 
 const int GOAL_RADIUS           = 50;
 
-const std::string CAR_ENGINE = "";
-const std::string CAR_HONK = "";
+const std::string CAR_ENGINE = "../audio/car.ogg";
+const std::string CAR_HONK = "../audio/horn.ogg";
 
 const std::string DEFAULT_MAP = "../maps/map-default.png";
 const std::string DEFAULT_AUDIO_MAP = "../data/test_audio.json";
@@ -36,8 +36,11 @@ const int HEIGHT = 1000;
 
 // lower number = more cars
 const int CAR_SPAWN_RATE = 100;
-const float CAR_SPEED = 50;
+
+const float CAR_SPEED = 100;
 const float HONKING_DISTANCE = 200;
+
+const float DOPPLER_FACTOR = 0.1;
 
 struct AudioSource {
     sf::Vector2<float> pos;
@@ -132,10 +135,10 @@ private:
      */
     void handle_collisions(float dt);
 
-  /*
-   * Returns true if the player is within the radius of the
-   * goal.
-   */
+    /*
+     * Returns true if the player is within the radius of the
+     * goal.
+     */
     bool has_reached_goal();
 
     /*
@@ -152,6 +155,8 @@ private:
     void debug_draw_player(sf::RenderTarget* target);
 
     void debug_draw_audio_sources(sf::RenderTarget* target);
+
+    void debug_draw_car(sf::RenderTarget* target);
     
     
     Mat::Material ground_under_player();
@@ -167,7 +172,7 @@ private:
 
     void play_collision_sound();
 
-    void update_car();
+    void update_car(float dt);
 
 };
 

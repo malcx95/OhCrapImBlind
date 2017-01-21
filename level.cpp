@@ -15,6 +15,13 @@ Level::Level() {
     this->player_velocity = sf::Vector2<float>(0, 0);
     this->player_speed = 50;
 
+    this->current_car = nullptr;
+
+    //init audio manager
+    this->audio_manager = cAudio::createAudioManager(true);
+    this->audio_manager->setDopplerFactor(DOPPLER_FACTOR);
+    this->listener = this->audio_manager->getListener();
+
     std::cout << "Loading map texture" << std::endl;
     if (!this->sound_map.loadFromFile(DEFAULT_MAP)) {
         std::cerr << "\"" << DEFAULT_MAP << "\" doesn't exist!" << std::endl;
@@ -25,6 +32,11 @@ Level::Level() {
     
     map_path = DEFAULT_MAP;
 
+    this->car_engine = this->audio_manager->create(CAR_ENGINE.data(), 
+            CAR_ENGINE.data(), false);
+    this->car_honk = this->audio_manager->create(CAR_HONK.data(), 
+            CAR_HONK.data(), false);
+
     std::cout << "Loading audio" << std::endl;
     load_json_data();
     play_audio_sources();
@@ -32,16 +44,9 @@ Level::Level() {
     ground = new Ground(this->audio_manager);
 
     this->load_collision_audio();
-
-    this->car_engine = this->audio_manager->create(CAR_ENGINE.data(), 
-            CAR_ENGINE.data(), false);
-    this->car_honk = this->audio_manager->create(CAR_HONK.data(), 
-            CAR_HONK.data(), false);
-    this->current_car = nullptr;
     
     this->step_delay = 0.5f;
     this->step_timer = 0;
-    this->roads = std::vector<CarRoad>();
 }
 
 Level::~Level() {
@@ -68,7 +73,7 @@ void Level::update(float dt) {
     handle_collisions(dt);
     update_player_position(dt);
     handle_steps(dt);
-    update_car();
+    update_car(dt);
     maybe_spawn_car();
     if (has_reached_goal()) {
         std::cout << "Reached Goal" << std::endl;
@@ -77,7 +82,7 @@ void Level::update(float dt) {
 }
 
 void Level::maybe_spawn_car() {
-    if (this->current_car != nullptr) {
+    if (this->current_car == nullptr && this->roads.size() > 0) {
         int r = rand() % CAR_SPAWN_RATE;
 
         if (r == 0) {
@@ -85,37 +90,42 @@ void Level::maybe_spawn_car() {
             int i = rand() % this->roads.size();
             CarRoad road = this->roads[i];
             
-            float d = (float)(rand() % 3) - 1;
+            float d = (float)(rand() % 2);
 
             sf::Vector2<float> pos;
             sf::Vector2<float> vel;
             
             if (road.direction == HORIZONTAL) {
-                vel = sf::Vector2<float>(d, 0);
-                if (d == -1.0) {
+                if (d == 0.0) {
+                    vel = sf::Vector2<float>(-1, 0);
                     pos = sf::Vector2<float>(WIDTH - 1, road.pos);
                 } else {
+                    vel = sf::Vector2<float>(1, 0);
                     pos = sf::Vector2<float>(0, road.pos);
                 }
             } else {
-                vel = sf::Vector2<float>(0, d);
-                if (d == -1.0) {
+                if (d == 0.0) {
+                    vel = sf::Vector2<float>(0, -1);
                     pos = sf::Vector2<float>(road.pos, HEIGHT - 1);
                 } else {
+                    vel = sf::Vector2<float>(0, 1);
                     pos = sf::Vector2<float>(road.pos, 0);
                 }
             }
 
-            this->current_car = new Car(pos, vel, 
+            this->current_car = new Car(pos, vel * CAR_SPEED, 
                     this->car_engine, this->car_honk);
             this->current_car->start();
+            std::cout << "Created a car at " << 
+                this->current_car->get_position().x << "," <<
+                this->current_car->get_position().y << std::endl;
         }
     }
 }
 
-void Level::update_car() {
+void Level::update_car(float dt) {
     if (this->current_car != nullptr) {
-        this->current_car->update_position();
+        this->current_car->update_position(dt);
         if (this->current_car->out_of_bounds(WIDTH - 1, HEIGHT - 1)) {
             this->current_car->stop();
             delete this->current_car;
@@ -240,10 +250,6 @@ void Level::load_json_data() {
     
     
     
-    //init audio manager
-    std::cout << "Initializing audio manager" << std::endl;
-    this->audio_manager = cAudio::createAudioManager(true);
-    this->listener = this->audio_manager->getListener();
 
     int c = 0;
     
@@ -294,8 +300,10 @@ void Level::load_json_data() {
             CarRoad road;
             if (car[0] == "horizontal") {
                 road.direction = HORIZONTAL;
+                std::cout << "Added horizontal road" << std::endl;
             } else {
                 road.direction = VERTICAL;
+                std::cout << "Added vertical road" << std::endl;
             }
             road.pos = car[1];
             this->roads.push_back(road);
@@ -326,6 +334,9 @@ void Level::draw(sf::RenderTarget* target)
     if (this->in_dev_mode) {
         debug_draw_player(target);
         debug_draw_audio_sources(target);
+        if (this->current_car != nullptr) {
+            debug_draw_car(target);
+        }
     }
 }
 
@@ -345,6 +356,25 @@ void Level::debug_draw_player(sf::RenderTarget* target) {
 
     target->draw(hline, 2, sf::Lines);
     target->draw(vline, 2, sf::Lines);
+}
+
+void Level::debug_draw_car(sf::RenderTarget* target) {
+    float car_x = this->current_car->get_position().x;
+    float car_y = this->current_car->get_position().y;
+
+    sf::Vertex hline[] = {
+        sf::Vertex(sf::Vector2f(car_x - CAR_WIDTH, car_y), sf::Color::Blue),
+        sf::Vertex(sf::Vector2f(car_x + CAR_WIDTH, car_y), sf::Color::Blue)
+    };
+
+    sf::Vertex vline[] = {
+        sf::Vertex(sf::Vector2f(car_x, car_y - CAR_WIDTH), sf::Color::Blue),
+        sf::Vertex(sf::Vector2f(car_x, car_y + CAR_WIDTH), sf::Color::Blue)
+    };
+
+    target->draw(hline, 2, sf::Lines);
+    target->draw(vline, 2, sf::Lines);
+
 }
 
 void Level::debug_draw_audio_sources(sf::RenderTarget* target) {
