@@ -116,6 +116,16 @@ private:
 
     void debug_draw_audio_sources(sf::RenderTarget* target);
     
+    
+    Mat::Material ground_under_player();
+
+    /*
+     * Decreases step_timer and plays a random step sound
+     * when it reaches zero
+     */
+    void handle_steps(float dt);
+    
+    
 };
 
 #endif /* ifndef LEVEL_H */

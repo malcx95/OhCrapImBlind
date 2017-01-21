@@ -242,3 +242,18 @@ void Level::change() {
     load_json_data();//WOW SUCH FUNCTION
 }
 
+
+Mat::Material Level::ground_under_player() {
+    return Mat::WOOD;
+}
+
+void Level::handle_steps(float dt) {
+    if (this->step_timer <= 0) {
+        this->step_timer += this->step_delay;
+        ground->play_random_step(ground_under_player());
+    }
+
+    if (this->player_velocity != STILL) {
+        this->step_timer -= dt;
+    }
+}
