@@ -68,9 +68,23 @@ void Level::load_audio_sources() {
     file >> json_data;
     file.close();
 
+    int c = 0;
     for (auto source : json_data) {
         auto position = source[0];
-        std::string file = source[1];
+        std::string file_name = source[1];
+
+        cAudio::IAudioSource* sound = this->audio_manager->create(
+                std::to_string(c).data(), file_name.data(), true);
+        if (!sound) {
+            std::cerr << "ERROR: Could not load " << file_name << std::endl;
+            exit(EXIT_FAILURE);
+        }
         
+        AudioSource as = {
+            sf::Vector2<float>(position[0], position[1]),
+            sound
+        };
+        audio_sources.push_back(as);
     }
 }
+

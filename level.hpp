@@ -48,6 +48,8 @@ class Level {
         
         sf::Image sound_map;
 
+        cAudio::IAudioManager* audio_manager;
+
         /*
          * Reads keyboard input and updates the
          * player velocities.
