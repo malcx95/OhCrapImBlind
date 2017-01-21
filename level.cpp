@@ -13,7 +13,7 @@ Level::Level() {
 
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
-    this->player_speed = 30;
+    this->player_speed = 50;
 
     std::cout << "Loading map texture" << std::endl;
     if (!this->sound_map.loadFromFile(DEFAULT_MAP)) {
@@ -72,6 +72,7 @@ void Level::update(float dt) {
     maybe_spawn_car();
     if (has_reached_goal()) {
         std::cout << "Reached Goal" << std::endl;
+        change();
     }
 }
 
@@ -163,7 +164,6 @@ bool Level::has_reached_goal() {
 }
 
 void Level::handle_collisions(float dt) {
-    // TODO implement
     sf::Vector2<float> next_pos = player_pos + player_velocity * player_speed * dt;
     if ( next_pos.x <= WIDTH && next_pos.x >= 0 && next_pos.y <= HEIGHT && next_pos.y >= 0 ) {
         sf::Color next_color = sound_map.getPixel(next_pos.x, next_pos.y);
@@ -215,7 +215,6 @@ void Level::load_json_data() {
     //reset player fields
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
-    this->player_speed = 1;
         
     //get player start position from json file
     auto start_pos = json_data["map_list"][level_num]["start_positions"][0];
@@ -253,7 +252,7 @@ void Level::load_json_data() {
     // load the audio sources sources
     auto audio_data = json_data["map_list"][level_num]["audio"];
     for (auto source : audio_data) {
-        auto position = source[0];
+        auto position_list = source[0];
         std::string file_name = source[1];
 
         std::cout << "Loading " << file_name << std::endl;
@@ -266,9 +265,24 @@ void Level::load_json_data() {
             exit(EXIT_FAILURE);
         }
 
+        sf::Vector2<float> position(position_list[0], position_list[1]);
+        auto sprite_paths = source[3];
+        std::vector<std::pair<sf::Texture, sf::Sprite>> sprites;
+        for (auto path : sprite_paths)
+        {
+            sf::Texture texture;
+            texture.loadFromFile(path);
+            sf::Sprite sprite(texture);
+            sprite.setPosition(position);
+
+            sprites.push_back(std::pair<sf::Texture, sf::Sprite>(texture, sprite));
+        }
+
         AudioSource as = {
-            sf::Vector2<float>(position[0], position[1]),
-            sound, source[2]
+            position,
+            sound, 
+            source[2],
+            sprites
         };
         audio_sources.push_back(as);
     }
@@ -357,11 +371,30 @@ void Level::change() {
     std::cout << " CHANGING LEVEL \n\n\n";
     level_num ++;
     load_json_data();//WOW SUCH FUNCTION
+    
+    play_audio_sources();
+
+    ground = new Ground(this->audio_manager);
+
+    this->load_collision_audio();
+
+    this->car_engine = this->audio_manager->create(CAR_ENGINE.data(), 
+            CAR_ENGINE.data(), false);
+    this->car_honk = this->audio_manager->create(CAR_HONK.data(), 
+            CAR_HONK.data(), false);
+    this->current_car = nullptr;
+    
+    this->step_delay = 0.5f;
+    this->step_timer = 0;
 }
 
 
 Mat::Material Level::ground_under_player() {
-    return Mat::WOOD;
+    sf::Color ground_col = sound_map.getPixel(player_pos.x, player_pos.y);
+    if (ground_col == WOOD) return Mat::WOOD;
+    if (ground_col == GRAVEL) return Mat::GRAVEL;
+    if (ground_col == GRASS) return Mat::GRASS;
+    return Mat::PUDDLE;    
 }
 
 void Level::handle_steps(float dt) {

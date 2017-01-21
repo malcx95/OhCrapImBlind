@@ -43,6 +43,8 @@ struct AudioSource {
     sf::Vector2<float> pos;
     cAudio::IAudioSource* audio;
     float attenuation;
+
+    std::vector<std::pair<sf::Texture, sf::Sprite>> sprites;
 };
 
 enum RoadDirection {VERTICAL, HORIZONTAL};
