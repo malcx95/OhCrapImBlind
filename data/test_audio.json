@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "map_list": [
         {"audio": [
             [[10, 10], "../audio/water/water1.ogg", 5.0],
@@ -16,4 +17,12 @@
         "start_position":[300,150],
         "path": "../maps/map-1.png"}
     ]
+=======
+    "audio": [
+        [[10, 10], "../audio/gravel/gravel1.ogg"],
+        [[60, 10], "../audio/water/water2.ogg"]
+    ],
+    "goal": [150,150],
+    "start_positions":[[0,0], [100, 50], [20, 10]]
+>>>>>>> bb129e5964f5827ae2fd2e7f0451b4312e2de339
 }
