@@ -9,8 +9,9 @@
 
 #include "level.hpp"
 
+
 int main() {
-    srand(time(NULL));
+    srand(time(nullptr));
 
     // Create the main window
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "SFML window", sf::Style::Titlebar | sf::Style::Close);

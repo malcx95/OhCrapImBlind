@@ -19,6 +19,7 @@ const sf::Vector2<float> STILL  = sf::Vector2<float>(0, 0);
 
 const std::string DEFAULT_MAP = "../maps/map-default.png";
 const std::string DEFAULT_AUDIO_MAP = "../data/test_audio.json";
+const std::string GOAL_SPRITE = "../assets/goal.png";
 
 const sf::Color WOOD = sf::Color(0x60,0x32,0x00, 255);
 const sf::Color GRAVEL = sf::Color(0x4b, 0x4b, 0x4b, 255);
@@ -68,9 +69,13 @@ private:
     sf::Image sound_map;
     sf::Texture level_texture;
     sf::Sprite level_sprite;
+    sf::Texture goal_texture;
+    sf::Sprite goal_sprite;
 
     cAudio::IAudioManager* audio_manager;
     cAudio::IListener* listener;
+
+    void play_audio_sources();
 
     /*
      * Reads keyboard input and updates the
@@ -104,6 +109,8 @@ private:
      * Draws the current position of the player for debugging
      */
     void debug_draw_player(sf::RenderTarget* target);
+
+    void debug_draw_audio_sources(sf::RenderTarget* target);
 };
 
 #endif /* ifndef LEVEL_H */
