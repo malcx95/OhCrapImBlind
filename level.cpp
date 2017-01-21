@@ -13,6 +13,9 @@ Level::Level() {
     this->player_velocity = sf::Vector2<float>(0, 0);
     this->player_speed = 1;
 
+    this->step_delay = 0.5f;
+    this->step_timer = 0;
+
     std::cout << "Loading map texture" << std::endl;
     if (!this->sound_map.loadFromFile(DEFAULT_MAP)) {
         std::cerr << "\"" << DEFAULT_MAP << "\" doesn't exist!" << std::endl;
@@ -23,10 +26,14 @@ Level::Level() {
 
     std::cout << "Loading audio" << std::endl;
     load_json_data();
+
     play_audio_sources();
+
+    ground = new Ground(this->audio_manager);
 }
 
 Level::~Level() {
+    delete ground;
     cAudio::destroyAudioManager(this->audio_manager);
 }
 
@@ -44,10 +51,11 @@ void Level::play_audio_sources() {
     }
 }
 
-void Level::update() {
+void Level::update(float dt) {
     handle_input();
     handle_collisions();
     update_player_position();
+    handle_steps(dt);
 }
 
 void Level::handle_input() {
@@ -65,6 +73,21 @@ void Level::handle_input() {
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         this->player_velocity += RIGHT;
+    }
+}
+
+Mat::Material Level::ground_under_player() {
+    return Mat::WOOD;
+}
+
+void Level::handle_steps(float dt) {
+    if (this->step_timer <= 0) {
+        this->step_timer += this->step_delay;
+        ground->play_random_step(ground_under_player());
+    }
+
+    if (this->player_velocity != STILL) {
+        this->step_timer -= dt;
     }
 }
 

@@ -1,6 +1,8 @@
 #ifndef LEVEL_H
 #define LEVEL
 
+#include "ground.hpp"
+
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
@@ -45,7 +47,7 @@ public:
     sf::Vector2<float> get_player_pos() const;
     sf::Vector2<float> get_player_velocity() const;
 
-    void update();
+    void update(float dt);
 
     void draw(sf::RenderTarget* target);
 private:
@@ -58,6 +60,11 @@ private:
     sf::Vector2<float> player_velocity;
 
     float player_speed;
+
+    float step_delay;
+    float step_timer;
+
+    Ground* ground;
 
     sf::Image sound_map;
     sf::Texture level_texture;
@@ -87,6 +94,14 @@ private:
      * Adds the player velocity scaled by the speed
      */
     void update_player_position();
+
+    Mat::Material ground_under_player();
+
+    /*
+     * Decreases step_timer and plays a random step sound
+     * when it reaches zero
+     */
+    void handle_steps(float dt);
 
     void load_json_data();
 
