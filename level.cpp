@@ -5,6 +5,8 @@
 #include "util.hpp"
 #include <math.h>
 #include <cstdlib>
+#include <cstring>
+#include <dirent.h>
 
 using namespace nlohmann;
 
@@ -47,6 +49,7 @@ Level::Level() {
             CAR_ENGINE.data(), false);
     this->car_honk = this->audio_manager->create(CAR_HONK.data(), 
             CAR_HONK.data(), false);
+    load_swears();
 
     std::cout << "Loading audio" << std::endl;
     load_json_data();
@@ -72,6 +75,20 @@ sf::Vector2<float> Level::get_player_velocity() const {
     return player_velocity;
 }
 
+void Level::load_swears() {
+    this->swear_sources = std::vector<cAudio::IAudioSource*>();
+    for (int i = 0; i < NUM_SWEARS; ++i) {
+        this->swear_sources.push_back(
+                this->audio_manager->create(
+                    SWEARS[i].data(),
+                    SWEARS[i].data(),
+                    false));
+    }
+    for (cAudio::IAudioSource* p : this->swear_sources) {
+        std::cout << "POINTER: " << p << std::endl;
+    }
+}
+
 void Level::play_audio_sources() {
   std::cout << "trying to play audio sources\n";
     for (AudioSource s : this->audio_sources) {
@@ -95,6 +112,8 @@ void Level::update(float dt) {
     {
         source.update(dt);
     }
+
+    time_since_collision_sound += dt;
 }
 
 void Level::maybe_spawn_car() {
@@ -129,8 +148,11 @@ void Level::maybe_spawn_car() {
                 }
             }
 
+            int swear = rand() % NUM_SWEARS;
+
             this->current_car = new Car(pos, vel * CAR_SPEED, 
-                    this->car_engine, this->car_honk);
+                    this->car_engine, 
+                    this->car_honk, this->swear_sources[swear]);
             this->current_car->start();
             std::cout << "Created a car at " << 
                 this->current_car->get_position().x << "," <<
@@ -149,6 +171,8 @@ void Level::update_car(float dt) {
         } else {
             this->current_car->honk_if_close_to(
                     this->player_pos, HONKING_DISTANCE);
+            this->current_car->swear_if_close_to(
+                    this->player_pos, SWEAR_DISTANCE);
         }
     }
 }
@@ -429,6 +453,12 @@ void Level::change() {
     std::cout << " CHANGING LEVEL \n\n\n";
     level_num ++;
 
+    if (this->current_car != nullptr) {
+        this->current_car->stop();
+        delete this->current_car;
+        this->current_car = nullptr;
+    }
+
     load_json_data();
 
     play_audio_sources();
@@ -478,12 +508,16 @@ void Level::handle_steps(float dt) {
 }
 
 void Level::play_collision_sound() {
-    auto selected_sound = rand() % this->wall_collision_sources.size();
+    if (time_since_collision_sound > COLLISION_SOUND_INTERVAL)
+    {
+        auto selected_sound = rand() % this->wall_collision_sources.size();
 
-    this->wall_collision_sources[selected_sound]->play2d(false);
+        this->wall_collision_sources[selected_sound]->play2d(false);
 
-    std::cout << "Wall collision" << std::endl;
+        std::cout << "Wall collision" << std::endl;
 
+        time_since_collision_sound = 0;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

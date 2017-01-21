@@ -1,5 +1,17 @@
 {
     "map_list": [
+        {"audio": [
+                [
+                    [300, 550],
+                    "../audio/InTheClub.ogg",
+                    10.0,
+                    ["../assets/nightclub-blue.png"]
+                ]
+            ],
+            "goal": [850, 220],
+            "start_positions":[[43, 529], [365, 932], [350, 106]],
+            "path": "../maps/map-woodswalk.png"
+        },
         {
             "audio": [
                 [
@@ -30,7 +42,7 @@
             "start_positions":[[0,0], [100, 50], [20, 10]],
             "path": "../maps/map-default.png"
         },
-        
+
         {
             "audio": [
                 [
@@ -44,7 +56,7 @@
                     ]
                 ],
                 [
-                    [550, 10], 
+                    [550, 10],
                     "../audio/water_dripping/water_dripping2.ogg",
                     10.0,
                     [
@@ -61,7 +73,7 @@
             "start_positions":[[300,150], [100, 50], [20, 10]],
             "path": "../maps/map-1.png"
         },
-        
+
         {
             "audio": [
                 [
@@ -74,10 +86,10 @@
                     ]
                 ],
                 [
-                    [550, 550], 
+                    [550, 550],
                     "../audio/water_dripping/water_dripping2.ogg",
                     10.0,
-                    [   
+                    [
                         "../assets/nightclub-blue.png",
                         "../assets/nightclub-pink.png",
                         "../assets/nightclub-yellow.png"
@@ -86,25 +98,25 @@
             ],
             "goal": [800, 50],
             "start_positions":[[100, 800], [100, 50], [20, 10]],
-            "path": "../maps/map-citywalk.png"
+            "path": "../maps/map-citywalk-pretty.png"
         },
 
         {
             "audio": [
                 [
-                    [300, 550], 
+                    [300, 550],
                     "../audio/water_dripping/water_dripping1.ogg",
                     10.0,
                     ["../assets/nightclub.png"]
                 ],
                 [
-                    [680, 630], 
+                    [680, 630],
                     "../audio/water_dripping/water_dripping2.ogg",
                     10.0,
                     ["../assets/nightclub.png"]
                 ],
                 [
-                    [550, 150], 
+                    [550, 150],
                     "../audio/water_dripping/water_dripping3.ogg",
                     10.0,
                     ["../assets/nightclub.png"]
@@ -114,6 +126,33 @@
             "goal": [50, 950],
             "start_positions":[[300, 300], [100, 50], [20, 10]],
             "path": "../maps/map-swampwalk.png"
+        },
+
+        {
+            "audio": [
+                [
+                    [300, 550],
+                    "../audio/water_dripping/water_dripping1.ogg",
+                    10.0,
+                    ["../assets/nightclub.png"]
+                ],
+                [
+                    [680, 630],
+                    "../audio/water_dripping/water_dripping2.ogg",
+                    10.0,
+                    ["../assets/nightclub.png"]
+                ],
+                [
+                    [550, 150],
+                    "../audio/water_dripping/water_dripping3.ogg",
+                    10.0,
+                    ["../assets/nightclub.png"]
+                ]
+
+            ],
+            "goal": [850, 220],
+            "start_positions":[[43, 529], [365, 932], [350, 106]],
+            "path": "../maps/map-woodswalk.png"
         }
     ]
 }
