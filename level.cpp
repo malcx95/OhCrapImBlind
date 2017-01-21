@@ -11,13 +11,21 @@ Level::Level() {
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
     this->player_speed = 1;
+
+    std::cout << "Loading map texture" << std::endl;
     if (!this->sound_map.loadFromFile(DEFAULT_MAP)) {
         std::cerr << "\"" << DEFAULT_MAP << "\" doesn't exist!" << std::endl;
-
-        level_texture.loadFromImage(sound_map);
-        level_sprite = sf::Sprite(level_texture);
     }
+
+    level_texture.loadFromImage(sound_map);
+    level_sprite = sf::Sprite(level_texture);
+
+    std::cout << "Loading audio" << std::endl;
     load_audio_sources();
+}
+
+Level::~Level() {
+    cAudio::destroyAudioManager(this->audio_manager);
 }
 
 sf::Vector2<float> Level::get_player_pos() const {
@@ -69,23 +77,30 @@ void Level::update_player_position() {
 }
 
 void Level::load_audio_sources() {
+    std::cout << "Loading " << DEFAULT_AUDIO_MAP << std::endl;
     json json_data;
     std::ifstream file(DEFAULT_AUDIO_MAP);
     file >> json_data;
     file.close();
+
+    std::cout << "Initializing audio manager" << std::endl;
+    this->audio_manager = cAudio::createAudioManager(true);
 
     int c = 0;
     for (auto source : json_data) {
         auto position = source[0];
         std::string file_name = source[1];
 
+        std::cout << "Loading " << file_name << std::endl;
         cAudio::IAudioSource* sound = this->audio_manager->create(
-                std::to_string(c).data(), file_name.data(), true);
+            std::to_string(c).data(), file_name.data(), true
+        );
+
         if (!sound) {
             std::cerr << "ERROR: Could not load " << file_name << std::endl;
             exit(EXIT_FAILURE);
         }
-        
+
         AudioSource as = {
             sf::Vector2<float>(position[0], position[1]),
             sound

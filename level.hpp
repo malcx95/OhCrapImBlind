@@ -33,50 +33,51 @@ struct AudioSource {
 
 class Level {
 
-    public:
+public:
 
-        Level();
+    Level();
+    ~Level();
 
-        sf::Vector2<float> get_player_pos() const;
-        sf::Vector2<float> get_player_velocity() const;
+    sf::Vector2<float> get_player_pos() const;
+    sf::Vector2<float> get_player_velocity() const;
 
-        void update();
+    void update();
 
-        void draw(sf::RenderTarget* target);
-    private:
+    void draw(sf::RenderTarget* target);
+private:
 
-        std::vector<AudioSource> audio_sources;
+    std::vector<AudioSource> audio_sources;
 
-        sf::Vector2<float> player_pos;
-        sf::Vector2<float> player_velocity;
+    sf::Vector2<float> player_pos;
+    sf::Vector2<float> player_velocity;
 
-        float player_speed;
+    float player_speed;
 
-        sf::Image sound_map;
-        sf::Texture level_texture;
-        sf::Sprite level_sprite;
+    sf::Image sound_map;
+    sf::Texture level_texture;
+    sf::Sprite level_sprite;
 
-        cAudio::IAudioManager* audio_manager;
+    cAudio::IAudioManager* audio_manager;
 
-        /*
-         * Reads keyboard input and updates the
-         * player velocities.
-         */
-        void handle_input();
+    /*
+     * Reads keyboard input and updates the
+     * player velocities.
+     */
+    void handle_input();
 
-        /*
-         * Sets the player velocity such that it doesn't
-         * walk through a wall. For example, walking straight
-         * into a wall would just set the velocity to (0, 0).
-         */
-        void handle_collisions();
+    /*
+     * Sets the player velocity such that it doesn't
+     * walk through a wall. For example, walking straight
+     * into a wall would just set the velocity to (0, 0).
+     */
+    void handle_collisions();
 
-        /*
-         * Adds the player velocity scaled by the speed
-         */
-        void update_player_position();
+    /*
+     * Adds the player velocity scaled by the speed
+     */
+    void update_player_position();
 
-        void load_audio_sources();
+    void load_audio_sources();
 };
 
 #endif /* ifndef LEVEL */
