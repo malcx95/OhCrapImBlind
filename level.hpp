@@ -16,7 +16,8 @@ const sf::Vector2<float> DOWN   = sf::Vector2<float>(0, 1.0);
 const sf::Vector2<float> RIGHT  = sf::Vector2<float>(1.0, 0);
 const sf::Vector2<float> LEFT   = sf::Vector2<float>(-1.0, 0);
 const sf::Vector2<float> STILL  = sf::Vector2<float>(0, 0);
-const int GOAL_RADIUS = 50;
+
+const int GOAL_RADIUS           = 50;
 
 const std::string DEFAULT_MAP = "../maps/map-default.png";
 const std::string DEFAULT_AUDIO_MAP = "../data/test_audio.json";
@@ -51,6 +52,7 @@ public:
     void update(float dt);
 
     void draw(sf::RenderTarget* target);
+
 private:
 
     bool in_dev_mode;
@@ -59,6 +61,7 @@ private:
 
     sf::Vector2<float> player_pos;
     sf::Vector2<float> player_velocity;
+    sf::Vector2<float> goal_position;
 
     float player_speed;
 
@@ -90,6 +93,12 @@ private:
      * into a wall would just set the velocity to (0, 0).
      */
     void handle_collisions();
+
+  /*
+   * Returns true if the player is within the radius of the
+   * goal.
+   */
+    bool has_reached_goal();
 
     /*
      * Adds the player velocity scaled by the speed

@@ -57,6 +57,9 @@ void Level::update(float dt) {
     handle_collisions();
     update_player_position();
     handle_steps(dt);
+    if (has_reached_goal()) {
+      std::cout << "Reached Goal" << std::endl;
+    }
 }
 
 void Level::handle_input() {
@@ -90,6 +93,10 @@ void Level::handle_steps(float dt) {
     if (this->player_velocity != STILL) {
         this->step_timer -= dt;
     }
+}
+
+bool Level::has_reached_goal() {
+    return GOAL_RADIUS >= util::distance(this->player_pos, this->goal_position);
 }
 
 void Level::handle_collisions() {
@@ -135,14 +142,15 @@ void Level::load_json_data() {
     int c = 0;
 
     // get the goal data from the json file
-    auto goal_position = sf::Vector2<float>(json_data["goal"][0], json_data["goal"][1]);
+    this->goal_position = sf::Vector2<float>(json_data["goal"][0], json_data["goal"][1]);
 
     if (!goal_texture.loadFromFile(GOAL_SPRITE)) {
       std::cerr << "\"" << GOAL_SPRITE << "\" doesn't exist!" << std::endl;
     }
     this->goal_texture.loadFromFile(GOAL_SPRITE);
     this->goal_sprite = sf::Sprite(this->goal_texture);
-    goal_sprite.setPosition(goal_position.x/2, goal_position.y/2);
+    goal_sprite.setPosition(this->goal_position.x, this->goal_position.y);
+    goal_sprite.setOrigin(GOAL_RADIUS, GOAL_RADIUS);
 
     auto player_positions = json_data["start_positions"];
     auto selected_position = player_positions[rand() % player_positions.size()];
