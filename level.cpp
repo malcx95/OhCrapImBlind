@@ -48,12 +48,19 @@ void Level::handle_input() {
 
 void Level::handle_collisions() {
     // TODO implement
-    sf::Vector2<float> next_pos = player_velocity * player_speed;
-    sf::Color next_color = sound_map.getPixel(next_pos.x, next_pos.y);
-    if (next_color == sf::Color::Black) {
+    sf::Vector2<float> next_pos = player_pos + player_velocity * player_speed;
+    if ( next_pos.x <= WIDTH && next_pos.x >= 0 && next_pos.y <= HEIGHT && next_pos.y >= 0 ) {
+        sf::Color next_color = sound_map.getPixel(next_pos.x, next_pos.y);
+        if (next_color == sf::Color::Black) {
+            player_velocity.x = 0.f;
+            player_velocity.y = 0.f;
+            std::cout << "That there's a wall mate!" << std::endl;
+        }
+    } else {
         player_velocity.x = 0.f;
         player_velocity.y = 0.f;
-        std::cout << "That there's a wall mate!" << std::endl;
+        std::cout << "Don't go off the map you idiot!" << std::endl;
+        std::cout << "predicted X: " << next_pos.x << " predicted Y: " << next_pos.y << std::endl;
     }
 }
 

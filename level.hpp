@@ -23,6 +23,9 @@ const int GRAVEL = 0x4b4b4b;
 const int GRASS = 0x00ff00;
 const int PUDDLE = 0x0000ff;
 
+const int WIDTH = 800;
+const int HEIGHT = 600;
+
 struct AudioSource {
 
     sf::Vector2<float> pos;
