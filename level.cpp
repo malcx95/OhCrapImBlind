@@ -13,7 +13,7 @@ Level::Level() {
 
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
-    this->player_speed = 100;
+    this->player_speed = 50;
 
     std::cout << "Loading map texture" << std::endl;
     if (!this->sound_map.loadFromFile(DEFAULT_MAP)) {
@@ -120,7 +120,6 @@ bool Level::has_reached_goal() {
 }
 
 void Level::handle_collisions(float dt) {
-    // TODO implement
     sf::Vector2<float> next_pos = player_pos + player_velocity * player_speed * dt;
     if ( next_pos.x <= WIDTH && next_pos.x >= 0 && next_pos.y <= HEIGHT && next_pos.y >= 0 ) {
         sf::Color next_color = sound_map.getPixel(next_pos.x, next_pos.y);
@@ -172,7 +171,6 @@ void Level::load_json_data() {
     //reset player fields
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
-    this->player_speed = 1;
         
     //get player start position from json file
     auto start_pos = json_data["map_list"][level_num]["start_positions"][0];
@@ -299,6 +297,21 @@ void Level::change() {
     std::cout << " CHANGING LEVEL \n\n\n";
     level_num ++;
     load_json_data();//WOW SUCH FUNCTION
+    
+    play_audio_sources();
+
+    ground = new Ground(this->audio_manager);
+
+    this->load_collision_audio();
+
+    this->car_engine = this->audio_manager->create(CAR_ENGINE.data(), 
+            CAR_ENGINE.data(), false);
+    this->car_honk = this->audio_manager->create(CAR_HONK.data(), 
+            CAR_HONK.data(), false);
+    this->current_car = nullptr;
+    
+    this->step_delay = 0.5f;
+    this->step_timer = 0;
 }
 
 
