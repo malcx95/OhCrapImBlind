@@ -24,6 +24,7 @@ const int GOAL_RADIUS           = 50;
 
 const std::string CAR_ENGINE = "../audio/car.ogg";
 const std::string CAR_HONK = "../audio/horn.ogg";
+const std::string SWEAR_DIR = "../audio/swears/";
 
 const std::string DEFAULT_MAP = "../maps/map-default.png";
 const std::string DEFAULT_AUDIO_MAP = "../data/test_audio.json";
@@ -43,6 +44,7 @@ const int CAR_SPAWN_RATE = 100;
 
 const float CAR_SPEED = 100;
 const float HONKING_DISTANCE = 200;
+const float SWEAR_DISTANCE = 100;
 
 const float DOPPLER_FACTOR = 0.1;
 
@@ -99,6 +101,7 @@ private:
 
     std::vector<cAudio::IAudioSource*> wall_collision_sources;
 
+    std::vector<cAudio::IAudioSource*> swear_sources;
 
     float player_angle;
     sf::Vector2<float> player_pos;
@@ -184,12 +187,13 @@ private:
      */
     void handle_steps(float dt);
 
-
     void load_collision_audio();
 
     void play_collision_sound();
 
     void update_car(float dt);
+
+    void load_swears();
 
 };
 

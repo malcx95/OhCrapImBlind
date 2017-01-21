@@ -5,6 +5,7 @@
 #include "util.hpp"
 #include <math.h>
 #include <cstdlib>
+#include <dirent.h>
 
 using namespace nlohmann;
 
@@ -47,6 +48,7 @@ Level::Level() {
             CAR_ENGINE.data(), false);
     this->car_honk = this->audio_manager->create(CAR_HONK.data(), 
             CAR_HONK.data(), false);
+    load_swears();
 
     std::cout << "Loading audio" << std::endl;
     load_json_data();
@@ -70,6 +72,22 @@ sf::Vector2<float> Level::get_player_pos() const {
 
 sf::Vector2<float> Level::get_player_velocity() const {
     return player_velocity;
+}
+
+void Level::load_swears() {
+    DIR* dir;
+    struct dirent* ent;
+    if ((dir = opendir(SWEAR_DIR.data())) != NULL) {
+        while ((ent = readdir(dir)) != NULL) {
+            std::cout << "Loaded " << ent->d_name << std::endl;
+            this->swear_sources.push_back(
+                    this->audio_manager->create(
+                        ent->d_name, 
+                        ent->d_name,
+                        false));
+        }
+        closedir(dir);
+    }
 }
 
 void Level::play_audio_sources() {
@@ -129,8 +147,11 @@ void Level::maybe_spawn_car() {
                 }
             }
 
+            int swear = rand() % this->swear_sources.size();
+
             this->current_car = new Car(pos, vel * CAR_SPEED, 
-                    this->car_engine, this->car_honk);
+                    this->car_engine, 
+                    this->car_honk, this->swear_sources[swear]);
             this->current_car->start();
             std::cout << "Created a car at " << 
                 this->current_car->get_position().x << "," <<
@@ -149,6 +170,8 @@ void Level::update_car(float dt) {
         } else {
             this->current_car->honk_if_close_to(
                     this->player_pos, HONKING_DISTANCE);
+            this->current_car->swear_if_close_to(
+                    this->player_pos, SWEAR_DISTANCE);
         }
     }
 }
@@ -428,6 +451,12 @@ void Level::debug_draw_audio_sources(sf::RenderTarget* target) {
 void Level::change() {
     std::cout << " CHANGING LEVEL \n\n\n";
     level_num ++;
+
+    if (this->current_car != nullptr) {
+        this->current_car->stop();
+        delete this->current_car;
+        this->current_car = nullptr;
+    }
 
     load_json_data();
 
