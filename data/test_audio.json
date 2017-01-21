@@ -1,19 +1,63 @@
 {
     "map_list": [
-        {"audio": [
-            [[10, 10], "../audio/water/water1.ogg", 5.0],
-            [[60, 10], "../audio/water/water2.ogg", 5.0]
-        ],
-        "goal": [15,100],
-        "start_positions":[[0,0], [100, 50], [20, 10]],
-        "path": "../maps/map-default.png"},
+        {
+            "audio": [
+                [
+                    [10, 10],
+                    "../audio/water/water1.ogg",
+                    5.0,
+                    ["../assets/nightclub.png"]
+                ],
+                [
+                    [60, 10],
+                    "../audio/water/water2.ogg",
+                    5.0,
+                    ["../assets/nightclub.png"]
+                ]
+            ],
+            "goal": [15,100],
+            "start_positions":[[0,0], [100, 50], [20, 10]],
+            "path": "../maps/map-default.png"
+        },
         
-        {"audio": [
-            [[500, 10], "../audio/water_dripping/water_dripping1.ogg", 20.0],
-            [[550, 410], "../audio/water_dripping/water_dripping2.ogg", 20.0]
-        ],
-        "goal": [30,200],
-        "start_positions":[[300,150], [100, 50], [20, 10]],
-        "path": "../maps/map-1.png"}
+        {
+            "audio": [
+                [
+                    [500, 700],
+                    "../audio/water_dripping/water_dripping1.ogg",
+                    10.0,
+                    ["../assets/nightclub.png"]
+                ],
+                [
+                    [550, 10], 
+                    "../audio/water_dripping/water_dripping2.ogg",
+                    10.0,
+                    ["../assets/nightclub.png"]
+                ]
+            ],
+            "goal": [30,200],
+            "start_positions":[[300,150], [100, 50], [20, 10]],
+            "path": "../maps/map-1.png"
+        },
+        
+        {
+            "audio": [
+                [
+                    [900, 10],
+                    "../audio/InTheClub.ogg",
+                    1,
+                    ["../assets/nightclub.png"]
+                ],
+                [
+                    [550, 550], 
+                    "../audio/water_dripping/water_dripping2.ogg",
+                    10.0,
+                    ["../assets/nightclub.png"]
+                ]
+            ],
+            "goal": [800, 50],
+            "start_positions":[[100, 800], [100, 50], [20, 10]],
+            "path": "../maps/map-citywalk.png"
+        }
     ]
 }
