@@ -1,17 +1,33 @@
 #include "level.hpp"
 #include <iostream>
 #include "json.hpp"
+#include <fstream>
 
 using namespace nlohmann;
 
+
+
 Level::Level() {
+    this->in_dev_mode = true;
+
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
     this->player_speed = 1;
+
+    std::cout << "Loading map texture" << std::endl;
     if (!this->sound_map.loadFromFile(DEFAULT_MAP)) {
         std::cerr << "\"" << DEFAULT_MAP << "\" doesn't exist!" << std::endl;
     }
+
+    this->level_texture.loadFromImage(this->sound_map);
+    this->level_sprite = sf::Sprite(this->level_texture);
+
+    std::cout << "Loading audio" << std::endl;
     load_audio_sources();
+}
+
+Level::~Level() {
+    cAudio::destroyAudioManager(this->audio_manager);
 }
 
 sf::Vector2<float> Level::get_player_pos() const {
@@ -70,6 +86,61 @@ void Level::update_player_position() {
 }
 
 void Level::load_audio_sources() {
+    std::cout << "Loading " << DEFAULT_AUDIO_MAP << std::endl;
     json json_data;
+    std::ifstream file(DEFAULT_AUDIO_MAP);
+    file >> json_data;
+    file.close();
 
+    std::cout << "Initializing audio manager" << std::endl;
+    this->audio_manager = cAudio::createAudioManager(true);
+
+    int c = 0;
+    for (auto source : json_data) {
+        auto position = source[0];
+        std::string file_name = source[1];
+
+        std::cout << "Loading " << file_name << std::endl;
+        cAudio::IAudioSource* sound = this->audio_manager->create(
+            std::to_string(c).data(), file_name.data(), true
+        );
+
+        if (!sound) {
+            std::cerr << "ERROR: Could not load " << file_name << std::endl;
+            exit(EXIT_FAILURE);
+        }
+
+        AudioSource as = {
+            sf::Vector2<float>(position[0], position[1]),
+            sound
+        };
+        audio_sources.push_back(as);
+    }
+}
+
+void Level::draw(sf::RenderTarget* target)
+{
+    target->draw(level_sprite);
+
+    if (this->in_dev_mode) {
+        debug_draw_player(target);
+    }
+}
+
+void Level::debug_draw_player(sf::RenderTarget* target) {
+    float player_x = this->player_pos.x;
+    float player_y = this->player_pos.y;
+
+    sf::Vertex hline[] = {
+        sf::Vertex(sf::Vector2f(player_x - 5, player_y), sf::Color::Red),
+        sf::Vertex(sf::Vector2f(player_x + 5, player_y), sf::Color::Red)
+    };
+
+    sf::Vertex vline[] = {
+        sf::Vertex(sf::Vector2f(player_x, player_y - 5), sf::Color::Red),
+        sf::Vertex(sf::Vector2f(player_x, player_y + 5), sf::Color::Red)
+    };
+
+    target->draw(hline, 2, sf::Lines);
+    target->draw(vline, 2, sf::Lines);
 }

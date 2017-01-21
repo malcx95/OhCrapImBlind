@@ -28,9 +28,11 @@ int generate_random_index(int last_index, unsigned int length) {
 
 int main() {
     // Create the main window
-    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window");
+    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window", sf::Style::Titlebar | sf::Style::Close);
 
+    std::cout << "Loading level" << std::endl;
     Level level;
+
 
     float rot = 0.0f;
 
@@ -55,6 +57,9 @@ int main() {
     my_sound->setMaxAttenuationDistance(100.0f);
 
     // Start the game loop
+
+    std::cout << "Starting main loop" << std::endl;
+
     while (window.isOpen())
     {
         // Process events
@@ -72,16 +77,20 @@ int main() {
         float z = 5.0f * sinf(rot);
         my_sound->move(cAudio::cVector3(x, 0.0f, z));
 
+        level.update();
+
+
         // Clear screen
         window.clear();
 
-        level.update();
-        usleep(1000);
+        level.draw(&window);
 
         // Update the window
         window.display();
     }
 
+
     cAudio::destroyAudioManager(audio_mgr);
+
     return EXIT_SUCCESS;
 }
