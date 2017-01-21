@@ -142,7 +142,6 @@ void Level::load_json_data() {
     }
     this->goal_texture.loadFromFile(GOAL_SPRITE);
     this->goal_sprite = sf::Sprite(this->goal_texture);
-    std::cout << "goal_position: " << goal_position << std::endl;
     goal_sprite.setPosition(goal_position.x/2, goal_position.y/2);
 
     auto player_positions = json_data["start_positions"];
