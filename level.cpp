@@ -69,6 +69,7 @@ void Level::update(float dt) {
     handle_steps(dt);
     if (has_reached_goal()) {
         std::cout << "Reached Goal" << std::endl;
+        change();
     }
 }
 
