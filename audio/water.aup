@@ -1,0 +1,68 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="water_data" version="1.3.0" audacityversion="2.1.2" sel0="0.0000000000" sel1="1.5345110927" vpos="112" h="0.0000000000" zoom="110.1327978671" rate="44100.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags/>
+	<wavetrack name="water" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="355578">
+				<waveblock start="0">
+					<simpleblockfile filename="e00006c1.au" len="262144" min="-0.107723" max="0.121868" rms="0.006252"/>
+				</waveblock>
+				<waveblock start="262144">
+					<simpleblockfile filename="e000098c.au" len="93434" min="-0.066012" max="0.074717" rms="0.005522"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="water" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="26429">
+				<waveblock start="0">
+					<simpleblockfile filename="e00008b3.au" len="26429" min="-0.061297" max="0.099018" rms="0.003581"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="water" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="22024">
+				<waveblock start="0">
+					<simpleblockfile filename="e00003ea.au" len="22024" min="-0.047514" max="0.0457" rms="0.00313"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="water" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="25627">
+				<waveblock start="0">
+					<simpleblockfile filename="e000011e.au" len="25627" min="-0.065649" max="0.0671" rms="0.00459"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="water" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="22024">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000877.au" len="22024" min="-0.062022" max="0.055131" rms="0.003897"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="water" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="43647">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000781.au" len="43647" min="-0.107723" max="0.121868" rms="0.005233"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>
