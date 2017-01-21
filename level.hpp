@@ -7,6 +7,7 @@
 #include <vector>
 #include <cAudio/cAudio.h>
 #include "car.hpp"
+#include <memory.h>
 
 const float DEFAULT_PLAYER_X = 0.0;
 const float DEFAULT_PLAYER_Y = 0.0;
@@ -37,12 +38,21 @@ const int HEIGHT = 1000;
 // lower number = more cars
 const int CAR_SPAWN_RATE = 100;
 
+const float AUDIO_SOURCE_ANIMATION_SPEED = 0.25;
+
 struct AudioSource {
     sf::Vector2<float> pos;
     cAudio::IAudioSource* audio;
     float attenuation;
 
-    std::vector<std::pair<sf::Texture, sf::Sprite>> sprites;
+    std::vector<sf::Texture*> textures;
+    std::vector<sf::Sprite> sprites;
+
+    std::size_t current_sprite;
+    float last_switch;
+
+    void draw(sf::RenderTarget* target);
+    void update(float dt);
 };
 
 class Level {
