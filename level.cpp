@@ -276,7 +276,11 @@ void Level::change() {
 
 
 Mat::Material Level::ground_under_player() {
-    return Mat::WOOD;
+    sf::Color ground_col = sound_map.getPixel(player_pos.x, player_pos.y);
+    if (ground_col == WOOD) return Mat::WOOD;
+    if (ground_col == GRAVEL) return Mat::GRAVEL;
+    if (ground_col == GRASS) return Mat::GRASS;
+    return Mat::PUDDLE;    
 }
 
 void Level::handle_steps(float dt) {
