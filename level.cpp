@@ -1,6 +1,7 @@
 #include "level.hpp"
 #include <iostream>
 #include "json.hpp"
+#include <fstream>
 
 using namespace nlohmann;
 
@@ -63,5 +64,13 @@ void Level::update_player_position() {
 
 void Level::load_audio_sources() {
     json json_data;
+    std::ifstream file(DEFAULT_AUDIO_MAP);
+    file >> json_data;
+    file.close();
 
+    for (auto source : json_data) {
+        auto position = source[0];
+        std::string file = source[1];
+        
+    }
 }

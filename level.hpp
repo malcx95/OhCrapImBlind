@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
-//#include <cAudio/cAudio.h>
+#include <cAudio/cAudio.h>
 
 const float DEFAULT_PLAYER_X = 0.0;
 const float DEFAULT_PLAYER_Y = 0.0;
@@ -22,7 +22,7 @@ struct AudioSource {
 
     sf::Vector2<float> pos;
 
- //   cAudio::IAudioSource* audio;
+    cAudio::IAudioSource* audio;
 
 };
 
