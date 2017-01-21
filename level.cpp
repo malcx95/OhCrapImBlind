@@ -31,6 +31,8 @@ Level::Level() {
     play_audio_sources();
 
     ground = new Ground(this->audio_manager);
+
+    this->load_collision_audio();
 }
 
 Level::~Level() {
@@ -57,10 +59,12 @@ void Level::update(float dt) {
     handle_collisions();
     update_player_position();
     handle_steps(dt);
+    if (has_reached_goal()) {
+      std::cout << "Reached Goal" << std::endl;
+    }
 }
 
 void Level::handle_input() {
-
     this->player_velocity = STILL;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
@@ -92,6 +96,10 @@ void Level::handle_steps(float dt) {
     }
 }
 
+bool Level::has_reached_goal() {
+    return GOAL_RADIUS >= util::distance(this->player_pos, this->goal_position);
+}
+
 void Level::handle_collisions() {
     // TODO implement
     sf::Vector2<float> next_pos = player_pos + player_velocity * player_speed;
@@ -100,7 +108,8 @@ void Level::handle_collisions() {
         if (next_color == sf::Color::Black) {
             player_velocity.x = 0.f;
             player_velocity.y = 0.f;
-            std::cout << "That there's a wall mate!" << std::endl;
+            //std::cout << "That there's a wall mate!" << std::endl;
+            this->play_collision_sound();
         }
     } else {
         player_velocity.x = 0.f;
@@ -135,14 +144,15 @@ void Level::load_json_data() {
     int c = 0;
 
     // get the goal data from the json file
-    auto goal_position = sf::Vector2<float>(json_data["goal"][0], json_data["goal"][1]);
+    this->goal_position = sf::Vector2<float>(json_data["goal"][0], json_data["goal"][1]);
 
     if (!goal_texture.loadFromFile(GOAL_SPRITE)) {
       std::cerr << "\"" << GOAL_SPRITE << "\" doesn't exist!" << std::endl;
     }
     this->goal_texture.loadFromFile(GOAL_SPRITE);
     this->goal_sprite = sf::Sprite(this->goal_texture);
-    goal_sprite.setPosition(goal_position.x/2, goal_position.y/2);
+    goal_sprite.setPosition(this->goal_position.x, this->goal_position.y);
+    goal_sprite.setOrigin(GOAL_RADIUS, GOAL_RADIUS);
 
     auto player_positions = json_data["start_positions"];
     auto selected_position = player_positions[rand() % player_positions.size()];
@@ -171,6 +181,12 @@ void Level::load_json_data() {
         };
         audio_sources.push_back(as);
     }
+}
+
+void Level::load_collision_audio(){
+    this->wall_collision_sources.push_back(this->audio_manager->create(
+                    "why do you need a name", "../audio/wood.ogg", false
+                ));
 }
 
 void Level::draw(sf::RenderTarget* target)
@@ -221,3 +237,10 @@ void Level::debug_draw_audio_sources(sf::RenderTarget* target) {
     }
 }
 
+void Level::play_collision_sound() {
+    auto selected_sound = rand() % this->wall_collision_sources.size();
+
+    this->wall_collision_sources[selected_sound]->play2d(false);
+
+    std::cout << "Wall collision" << std::endl;
+}
