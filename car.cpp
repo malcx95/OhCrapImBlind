@@ -25,6 +25,23 @@ void Car::honk_if_close_to(sf::Vector2<float> pos, float distance) const {
     sf::Vector2<float> p_pos = pos - this->pos;
     float phi = fabs(atan2(p_pos.y, p_pos.x) - 
             atan2(this->pos.y, this->pos.x));
-    //float gamma = util::distance()
+    float dis = sqrt(p_pos.x * p_pos.x + p_pos.y * p_pos.y);
+    float gamma = fabs(atan2(dis, CAR_WIDTH));
+
+    if (phi > gamma && dis < distance && 
+            !this->honk_audio_source->isPlaying()) {
+        this->honk_audio_source->play3d(
+                util::sf_to_caudio_vect(this->pos), HONK_STRENGTH, false);
+    }
+}
+
+bool Car::collides_with(sf::Vector2<float> pos, float width) const {
+    sf::Vector2<float> p_pos = pos - this->pos;
+    return sqrt(p_pos.x * p_pos.x + p_pos.y * p_pos.y) < width;
+}
+
+void Car::start() {
+    this->honk_audio_source->play3d(
+            util::sf_to_caudio_vect(this->pos), ENGINE_NOISE_STRENGTH, true);
 }
 
