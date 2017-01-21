@@ -12,7 +12,7 @@ Level::Level() {
 
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
-    this->player_speed = 1;
+    this->player_speed = 30;
 
     this->step_delay = 0.5f;
     this->step_timer = 0;
@@ -56,8 +56,8 @@ void Level::play_audio_sources() {
 
 void Level::update(float dt) {
     handle_input();
-    handle_collisions();
-    update_player_position();
+    handle_collisions(dt);
+    update_player_position(dt);
     handle_steps(dt);
     if (has_reached_goal()) {
       std::cout << "Reached Goal" << std::endl;
@@ -100,9 +100,9 @@ bool Level::has_reached_goal() {
     return GOAL_RADIUS >= util::distance(this->player_pos, this->goal_position);
 }
 
-void Level::handle_collisions() {
+void Level::handle_collisions(float dt) {
     // TODO implement
-    sf::Vector2<float> next_pos = player_pos + player_velocity * player_speed;
+    sf::Vector2<float> next_pos = player_pos + player_velocity * player_speed * dt;
     if ( next_pos.x <= WIDTH && next_pos.x >= 0 && next_pos.y <= HEIGHT && next_pos.y >= 0 ) {
         sf::Color next_color = sound_map.getPixel(next_pos.x, next_pos.y);
         if (next_color == sf::Color::Black) {
@@ -119,12 +119,13 @@ void Level::handle_collisions() {
     }
 }
 
-void Level::update_player_position() {
-    this->player_pos += this->player_velocity * this->player_speed;
+void Level::update_player_position(float dt) {
+    sf::Vector2<float> v = this->player_velocity * this->player_speed * dt;
+    this->player_pos += v;
 
     // update the audio listener
     this->listener->setPosition(util::sf_to_caudio_vect(this->player_pos));
-    sf::Vector2<float> v = this->player_velocity * this->player_speed;
+    //sf::Vector2<float> v = this->player_velocity * this->player_speed;
     this->listener->setVelocity(util::sf_to_caudio_vect(v));
 
     //std::cout << "X: " << player_pos.x << " Y: " << player_pos.y << std::endl;

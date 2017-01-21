@@ -93,7 +93,7 @@ private:
      * walk through a wall. For example, walking straight
      * into a wall would just set the velocity to (0, 0).
      */
-    void handle_collisions();
+    void handle_collisions(float dt);
 
   /*
    * Returns true if the player is within the radius of the
@@ -104,7 +104,7 @@ private:
     /*
      * Adds the player velocity scaled by the speed
      */
-    void update_player_position();
+    void update_player_position(float dt);
 
     Mat::Material ground_under_player();
 
