@@ -4,7 +4,7 @@
 #include <ctime>
 #include <unistd.h>
 
-#include <cAudio/cAudio.h>
+//#include <cAudio/cAudio.h>
 #include <SFML/Graphics.hpp>
 
 #include "level.hpp"
@@ -33,7 +33,7 @@ int main() {
     Level level;
 
     float rot = 0.0f;
-
+/*
     cAudio::IAudioManager* audio_mgr = cAudio::createAudioManager(true);
     if (!audio_mgr) {
         std::cerr << "ERROR: Could not create audio manager" << std::endl;
@@ -53,7 +53,7 @@ int main() {
     my_sound->setVolume(1.0f);
     my_sound->setMinDistance(1.0f);
     my_sound->setMaxAttenuationDistance(100.0f);
-
+*/
     // Start the game loop
     while (window.isOpen())
     {
@@ -70,7 +70,7 @@ int main() {
         rot += 0.1f * 0.017453293f;
         float x = 5.0f * cosf(rot);
         float z = 5.0f * sinf(rot);
-        my_sound->move(cAudio::cVector3(x, 0.0f, z));
+        //my_sound->move(cAudio::cVector3(x, 0.0f, z));
 
         // Clear screen
         window.clear();
@@ -84,6 +84,6 @@ int main() {
         window.display();
     }
 
-    cAudio::destroyAudioManager(audio_mgr);
+    //cAudio::destroyAudioManager(audio_mgr);
     return EXIT_SUCCESS;
 }

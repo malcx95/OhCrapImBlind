@@ -1,6 +1,7 @@
 #include "level.hpp"
 #include <iostream>
 #include "json.hpp"
+#include <fstream>
 
 using namespace nlohmann;
 
@@ -53,22 +54,44 @@ void Level::handle_input() {
 
 void Level::handle_collisions() {
     // TODO implement
-    /*sf::Vector2<float> next_pos = player_velocity * player_speed;
+    sf::Vector2<float> next_pos = player_velocity * player_speed;
     sf::Color next_color = sound_map.getPixel(next_pos.x, next_pos.y);
     if (next_color == sf::Color::Black) {
         player_velocity.x = 0.f;
         player_velocity.y = 0.f;
-    }*/
+        std::cout << "That there's a wall mate!" << std::endl;
+    }
 }
 
 void Level::update_player_position() {
     this->player_pos += this->player_velocity * this->player_speed;
-    //std::cout << "X: " << player_pos.x << " Y: " << player_pos.y << std::endl;
+    std::cout << "X: " << player_pos.x << " Y: " << player_pos.y << std::endl;
 }
 
 void Level::load_audio_sources() {
     json json_data;
+    std::ifstream file(DEFAULT_AUDIO_MAP);
+    file >> json_data;
+    file.close();
 
+    int c = 0;
+    for (auto source : json_data) {
+        auto position = source[0];
+        std::string file_name = source[1];
+
+        cAudio::IAudioSource* sound = this->audio_manager->create(
+                std::to_string(c).data(), file_name.data(), true);
+        if (!sound) {
+            std::cerr << "ERROR: Could not load " << file_name << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        
+        AudioSource as = {
+            sf::Vector2<float>(position[0], position[1]),
+            sound
+        };
+        audio_sources.push_back(as);
+    }
 }
 
 void Level::draw(sf::RenderTarget* target)
