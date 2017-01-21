@@ -1,5 +1,5 @@
 #ifndef LEVEL_H
-#define LEVEL
+#define LEVEL_H
 
 #include "ground.hpp"
 

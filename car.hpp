@@ -4,7 +4,10 @@
 #include <SFML/Graphics.hpp>
 #include <cAudio/cAudio.h>
 
-const std::string CAR_DRIVE_AUDIO = "";
+const float CAR_WIDTH = 10;
+
+const float HONK_STRENGTH = 100.0;
+const float ENGINE_NOISE_STRENGTH = 10.0;
 
 class Car {
 
@@ -23,6 +26,16 @@ public:
      * Moves the car one step in the direction of it's velocity.
      */
     void update_position();
+
+    /*
+     * Starts the engine noise
+     */
+    void start();
+
+    /*
+     * Stops the engine noise.
+     */
+    void stop();
 
     sf::Vector2<float> get_position() const;
 
