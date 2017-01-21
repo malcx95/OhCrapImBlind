@@ -18,10 +18,10 @@ const sf::Vector2<float> STILL  = sf::Vector2<float>(0, 0);
 const std::string DEFAULT_MAP = "images/map-default";
 const std::string DEFAULT_AUDIO_MAP = "data/test_audio.json";
 
-const int WOOD = 0x603200;
-const int GRAVEL = 0x4b4b4b;
-const int GRASS = 0x00ff00;
-const int PUDDLE = 0x0000ff;
+const sf::Color WOOD = sf::Color(0x60,0x32,0x00, 255);
+const sf::Color GRAVEL = sf::Color(0x4b, 0x4b, 0x4b, 255);
+const sf::Color GRASS = sf::Color(0x00, 0xff, 0x00, 255);
+const sf::Color PUDDLE = sf::Color(0x00, 0x00, 0xff, 255);
 
 struct AudioSource {
 
