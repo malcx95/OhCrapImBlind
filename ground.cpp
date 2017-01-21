@@ -44,11 +44,11 @@ Ground::Ground(cAudio::IAudioManager* audio_manager) {
             
         },
         {
-            /*"grass1.ogg",
             "grass1.ogg",
-            "grass1.ogg",
-            "grass1.ogg",
-            "grass1.ogg",*/
+            "grass2.ogg",
+            "grass3.ogg",
+            "grass4.ogg",
+            "grass5.ogg",
         },
         {
             "water1.ogg",

@@ -22,14 +22,25 @@ Level::Level() {
     this->audio_manager->setDopplerFactor(DOPPLER_FACTOR);
     this->listener = this->audio_manager->getListener();
 
-    std::cout << "Loading map texture" << std::endl;
+    std::cout << "Loading world from Json" << std::endl;
+
+    /*std::cout << "Loading map texture" << std::endl;
     if (!this->sound_map.loadFromFile(DEFAULT_MAP)) {
         std::cerr << "\"" << DEFAULT_MAP << "\" doesn't exist!" << std::endl;
     }
 
     this->level_texture.loadFromImage(this->sound_map);
-    this->level_sprite = sf::Sprite(this->level_texture);
-    
+    this->level_sprite = sf::Sprite(this->level_texture);*/
+
+    //orientation arrow 
+    if (!this->arrow_texture.loadFromFile(ARROW_SPRITE)) {
+        std::cerr << "\"" << ARROW_SPRITE << "\" doesn't exist!" << std::endl;
+    }
+    this->arrow_sprite = sf::Sprite(this->arrow_texture);
+    this->arrow_sprite.setPosition(sf::Vector2f(WIDTH - 100, 100));
+    auto arrow_size = this->arrow_texture.getSize();
+    this->arrow_sprite.setOrigin(arrow_size.x / 2, arrow_size.y / 2);
+
     map_path = DEFAULT_MAP;
 
     this->car_engine = this->audio_manager->create(CAR_ENGINE.data(), 
@@ -44,7 +55,7 @@ Level::Level() {
     ground = new Ground(this->audio_manager);
 
     this->load_collision_audio();
-    
+
     this->step_delay = 0.5f;
     this->step_timer = 0;
 }
@@ -78,6 +89,11 @@ void Level::update(float dt) {
     if (has_reached_goal()) {
         std::cout << "Reached Goal" << std::endl;
         change();
+    }
+
+    for (auto& source : this->audio_sources)
+    {
+        source.update(dt);
     }
 }
 
@@ -162,7 +178,7 @@ void Level::handle_input() {
         changed_level = false;
         change_lvl = false;
     }
-    
+
     if (change_lvl && !changed_level) {
       change();
       changed_level = true;
@@ -199,8 +215,6 @@ void Level::update_player_position(float dt) {
     this->listener->setPosition(util::sf_to_caudio_vect(this->player_pos));
     //sf::Vector2<float> v = this->player_velocity * this->player_speed;
     this->listener->setVelocity(util::sf_to_caudio_vect(v));
-
-    //std::cout << "X: " << player_pos.x << " Y: " << player_pos.y << std::endl;
 }
 
 void Level::load_json_data() {
@@ -213,46 +227,42 @@ void Level::load_json_data() {
     std::cout << "level number: "<< level_num << std::endl;
     //get map path from json file
     map_path = json_data["map_list"][level_num]["path"];
-    
+
     std::cout << "Loading map texture" << std::endl;
     if (!this->sound_map.loadFromFile(map_path)) {
         std::cerr << "\"" << map_path << "\" doesn't exist!" << std::endl;
     }
-    
+
     this->level_texture.loadFromImage(this->sound_map);
     this->level_sprite = sf::Sprite(this->level_texture);
-    
+
     //reset player fields
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
-        
+
     //get player start position from json file
     auto start_pos = json_data["map_list"][level_num]["start_positions"][0];
     player_pos.x = start_pos[0];
     player_pos.y = start_pos[1];
     std::cout << "start_position: " << player_pos.x <<  " " << player_pos.y << std::endl;
-        
-    
+
+
     // get the goal data from the json file + handle goal sprite
-    this->goal_position = sf::Vector2<float>(json_data["map_list"][level_num]["goal"][0], 
+    this->goal_position = sf::Vector2<float>(json_data["map_list"][level_num]["goal"][0],
                                             json_data["map_list"][level_num]["goal"][1]);
 
     if (!goal_texture.loadFromFile(GOAL_SPRITE)) {
       std::cerr << "\"" << GOAL_SPRITE << "\" doesn't exist!" << std::endl;
     }
-    
-    this->goal_texture.loadFromFile(GOAL_SPRITE);
+
     this->goal_sprite = sf::Sprite(this->goal_texture);
     std::cout << "goal_position: " << goal_position.x << " "<< goal_position.y << std::endl;
     goal_sprite.setPosition(goal_position.x, goal_position.x);
     goal_sprite.setPosition(this->goal_position.x, this->goal_position.y);
     goal_sprite.setOrigin(GOAL_RADIUS, GOAL_RADIUS);
-    
-    
-    
 
     int c = 0;
-    
+
     audio_sources.clear();
 
     // load the audio sources sources
@@ -263,7 +273,7 @@ void Level::load_json_data() {
 
         std::cout << "Loading " << file_name << std::endl;
         cAudio::IAudioSource* sound = this->audio_manager->create(
-            std::to_string(c).data(), file_name.data(), false 
+            std::to_string(c).data(), file_name.data(), false
         );
 
         if (!sound) {
@@ -273,22 +283,31 @@ void Level::load_json_data() {
 
         sf::Vector2<float> position(position_list[0], position_list[1]);
         auto sprite_paths = source[3];
-        std::vector<std::pair<sf::Texture, sf::Sprite>> sprites;
+        std::vector<sf::Sprite> sprites;
+        std::vector<sf::Texture*> textures;
         for (auto path : sprite_paths)
         {
-            sf::Texture texture;
-            texture.loadFromFile(path);
-            sf::Sprite sprite(texture);
+            sf::Texture* texture = new sf::Texture();
+            if (!texture->loadFromFile(path))
+            {
+                std::cout << "Failed to load texture\"" << path << "\"" << std::endl;
+            }
+            sf::Sprite sprite;
             sprite.setPosition(position);
 
-            sprites.push_back(std::pair<sf::Texture, sf::Sprite>(texture, sprite));
+            sprite.setTexture(*texture);
+            sprites.push_back(sprite);
+            textures.push_back(texture);
         }
 
         AudioSource as = {
             position,
-            sound, 
+            sound,
             source[2],
-            sprites
+            textures,
+            sprites,
+            0,
+            0.0
         };
         audio_sources.push_back(as);
     }
@@ -331,6 +350,9 @@ void Level::draw(sf::RenderTarget* target)
     target->draw(level_sprite);
     target->draw(goal_sprite);
 
+    this->arrow_sprite.setRotation(player_angle);
+    target->draw(arrow_sprite);
+
     if (this->in_dev_mode) {
         debug_draw_player(target);
         debug_draw_audio_sources(target);
@@ -338,7 +360,13 @@ void Level::draw(sf::RenderTarget* target)
             debug_draw_car(target);
         }
     }
+
+    for (auto source : this->audio_sources)
+    {
+        source.draw(target);
+    }
 }
+
 
 void Level::debug_draw_player(sf::RenderTarget* target) {
     float player_x = this->player_pos.x;
@@ -400,31 +428,41 @@ void Level::debug_draw_audio_sources(sf::RenderTarget* target) {
 void Level::change() {
     std::cout << " CHANGING LEVEL \n\n\n";
     level_num ++;
-    load_json_data();//WOW SUCH FUNCTION
-    
+
+    load_json_data();
+
     play_audio_sources();
 
     ground = new Ground(this->audio_manager);
 
     this->load_collision_audio();
 
-    this->car_engine = this->audio_manager->create(CAR_ENGINE.data(), 
+    this->car_engine = this->audio_manager->create(CAR_ENGINE.data(),
             CAR_ENGINE.data(), false);
-    this->car_honk = this->audio_manager->create(CAR_HONK.data(), 
+    this->car_honk = this->audio_manager->create(CAR_HONK.data(),
             CAR_HONK.data(), false);
     this->current_car = nullptr;
-    
+
     this->step_delay = 0.5f;
     this->step_timer = 0;
 }
 
+void Level::turn_player(int amount) {
+    // This calculation is totally fucked up...
+    // But at least it works
+    this->player_angle += amount * PLAYER_TURN_SPEED;
+    float angle_radians = (player_angle + 90) / 180 * M_PI;
+    this->listener->setDirection(
+        cAudio::cVector3(-cosf(angle_radians), 0.0f, -sinf(angle_radians)
+    ));
+}
 
 Mat::Material Level::ground_under_player() {
     sf::Color ground_col = sound_map.getPixel(player_pos.x, player_pos.y);
     if (ground_col == WOOD) return Mat::WOOD;
     if (ground_col == GRAVEL) return Mat::GRAVEL;
     if (ground_col == GRASS) return Mat::GRASS;
-    return Mat::PUDDLE;    
+    return Mat::PUDDLE;
 }
 
 void Level::handle_steps(float dt) {
@@ -445,5 +483,22 @@ void Level::play_collision_sound() {
     this->wall_collision_sources[selected_sound]->play2d(false);
 
     std::cout << "Wall collision" << std::endl;
-    
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//              Audio source methods
+////////////////////////////////////////////////////////////////////////////////
+void  AudioSource::draw(sf::RenderTarget* target)
+{
+    target->draw(sprites[current_sprite]);
+}
+void AudioSource::update(float dt)
+{
+    last_switch += dt;
+    if(last_switch > AUDIO_SOURCE_ANIMATION_SPEED)
+    {
+        current_sprite = (current_sprite + 1) % sprites.size();
+        last_switch = 0;
+    }
 }
