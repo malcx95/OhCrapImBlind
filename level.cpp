@@ -84,7 +84,7 @@ void Level::update_player_position() {
     this->listener->setPosition(util::sf_to_caudio_vect(this->player_pos));
     this->listener->setVelocity(util::sf_to_caudio_vect(this->player_pos));
 
-    std::cout << "X: " << player_pos.x << " Y: " << player_pos.y << std::endl;
+    //std::cout << "X: " << player_pos.x << " Y: " << player_pos.y << std::endl;
 }
 
 void Level::load_json_data() {
@@ -99,6 +99,17 @@ void Level::load_json_data() {
     this->listener = this->audio_manager->getListener();
 
     int c = 0;
+
+    // get the goal data from the json file
+    auto goal_position = json_data["goal"];
+    if (!goal_texture.loadFromFile(GOAL_SPRITE)) {
+      std::cerr << "\"" << GOAL_SPRITE << "\" doesn't exist!" << std::endl;
+    }
+    this->goal_texture.loadFromFile(GOAL_SPRITE);
+    this->goal_sprite = sf::Sprite(this->goal_texture);
+    std::cout << "goal_position: " << goal_position << std::endl;
+    goal_sprite.setPosition(goal_position[0], goal_position[1]);
+
 
     // load the audio sources sources
     auto audio_data = json_data["audio"];
@@ -127,6 +138,7 @@ void Level::load_json_data() {
 void Level::draw(sf::RenderTarget* target)
 {
     target->draw(level_sprite);
+    target->draw(goal_sprite);
 
     if (this->in_dev_mode) {
         debug_draw_player(target);
