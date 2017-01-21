@@ -8,6 +8,8 @@ using namespace nlohmann;
 
 
 Level::Level() {
+    this->in_dev_mode = true;
+
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
     this->player_speed = 1;
@@ -17,8 +19,8 @@ Level::Level() {
         std::cerr << "\"" << DEFAULT_MAP << "\" doesn't exist!" << std::endl;
     }
 
-    level_texture.loadFromImage(sound_map);
-    level_sprite = sf::Sprite(level_texture);
+    this->level_texture.loadFromImage(this->sound_map);
+    this->level_sprite = sf::Sprite(this->level_texture);
 
     std::cout << "Loading audio" << std::endl;
     load_audio_sources();
@@ -112,4 +114,26 @@ void Level::load_audio_sources() {
 void Level::draw(sf::RenderTarget* target)
 {
     target->draw(level_sprite);
+
+    if (this->in_dev_mode) {
+        debug_draw_player(target);
+    }
+}
+
+void Level::debug_draw_player(sf::RenderTarget* target) {
+    float player_x = this->player_pos.x;
+    float player_y = this->player_pos.y;
+
+    sf::Vertex hline[] = {
+        sf::Vertex(sf::Vector2f(player_x - 5, player_y), sf::Color::Red),
+        sf::Vertex(sf::Vector2f(player_x + 5, player_y), sf::Color::Red)
+    };
+
+    sf::Vertex vline[] = {
+        sf::Vertex(sf::Vector2f(player_x, player_y - 5), sf::Color::Red),
+        sf::Vertex(sf::Vector2f(player_x, player_y + 5), sf::Color::Red)
+    };
+
+    target->draw(hline, 2, sf::Lines);
+    target->draw(vline, 2, sf::Lines);
 }

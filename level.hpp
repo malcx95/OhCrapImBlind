@@ -46,6 +46,8 @@ public:
     void draw(sf::RenderTarget* target);
 private:
 
+    bool in_dev_mode;
+
     std::vector<AudioSource> audio_sources;
 
     sf::Vector2<float> player_pos;
@@ -78,6 +80,11 @@ private:
     void update_player_position();
 
     void load_audio_sources();
+
+    /*
+     * Draws the current position of the player for debugging
+     */
+    void debug_draw_player(sf::RenderTarget* target);
 };
 
 #endif /* ifndef LEVEL */

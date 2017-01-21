@@ -28,7 +28,7 @@ int generate_random_index(int last_index, unsigned int length) {
 
 int main() {
     // Create the main window
-    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window");
+    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window", sf::Style::Titlebar | sf::Style::Close);
 
     std::cout << "Loading level" << std::endl;
     Level level;
