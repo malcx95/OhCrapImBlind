@@ -27,6 +27,8 @@ int generate_random_index(int last_index, unsigned int length) {
 }
 
 int main() {
+    srand(time(nullptr));
+
     // Create the main window
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "SFML window", sf::Style::Titlebar | sf::Style::Close);
 

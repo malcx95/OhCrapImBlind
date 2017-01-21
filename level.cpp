@@ -110,6 +110,11 @@ void Level::load_json_data() {
     std::cout << "goal_position: " << goal_position << std::endl;
     goal_sprite.setPosition(goal_position[0], goal_position[1]);
 
+    auto player_positions = json_data["start_positions"];
+    auto selected_position = player_positions[rand() % player_positions.size()];
+    this->player_pos = sf::Vector2<float>(selected_position[0], selected_position[1]);
+    std::cout << selected_position << std::endl;
+
 
     // load the audio sources sources
     auto audio_data = json_data["audio"];
