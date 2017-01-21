@@ -35,8 +35,20 @@ Ground::Ground(cAudio::IAudioManager* audio_manager) {
             "wood6.ogg"
         },
         {
+            "gravel1.ogg",
+            "gravel2.ogg",
+            "gravel3.ogg",
+            "gravel4.ogg",
+            "gravel5.ogg",
+            "gravel6.ogg",
+            
         },
         {
+            /*"grass1.ogg",
+            "grass1.ogg",
+            "grass1.ogg",
+            "grass1.ogg",
+            "grass1.ogg",*/
         },
         {
             "water1.ogg",
