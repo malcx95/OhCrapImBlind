@@ -206,7 +206,16 @@ void Level::load_json_data() {
 
 void Level::load_collision_audio(){
     this->wall_collision_sources.push_back(this->audio_manager->create(
-                    "why do you need a name", "../audio/wood.ogg", false
+                    "collision1", "../audio/walls/collision1.ogg", false
+                ));
+    this->wall_collision_sources.push_back(this->audio_manager->create(
+                    "collision2", "../audio/walls/collision2.ogg", false
+                ));
+    this->wall_collision_sources.push_back(this->audio_manager->create(
+                    "collision3", "../audio/walls/collision3.ogg", false
+                ));
+    this->wall_collision_sources.push_back(this->audio_manager->create(
+                    "collision4", "../audio/walls/collision4.ogg", false
                 ));
 }
 
