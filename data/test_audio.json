@@ -62,13 +62,20 @@
                     [900, 10],
                     "../audio/InTheClub.ogg",
                     10.0,
-                    ["../assets/nightclub.png"]
+                    [   "../assets/nightclub-blue.png",
+                        "../assets/nightclub-pink.png",
+                        "../assets/nightclub-yellow.png"
+                    ]
                 ],
                 [
                     [550, 550], 
                     "../audio/water_dripping/water_dripping2.ogg",
                     10.0,
-                    ["../assets/nightclub.png"]
+                    [   
+                        "../assets/nightclub-blue.png",
+                        "../assets/nightclub-pink.png",
+                        "../assets/nightclub-yellow.png"
+                     ]
                 ]
             ],
             "goal": [800, 50],
