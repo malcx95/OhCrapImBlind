@@ -10,6 +10,7 @@ Car::Car(sf::Vector2<float> pos, sf::Vector2<float> velocity,
     this->velocity = velocity;
     this->audio_source = audio_source;
     this->honk_audio_source = honk_audio_source;
+    this->swear_audio_source = swear_audio_source;
 }
 
 void Car::update_position(float dt) {
@@ -19,6 +20,9 @@ void Car::update_position(float dt) {
             util::sf_to_caudio_vect(this->velocity));
     this->honk_audio_source->move(util::sf_to_caudio_vect(this->pos));
     this->honk_audio_source->setVelocity(
+            util::sf_to_caudio_vect(this->velocity));
+    this->swear_audio_source->move(util::sf_to_caudio_vect(this->pos));
+    this->swear_audio_source->setVelocity(
             util::sf_to_caudio_vect(this->velocity));
 }
 

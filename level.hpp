@@ -50,6 +50,22 @@ const float DOPPLER_FACTOR = 0.1;
 
 const float AUDIO_SOURCE_ANIMATION_SPEED = 0.25;
 
+const int NUM_SWEARS = 11;
+
+const std::string SWEARS[NUM_SWEARS] {
+    "../audio/swears/australian1.ogg",
+    "../audio/swears/brittish1.ogg",
+    "../audio/swears/danish.ogg",
+    "../audio/swears/french1.ogg",
+    "../audio/swears/french2.ogg",
+    "../audio/swears/german1.ogg",
+    "../audio/swears/german2.ogg",
+    "../audio/swears/norwegian1.ogg",
+    "../audio/swears/russian1.ogg",
+    "../audio/swears/russian2.ogg",
+    "../audio/swears/skane1.ogg"
+};
+
 struct AudioSource {
     sf::Vector2<float> pos;
     cAudio::IAudioSource* audio;
@@ -100,7 +116,6 @@ private:
     std::vector<AudioSource> audio_sources;
 
     std::vector<cAudio::IAudioSource*> wall_collision_sources;
-
     std::vector<cAudio::IAudioSource*> swear_sources;
 
     float player_angle;

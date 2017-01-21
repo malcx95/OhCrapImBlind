@@ -5,6 +5,7 @@
 #include "util.hpp"
 #include <math.h>
 #include <cstdlib>
+#include <cstring>
 #include <dirent.h>
 
 using namespace nlohmann;
@@ -75,18 +76,16 @@ sf::Vector2<float> Level::get_player_velocity() const {
 }
 
 void Level::load_swears() {
-    DIR* dir;
-    struct dirent* ent;
-    if ((dir = opendir(SWEAR_DIR.data())) != NULL) {
-        while ((ent = readdir(dir)) != NULL) {
-            std::cout << "Loaded " << ent->d_name << std::endl;
-            this->swear_sources.push_back(
-                    this->audio_manager->create(
-                        ent->d_name, 
-                        ent->d_name,
-                        false));
-        }
-        closedir(dir);
+    this->swear_sources = std::vector<cAudio::IAudioSource*>();
+    for (int i = 0; i < NUM_SWEARS; ++i) {
+        this->swear_sources.push_back(
+                this->audio_manager->create(
+                    SWEARS[i].data(),
+                    SWEARS[i].data(),
+                    false));
+    }
+    for (cAudio::IAudioSource* p : this->swear_sources) {
+        std::cout << "POINTER: " << p << std::endl;
     }
 }
 
@@ -147,7 +146,7 @@ void Level::maybe_spawn_car() {
                 }
             }
 
-            int swear = rand() % this->swear_sources.size();
+            int swear = rand() % NUM_SWEARS;
 
             this->current_car = new Car(pos, vel * CAR_SPEED, 
                     this->car_engine, 
