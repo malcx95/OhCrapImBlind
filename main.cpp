@@ -77,8 +77,8 @@ int main() {
 
         level.update();
 
-        level.draw(&window);
-        usleep(1000);
+        //level.draw(&window);
+        //usleep(1000);
 
         // Update the window
         window.display();
