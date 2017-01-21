@@ -19,6 +19,9 @@ const sf::Vector2<float> STILL  = sf::Vector2<float>(0, 0);
 
 const int GOAL_RADIUS           = 50;
 
+const std::string CAR_ENGINE = "";
+const std::string CAR_HONK = "";
+
 const std::string DEFAULT_MAP = "../maps/map-default.png";
 const std::string DEFAULT_AUDIO_MAP = "../data/test_audio.json";
 const std::string GOAL_SPRITE = "../assets/goal.png";
@@ -79,6 +82,9 @@ private:
 
     cAudio::IAudioManager* audio_manager;
     cAudio::IListener* listener;
+
+    cAudio::IAudioSource* car_engine;
+    cAudio::IAudioSource* car_honk;
 
     void play_audio_sources();
 

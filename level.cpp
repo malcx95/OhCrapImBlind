@@ -33,6 +33,11 @@ Level::Level() {
     ground = new Ground(this->audio_manager);
 
     this->load_collision_audio();
+
+    this->car_engine = this->audio_manager->create(CAR_ENGINE.data(), 
+            CAR_ENGINE.data(), false);
+    this->car_honk = this->audio_manager->create(CAR_HONK.data(), 
+            CAR_HONK.data(), false);
 }
 
 Level::~Level() {
@@ -167,7 +172,7 @@ void Level::load_json_data() {
 
         std::cout << "Loading " << file_name << std::endl;
         cAudio::IAudioSource* sound = this->audio_manager->create(
-            std::to_string(c).data(), file_name.data(), true
+            std::to_string(c).data(), file_name.data(), false 
         );
 
         if (!sound) {
