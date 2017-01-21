@@ -76,6 +76,8 @@ int main() {
         window.clear();
 
         level.update();
+
+        level.draw(&window);
         usleep(1000);
 
         // Update the window

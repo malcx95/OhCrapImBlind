@@ -4,12 +4,17 @@
 
 using namespace nlohmann;
 
+
+
 Level::Level() {
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
     this->player_speed = 1;
     if (!this->sound_map.loadFromFile(DEFAULT_MAP)) {
         std::cerr << "\"" << DEFAULT_MAP << "\" doesn't exist!" << std::endl;
+
+        level_texture.loadFromImage(sound_map);
+        level_sprite = sf::Sprite(level_texture);
     }
     load_audio_sources();
 }
@@ -64,4 +69,9 @@ void Level::update_player_position() {
 void Level::load_audio_sources() {
     json json_data;
 
+}
+
+void Level::draw(sf::RenderTarget* target)
+{
+    target->draw(level_sprite);
 }

@@ -15,7 +15,7 @@ const sf::Vector2<float> RIGHT  = sf::Vector2<float>(1.0, 0);
 const sf::Vector2<float> LEFT   = sf::Vector2<float>(-1.0, 0);
 const sf::Vector2<float> STILL  = sf::Vector2<float>(0, 0);
 
-const std::string DEFAULT_MAP = "images/map-default";
+const std::string DEFAULT_MAP = "../maps/map-default.png";
 const std::string DEFAULT_AUDIO_MAP = "data/test_audio.json";
 
 struct AudioSource {
@@ -36,7 +36,8 @@ class Level {
         sf::Vector2<float> get_player_velocity() const;
 
         void update();
-    
+
+        void draw(sf::RenderTarget* target);
     private:
 
         std::vector<AudioSource> audio_sources;
@@ -47,6 +48,8 @@ class Level {
         float player_speed;
         
         sf::Image sound_map;
+        sf::Texture level_texture;
+        sf::Sprite level_sprite;
 
         /*
          * Reads keyboard input and updates the
