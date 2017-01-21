@@ -38,7 +38,7 @@ class Level {
 
 public:
 
-    Level(cAudio::IAudioManager* audio_manager, cAudio::IListener* listener);
+    Level();
     ~Level();
 
     sf::Vector2<float> get_player_pos() const;

@@ -5,8 +5,7 @@
 
 using namespace nlohmann;
 
-Level::Level(cAudio::IAudioManager* audio_manager, 
-        cAudio::IListener* listener) {
+Level::Level() {
     this->in_dev_mode = true;
 
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
@@ -20,9 +19,6 @@ Level::Level(cAudio::IAudioManager* audio_manager,
 
     this->level_texture.loadFromImage(this->sound_map);
     this->level_sprite = sf::Sprite(this->level_texture);
-
-    this->audio_manager = audio_manager;
-    this->listener = listener;
 
     std::cout << "Loading audio" << std::endl;
     load_audio_sources();
@@ -96,6 +92,7 @@ void Level::load_audio_sources() {
 
     std::cout << "Initializing audio manager" << std::endl;
     this->audio_manager = cAudio::createAudioManager(true);
+    this->listener = this->audio_manager->getListener();
 
     int c = 0;
     for (auto source : json_data) {

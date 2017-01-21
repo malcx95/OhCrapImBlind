@@ -31,25 +31,10 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window", sf::Style::Titlebar | sf::Style::Close);
 
     std::cout << "Loading level" << std::endl;
-    Level level;
 
     float rot = 0.0f;
 
-    cAudio::IAudioManager* audio_mgr = cAudio::createAudioManager(true);
-    if (!audio_mgr) {
-        std::cerr << "ERROR: Could not create audio manager" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-
-    cAudio::IListener* listener = audio_mgr->getListener();
-    listener->setPosition(cAudio::cVector3(0, 0, 0));
-
-    // my_sound->play3d(cAudio::cVector3(0, 0, 0), 2.0f, true);
-    // my_sound->setVolume(1.0f);
-    // my_sound->setMinDistance(1.0f);
-    // my_sound->setMaxAttenuationDistance(100.0f);
-
+    Level level;
     // Start the game loop
 
     std::cout << "Starting main loop" << std::endl;
@@ -69,7 +54,6 @@ int main() {
         rot += 0.1f * 0.017453293f;
         float x = 5.0f * cosf(rot);
         float z = 5.0f * sinf(rot);
-        my_sound->move(cAudio::cVector3(x, 0.0f, z));
 
         level.update();
 
@@ -82,9 +66,6 @@ int main() {
         // Update the window
         window.display();
     }
-
-
-    cAudio::destroyAudioManager(audio_mgr);
 
     return EXIT_SUCCESS;
 }
