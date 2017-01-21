@@ -3,6 +3,7 @@
 #include "json.hpp"
 #include <fstream>
 #include "util.hpp"
+#include <math.h>
 
 using namespace nlohmann;
 
@@ -12,6 +13,9 @@ Level::Level() {
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
     this->player_speed = 1;
+
+    this->step_delay = 0.5f;
+    this->step_timer = 0;
 
     std::cout << "Loading map texture" << std::endl;
     if (!this->sound_map.loadFromFile(DEFAULT_MAP)) {
@@ -23,10 +27,14 @@ Level::Level() {
 
     std::cout << "Loading audio" << std::endl;
     load_json_data();
+
     play_audio_sources();
+
+    ground = new Ground(this->audio_manager);
 }
 
 Level::~Level() {
+    delete ground;
     cAudio::destroyAudioManager(this->audio_manager);
 }
 
@@ -44,10 +52,11 @@ void Level::play_audio_sources() {
     }
 }
 
-void Level::update() {
+void Level::update(float dt) {
     handle_input();
     handle_collisions();
     update_player_position();
+    handle_steps(dt);
 }
 
 void Level::handle_input() {
@@ -65,6 +74,21 @@ void Level::handle_input() {
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         this->player_velocity += RIGHT;
+    }
+}
+
+Mat::Material Level::ground_under_player() {
+    return Mat::WOOD;
+}
+
+void Level::handle_steps(float dt) {
+    if (this->step_timer <= 0) {
+        this->step_timer += this->step_delay;
+        ground->play_random_step(ground_under_player());
+    }
+
+    if (this->player_velocity != STILL) {
+        this->step_timer -= dt;
     }
 }
 
@@ -111,15 +135,19 @@ void Level::load_json_data() {
     int c = 0;
 
     // get the goal data from the json file
-    auto goal_position = json_data["goal"];
+    auto goal_position = sf::Vector2<float>(json_data["goal"][0], json_data["goal"][1]);
+
     if (!goal_texture.loadFromFile(GOAL_SPRITE)) {
       std::cerr << "\"" << GOAL_SPRITE << "\" doesn't exist!" << std::endl;
     }
     this->goal_texture.loadFromFile(GOAL_SPRITE);
     this->goal_sprite = sf::Sprite(this->goal_texture);
-    std::cout << "goal_position: " << goal_position << std::endl;
-    goal_sprite.setPosition(goal_position[0], goal_position[1]);
+    goal_sprite.setPosition(goal_position.x/2, goal_position.y/2);
 
+    auto player_positions = json_data["start_positions"];
+    auto selected_position = player_positions[rand() % player_positions.size()];
+    this->player_pos = sf::Vector2<float>(selected_position[0], selected_position[1]);
+    std::cout << selected_position << std::endl;
 
     // load the audio sources sources
     auto audio_data = json_data["audio"];

@@ -1,6 +1,8 @@
 #ifndef LEVEL_H
 #define LEVEL
 
+#include "ground.hpp"
+
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
@@ -14,6 +16,7 @@ const sf::Vector2<float> DOWN   = sf::Vector2<float>(0, 1.0);
 const sf::Vector2<float> RIGHT  = sf::Vector2<float>(1.0, 0);
 const sf::Vector2<float> LEFT   = sf::Vector2<float>(-1.0, 0);
 const sf::Vector2<float> STILL  = sf::Vector2<float>(0, 0);
+const int GOAL_RADIUS = 50;
 
 const std::string DEFAULT_MAP = "../maps/map-default.png";
 const std::string DEFAULT_AUDIO_MAP = "../data/test_audio.json";
@@ -45,7 +48,7 @@ public:
     sf::Vector2<float> get_player_pos() const;
     sf::Vector2<float> get_player_velocity() const;
 
-    void update();
+    void update(float dt);
 
     void draw(sf::RenderTarget* target);
 
@@ -59,6 +62,11 @@ private:
     sf::Vector2<float> player_velocity;
 
     float player_speed;
+
+    float step_delay;
+    float step_timer;
+
+    Ground* ground;
 
     sf::Image sound_map;
     sf::Texture level_texture;
@@ -88,6 +96,14 @@ private:
      * Adds the player velocity scaled by the speed
      */
     void update_player_position();
+
+    Mat::Material ground_under_player();
+
+    /*
+     * Decreases step_timer and plays a random step sound
+     * when it reaches zero
+     */
+    void handle_steps(float dt);
 
     void load_json_data();
 

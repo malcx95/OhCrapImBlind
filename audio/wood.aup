@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="no" ?>
 <!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
-<project xmlns="http://audacity.sourceforge.net/xml/" projname="wood_data" version="1.3.0" audacityversion="2.1.2" sel0="0.0000000000" sel1="0.1743990930" vpos="0" h="0.0000000000" zoom="120.4003013021" rate="44100.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="wood_data" version="1.3.0" audacityversion="2.1.2" sel0="0.0000000000" sel1="0.4443510475" vpos="288" h="0.0000000000" zoom="240.8006026042" rate="44100.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
 	<tags/>
 	<wavetrack name="wood" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
 		<waveclip offset="0.00000000">
@@ -17,9 +17,9 @@
 	</wavetrack>
 	<wavetrack name="wood" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
 		<waveclip offset="0.00000000">
-			<sequence maxsamples="262144" sampleformat="262159" numsamples="9889">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="7325">
 				<waveblock start="0">
-					<simpleblockfile filename="e00004e7.au" len="9889" min="-0.271057" max="0.183563" rms="0.006891"/>
+					<simpleblockfile filename="e00005bf.au" len="7325" min="-0.271057" max="0.183563" rms="0.006891"/>
 				</waveblock>
 			</sequence>
 			<envelope numpoints="0"/>
@@ -27,15 +27,15 @@
 	</wavetrack>
 	<wavetrack name="wood" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
 		<waveclip offset="0.00000000">
-			<sequence maxsamples="262144" sampleformat="262159" numsamples="11354">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="8424">
 				<waveblock start="0">
-					<simpleblockfile filename="e0000b20.au" len="11354" min="-0.325989" max="0.246643" rms="0.009065"/>
+					<simpleblockfile filename="e00002b5.au" len="8424" min="-0.325989" max="0.246643" rms="0.009063"/>
 				</waveblock>
 			</sequence>
 			<envelope numpoints="0"/>
 		</waveclip>
 	</wavetrack>
-	<wavetrack name="wood" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="44100" gain="1.0" pan="0.0">
+	<wavetrack name="wood" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
 		<waveclip offset="0.00000000">
 			<sequence maxsamples="262144" sampleformat="262159" numsamples="7691">
 				<waveblock start="0">
@@ -47,9 +47,9 @@
 	</wavetrack>
 	<wavetrack name="wood" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
 		<waveclip offset="0.00000000">
-			<sequence maxsamples="262144" sampleformat="262159" numsamples="11721">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="8424">
 				<waveblock start="0">
-					<simpleblockfile filename="e000008c.au" len="11721" min="-0.298401" max="0.172577" rms="0.007742"/>
+					<simpleblockfile filename="e000000d.au" len="8424" min="-0.298401" max="0.172577" rms="0.007741"/>
 				</waveblock>
 			</sequence>
 			<envelope numpoints="0"/>
@@ -57,19 +57,19 @@
 	</wavetrack>
 	<wavetrack name="wood" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
 		<waveclip offset="0.00000000">
-			<sequence maxsamples="262144" sampleformat="262159" numsamples="9523">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="7875">
 				<waveblock start="0">
-					<simpleblockfile filename="e0000d0c.au" len="9523" min="-0.405579" max="0.256592" rms="0.009899"/>
+					<simpleblockfile filename="e000036b.au" len="7875" min="-0.405579" max="0.256592" rms="0.009897"/>
 				</waveblock>
 			</sequence>
 			<envelope numpoints="0"/>
 		</waveclip>
 	</wavetrack>
-	<wavetrack name="wood" channel="2" linked="0" mute="0" solo="1" height="150" minimized="0" isSelected="0" rate="44100" gain="1.0" pan="0.0">
+	<wavetrack name="wood" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="44100" gain="1.0" pan="0.0">
 		<waveclip offset="0.00000000">
-			<sequence maxsamples="262144" sampleformat="262159" numsamples="9890">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="7692">
 				<waveblock start="0">
-					<simpleblockfile filename="e0000746.au" len="9890" min="-0.270935" max="0.183289" rms="0.007462"/>
+					<simpleblockfile filename="e0000a5a.au" len="7692" min="-0.270935" max="0.183289" rms="0.007461"/>
 				</waveblock>
 			</sequence>
 			<envelope numpoints="0"/>
