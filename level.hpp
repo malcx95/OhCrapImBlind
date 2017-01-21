@@ -48,6 +48,7 @@ public:
     void update();
 
     void draw(sf::RenderTarget* target);
+
 private:
 
     bool in_dev_mode;
