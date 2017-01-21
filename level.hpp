@@ -23,8 +23,8 @@ const sf::Color GRAVEL = sf::Color(0x4b, 0x4b, 0x4b, 255);
 const sf::Color GRASS = sf::Color(0x00, 0xff, 0x00, 255);
 const sf::Color PUDDLE = sf::Color(0x00, 0x00, 0xff, 255);
 
-const int WIDTH = 800;
-const int HEIGHT = 600;
+const int WIDTH = 1000;
+const int HEIGHT = 1000;
 
 struct AudioSource {
 
