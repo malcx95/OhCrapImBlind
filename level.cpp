@@ -146,8 +146,6 @@ void Level::update_player_position(float dt) {
     this->listener->setPosition(util::sf_to_caudio_vect(this->player_pos));
     //sf::Vector2<float> v = this->player_velocity * this->player_speed;
     this->listener->setVelocity(util::sf_to_caudio_vect(v));
-
-    //std::cout << "X: " << player_pos.x << " Y: " << player_pos.y << std::endl;
 }
 
 void Level::load_json_data() {

@@ -9,8 +9,8 @@
         "path": "../maps/map-default.png"},
         
         {"audio": [
-            [[500, 10], "../audio/water_dripping/water_dripping1.ogg", 10.0],
-            [[550, 10], "../audio/water_dripping/water_dripping2.ogg", 10.0]
+            [[500, 10], "../audio/water_dripping/water_dripping1.ogg", 20.0],
+            [[550, 410], "../audio/water_dripping/water_dripping2.ogg", 20.0]
         ],
         "goal": [30,200],
         "start_positions":[[300,150], [100, 50], [20, 10]],
