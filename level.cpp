@@ -31,6 +31,8 @@ Level::Level() {
     play_audio_sources();
 
     ground = new Ground(this->audio_manager);
+
+    this->load_collision_audio();
 }
 
 Level::~Level() {
@@ -63,7 +65,6 @@ void Level::update(float dt) {
 }
 
 void Level::handle_input() {
-
     this->player_velocity = STILL;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
@@ -107,7 +108,8 @@ void Level::handle_collisions() {
         if (next_color == sf::Color::Black) {
             player_velocity.x = 0.f;
             player_velocity.y = 0.f;
-            std::cout << "That there's a wall mate!" << std::endl;
+            //std::cout << "That there's a wall mate!" << std::endl;
+            this->play_collision_sound();
         }
     } else {
         player_velocity.x = 0.f;
@@ -181,6 +183,12 @@ void Level::load_json_data() {
     }
 }
 
+void Level::load_collision_audio(){
+    this->wall_collision_sources.push_back(this->audio_manager->create(
+                    "why do you need a name", "../audio/wood.ogg", false
+                ));
+}
+
 void Level::draw(sf::RenderTarget* target)
 {
     target->draw(level_sprite);
@@ -229,3 +237,10 @@ void Level::debug_draw_audio_sources(sf::RenderTarget* target) {
     }
 }
 
+void Level::play_collision_sound() {
+    auto selected_sound = rand() % this->wall_collision_sources.size();
+
+    this->wall_collision_sources[selected_sound]->play2d(false);
+
+    std::cout << "Wall collision" << std::endl;
+}

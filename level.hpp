@@ -58,6 +58,7 @@ private:
     bool in_dev_mode;
 
     std::vector<AudioSource> audio_sources;
+    std::vector<cAudio::IAudioSource*> wall_collision_sources;
 
     sf::Vector2<float> player_pos;
     sf::Vector2<float> player_velocity;
@@ -121,6 +122,10 @@ private:
     void debug_draw_player(sf::RenderTarget* target);
 
     void debug_draw_audio_sources(sf::RenderTarget* target);
+
+    void load_collision_audio();
+
+    void play_collision_sound();
 };
 
 #endif /* ifndef LEVEL_H */
