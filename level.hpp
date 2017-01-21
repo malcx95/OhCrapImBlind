@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <cAudio/cAudio.h>
+#include "car.hpp"
 
 const float DEFAULT_PLAYER_X = 0.0;
 const float DEFAULT_PLAYER_Y = 0.0;
@@ -33,6 +34,9 @@ const sf::Color PUDDLE = sf::Color(0x00, 0x00, 0xff, 255);
 
 const int WIDTH = 1000;
 const int HEIGHT = 1000;
+
+// lower number = more cars
+const int CAR_SPAWN_RATE = 100;
 
 struct AudioSource {
 
@@ -85,6 +89,10 @@ private:
 
     cAudio::IAudioSource* car_engine;
     cAudio::IAudioSource* car_honk;
+
+    Car* current_car;
+
+    void maybe_spawn_car();
 
     void play_audio_sources();
 

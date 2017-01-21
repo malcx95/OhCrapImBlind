@@ -4,6 +4,7 @@
 #include <fstream>
 #include "util.hpp"
 #include <math.h>
+#include <cstdlib>
 
 using namespace nlohmann;
 
@@ -38,6 +39,7 @@ Level::Level() {
             CAR_ENGINE.data(), false);
     this->car_honk = this->audio_manager->create(CAR_HONK.data(), 
             CAR_HONK.data(), false);
+    this->current_car = nullptr;
 }
 
 Level::~Level() {
@@ -65,7 +67,18 @@ void Level::update(float dt) {
     update_player_position();
     handle_steps(dt);
     if (has_reached_goal()) {
-      std::cout << "Reached Goal" << std::endl;
+        std::cout << "Reached Goal" << std::endl;
+    }
+}
+
+void Level::maybe_spawn_car() {
+    if (this->current_car != nullptr) {
+        int r = rand() % CAR_SPAWN_RATE;
+
+        if (r == 0) {
+            // spawn car
+            //this->current_car = 
+        }
     }
 }
 
