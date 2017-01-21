@@ -3,7 +3,6 @@
 #include "json.hpp"
 #include <fstream>
 #include "util.hpp"
-#include <math.h>
 
 using namespace nlohmann;
 
@@ -13,28 +12,15 @@ Level::Level() {
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
     this->player_speed = 1;
-
-    this->step_delay = 0.5f;
-    this->step_timer = 0;
-
-    std::cout << "Loading map texture" << std::endl;
-    if (!this->sound_map.loadFromFile(DEFAULT_MAP)) {
-        std::cerr << "\"" << DEFAULT_MAP << "\" doesn't exist!" << std::endl;
-    }
-
-    this->level_texture.loadFromImage(this->sound_map);
-    this->level_sprite = sf::Sprite(this->level_texture);
+    
+    map_path = DEFAULT_MAP;
 
     std::cout << "Loading audio" << std::endl;
     load_json_data();
-
     play_audio_sources();
-
-    ground = new Ground(this->audio_manager);
 }
 
 Level::~Level() {
-    delete ground;
     cAudio::destroyAudioManager(this->audio_manager);
 }
 
@@ -48,19 +34,19 @@ sf::Vector2<float> Level::get_player_velocity() const {
 
 void Level::play_audio_sources() {
     for (AudioSource s : this->audio_sources) {
-        s.audio->play3d(util::sf_to_caudio_vect(s.pos), 10.0, true);
+        s.audio->play3d(util::sf_to_caudio_vect(s.pos), s.attenuation, true);
     }
 }
 
-void Level::update(float dt) {
+void Level::update() {
     handle_input();
     handle_collisions();
     update_player_position();
-    handle_steps(dt);
 }
 
 void Level::handle_input() {
 
+    bool change_lvl = false;
     this->player_velocity = STILL;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
@@ -75,25 +61,21 @@ void Level::handle_input() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         this->player_velocity += RIGHT;
     }
-}
-
-Mat::Material Level::ground_under_player() {
-    return Mat::WOOD;
-}
-
-void Level::handle_steps(float dt) {
-    if (this->step_timer <= 0) {
-        this->step_timer += this->step_delay;
-        ground->play_random_step(ground_under_player());
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::N)) {
+        change_lvl = true;
     }
-
-    if (this->player_velocity != STILL) {
-        this->step_timer -= dt;
+    else {
+        changed_level = false;
+        change_lvl = false;
+    }
+    
+    if (change_lvl && !changed_level) {
+      change();
+      changed_level = true;
     }
 }
 
 void Level::handle_collisions() {
-    // TODO implement
     sf::Vector2<float> next_pos = player_pos + player_velocity * player_speed;
     if ( next_pos.x <= WIDTH && next_pos.x >= 0 && next_pos.y <= HEIGHT && next_pos.y >= 0 ) {
         sf::Color next_color = sound_map.getPixel(next_pos.x, next_pos.y);
@@ -128,29 +110,52 @@ void Level::load_json_data() {
     file >> json_data;
     file.close();
 
+    std::cout << "level number: "<< level_num << std::endl;
+    //get map path from json file
+    map_path = json_data["map_list"][level_num]["path"];
+    
+    std::cout << "Loading map texture" << std::endl;
+    if (!this->sound_map.loadFromFile(map_path)) {
+        std::cerr << "\"" << map_path << "\" doesn't exist!" << std::endl;
+    }
+    
+    this->level_texture.loadFromImage(this->sound_map);
+    this->level_sprite = sf::Sprite(this->level_texture);
+    
+    
+    //get player start position from json file
+    auto start_pos = json_data["map_list"][level_num]["start_position"];
+    player_pos.x = start_pos[0];
+    player_pos.y = start_pos[1];
+    std::cout << "start_position: " << player_pos.x <<  " " << player_pos.y << std::endl;
+        
+    
+    // get the goal data from the json file
+    auto goal_position = json_data["map_list"][level_num]["goal"];
+    
+    if (!goal_texture.loadFromFile(GOAL_SPRITE)) {
+      std::cerr << "\"" << GOAL_SPRITE << "\" doesn't exist!" << std::endl;
+    }
+    
+    this->goal_texture.loadFromFile(GOAL_SPRITE);
+    this->goal_sprite = sf::Sprite(this->goal_texture);
+    std::cout << "goal_position: " << goal_position << std::endl;
+    goal_sprite.setPosition(goal_position[0], goal_position[1]);
+    
+    
+    
+    //init audio manager
     std::cout << "Initializing audio manager" << std::endl;
     this->audio_manager = cAudio::createAudioManager(true);
     this->listener = this->audio_manager->getListener();
 
     int c = 0;
+    
 
-    // get the goal data from the json file
-    auto goal_position = sf::Vector2<float>(json_data["goal"][0], json_data["goal"][1]);
-
-    if (!goal_texture.loadFromFile(GOAL_SPRITE)) {
-      std::cerr << "\"" << GOAL_SPRITE << "\" doesn't exist!" << std::endl;
-    }
-    this->goal_texture.loadFromFile(GOAL_SPRITE);
-    this->goal_sprite = sf::Sprite(this->goal_texture);
-    goal_sprite.setPosition(goal_position.x/2, goal_position.y/2);
-
-    auto player_positions = json_data["start_positions"];
-    auto selected_position = player_positions[rand() % player_positions.size()];
-    this->player_pos = sf::Vector2<float>(selected_position[0], selected_position[1]);
-    std::cout << selected_position << std::endl;
+    audio_sources.clear();
 
     // load the audio sources sources
-    auto audio_data = json_data["audio"];
+    auto audio_data = json_data["map_list"][level_num]["audio"];
     for (auto source : audio_data) {
         auto position = source[0];
         std::string file_name = source[1];
@@ -167,7 +172,7 @@ void Level::load_json_data() {
 
         AudioSource as = {
             sf::Vector2<float>(position[0], position[1]),
-            sound
+            sound, source[2]
         };
         audio_sources.push_back(as);
     }
@@ -219,5 +224,11 @@ void Level::debug_draw_audio_sources(sf::RenderTarget* target) {
         target->draw(hline, 2, sf::Lines);
         target->draw(vline, 2, sf::Lines);
     }
+}
+
+void Level::change() {
+    std::cout << " CHANGING LEVEL \n\n\n";
+    level_num ++;
+    load_json_data();//WOW SUCH FUNCTION
 }
 

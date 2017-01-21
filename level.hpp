@@ -1,8 +1,6 @@
 #ifndef LEVEL_H
 #define LEVEL
 
-#include "ground.hpp"
-
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
@@ -16,7 +14,6 @@ const sf::Vector2<float> DOWN   = sf::Vector2<float>(0, 1.0);
 const sf::Vector2<float> RIGHT  = sf::Vector2<float>(1.0, 0);
 const sf::Vector2<float> LEFT   = sf::Vector2<float>(-1.0, 0);
 const sf::Vector2<float> STILL  = sf::Vector2<float>(0, 0);
-const int GOAL_RADIUS = 50;
 
 const std::string DEFAULT_MAP = "../maps/map-default.png";
 const std::string DEFAULT_AUDIO_MAP = "../data/test_audio.json";
@@ -31,11 +28,9 @@ const int WIDTH = 1000;
 const int HEIGHT = 1000;
 
 struct AudioSource {
-
     sf::Vector2<float> pos;
-
     cAudio::IAudioSource* audio;
-
+    float attenuation;
 };
 
 class Level {
@@ -48,25 +43,23 @@ public:
     sf::Vector2<float> get_player_pos() const;
     sf::Vector2<float> get_player_velocity() const;
 
-    void update(float dt);
+    void update();
 
     void draw(sf::RenderTarget* target);
-
+    
+    void change();
+    
+    
 private:
 
     bool in_dev_mode;
 
     std::vector<AudioSource> audio_sources;
-
+    
     sf::Vector2<float> player_pos;
     sf::Vector2<float> player_velocity;
 
     float player_speed;
-
-    float step_delay;
-    float step_timer;
-
-    Ground* ground;
 
     sf::Image sound_map;
     sf::Texture level_texture;
@@ -76,6 +69,12 @@ private:
 
     cAudio::IAudioManager* audio_manager;
     cAudio::IListener* listener;
+    
+    int level_num {0};
+    std::string map_path;
+    bool changed_level {false};
+    
+    
 
     void play_audio_sources();
 
@@ -97,14 +96,7 @@ private:
      */
     void update_player_position();
 
-    Mat::Material ground_under_player();
-
-    /*
-     * Decreases step_timer and plays a random step sound
-     * when it reaches zero
-     */
-    void handle_steps(float dt);
-
+    
     void load_json_data();
 
     /*
@@ -113,6 +105,7 @@ private:
     void debug_draw_player(sf::RenderTarget* target);
 
     void debug_draw_audio_sources(sf::RenderTarget* target);
+    
 };
 
 #endif /* ifndef LEVEL_H */
