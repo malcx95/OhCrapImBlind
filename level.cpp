@@ -13,7 +13,7 @@ Level::Level() {
 
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
-    this->player_speed = 30;
+    this->player_speed = 50;
 
     std::cout << "Loading map texture" << std::endl;
     if (!this->sound_map.loadFromFile(DEFAULT_MAP)) {
@@ -172,7 +172,6 @@ void Level::load_json_data() {
     //reset player fields
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
-    this->player_speed = 1;
         
     //get player start position from json file
     auto start_pos = json_data["map_list"][level_num]["start_positions"][0];
