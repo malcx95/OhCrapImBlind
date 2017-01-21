@@ -23,6 +23,7 @@ Level::Level() {
 
     std::cout << "Loading audio" << std::endl;
     load_json_data();
+    play_audio_sources();
 }
 
 Level::~Level() {
@@ -35,6 +36,12 @@ sf::Vector2<float> Level::get_player_pos() const {
 
 sf::Vector2<float> Level::get_player_velocity() const {
     return player_velocity;
+}
+
+void Level::play_audio_sources() {
+    for (AudioSource s : this->audio_sources) {
+        s.audio->play3d(util::sf_to_caudio_vect(s.pos), 10.0, true);
+    }
 }
 
 void Level::update() {
@@ -81,8 +88,11 @@ void Level::handle_collisions() {
 
 void Level::update_player_position() {
     this->player_pos += this->player_velocity * this->player_speed;
+
+    // update the audio listener
     this->listener->setPosition(util::sf_to_caudio_vect(this->player_pos));
-    this->listener->setVelocity(util::sf_to_caudio_vect(this->player_pos));
+    sf::Vector2<float> v = this->player_velocity * this->player_speed;
+    this->listener->setVelocity(util::sf_to_caudio_vect(v));
 
     //std::cout << "X: " << player_pos.x << " Y: " << player_pos.y << std::endl;
 }
@@ -147,6 +157,7 @@ void Level::draw(sf::RenderTarget* target)
 
     if (this->in_dev_mode) {
         debug_draw_player(target);
+        debug_draw_audio_sources(target);
     }
 }
 
@@ -167,3 +178,23 @@ void Level::debug_draw_player(sf::RenderTarget* target) {
     target->draw(hline, 2, sf::Lines);
     target->draw(vline, 2, sf::Lines);
 }
+
+void Level::debug_draw_audio_sources(sf::RenderTarget* target) {
+    for (AudioSource s : this->audio_sources) {
+        float x = s.pos.x;
+        float y = s.pos.y;
+        sf::Vertex hline[] = {
+            sf::Vertex(sf::Vector2f(x - 5, y), sf::Color::Green),
+            sf::Vertex(sf::Vector2f(x + 5, y), sf::Color::Green)
+        };
+
+        sf::Vertex vline[] = {
+            sf::Vertex(sf::Vector2f(x, y - 5), sf::Color::Green),
+            sf::Vertex(sf::Vector2f(x, y + 5), sf::Color::Green)
+        };
+
+        target->draw(hline, 2, sf::Lines);
+        target->draw(vline, 2, sf::Lines);
+    }
+}
+

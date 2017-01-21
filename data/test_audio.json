@@ -1,6 +1,6 @@
 {
     "audio": [
-        [[10, 10], "../audio/water/water1.ogg"],
+        [[10, 10], "../audio/gravel/gravel1.ogg"],
         [[60, 10], "../audio/water/water2.ogg"]
     ],
     "goal": [15,100],
