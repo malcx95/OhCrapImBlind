@@ -79,6 +79,11 @@ void Level::update(float dt) {
         std::cout << "Reached Goal" << std::endl;
         change();
     }
+
+    for (auto& source : this->audio_sources)
+    {
+        source.update(dt);
+    }
 }
 
 void Level::maybe_spawn_car() {
@@ -232,22 +237,31 @@ void Level::load_json_data() {
 
         sf::Vector2<float> position(position_list[0], position_list[1]);
         auto sprite_paths = source[3];
-        std::vector<std::pair<sf::Texture, sf::Sprite>> sprites;
+        std::vector<sf::Sprite> sprites;
+        std::vector<sf::Texture*> textures;
         for (auto path : sprite_paths)
         {
-            sf::Texture texture;
-            texture.loadFromFile(path);
-            sf::Sprite sprite(texture);
+            sf::Texture* texture = new sf::Texture();
+            if (!texture->loadFromFile(path))
+            {
+                std::cout << "Failed to load texture\"" << path << "\"" << std::endl;
+            }
+            sf::Sprite sprite;
             sprite.setPosition(position);
 
-            sprites.push_back(std::pair<sf::Texture, sf::Sprite>(texture, sprite));
+            sprite.setTexture(*texture);
+            sprites.push_back(sprite);
+            textures.push_back(texture);
         }
 
         AudioSource as = {
             position,
             sound,
             source[2],
-            sprites
+            textures,
+            sprites,
+            0,
+            0.0
         };
         audio_sources.push_back(as);
     }
@@ -280,7 +294,13 @@ void Level::draw(sf::RenderTarget* target)
         debug_draw_player(target);
         debug_draw_audio_sources(target);
     }
+
+    for (auto source : this->audio_sources)
+    {
+        source.draw(target);
+    }
 }
+
 
 void Level::debug_draw_player(sf::RenderTarget* target) {
     float player_x = this->player_pos.x;
@@ -378,4 +398,21 @@ void Level::play_collision_sound() {
 
     std::cout << "Wall collision" << std::endl;
 
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//              Audio source methods
+////////////////////////////////////////////////////////////////////////////////
+void  AudioSource::draw(sf::RenderTarget* target)
+{
+    target->draw(sprites[current_sprite]);
+}
+void AudioSource::update(float dt)
+{
+    last_switch += dt;
+    if(last_switch > AUDIO_SOURCE_ANIMATION_SPEED)
+    {
+        current_sprite = (current_sprite + 1) % sprites.size();
+        last_switch = 0;
+    }
 }
