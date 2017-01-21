@@ -7,7 +7,7 @@
 const float CAR_WIDTH = 10;
 
 const float HONK_STRENGTH = 100.0;
-const float ENGINE_NOISE_STRENGTH = 10.0;
+const float ENGINE_NOISE_STRENGTH = 50.0;
 
 class Car {
 
@@ -25,7 +25,7 @@ public:
     /*
      * Moves the car one step in the direction of it's velocity.
      */
-    void update_position();
+    void update_position(float dt);
 
     /*
      * Starts the engine noise
@@ -47,6 +47,8 @@ public:
      * pos with width width.
      */
     bool collides_with(sf::Vector2<float> pos, float width) const;
+
+    bool out_of_bounds(int width, int height) const;
 
 private:
 
