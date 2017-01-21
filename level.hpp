@@ -14,6 +14,7 @@ const sf::Vector2<float> DOWN   = sf::Vector2<float>(0, 1.0);
 const sf::Vector2<float> RIGHT  = sf::Vector2<float>(1.0, 0);
 const sf::Vector2<float> LEFT   = sf::Vector2<float>(-1.0, 0);
 const sf::Vector2<float> STILL  = sf::Vector2<float>(0, 0);
+const int GOAL_RADIUS = 50;
 
 const std::string DEFAULT_MAP = "../maps/map-default.png";
 const std::string DEFAULT_AUDIO_MAP = "../data/test_audio.json";

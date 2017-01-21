@@ -3,6 +3,7 @@
 #include "json.hpp"
 #include <fstream>
 #include "util.hpp"
+#include <math.h>
 
 using namespace nlohmann;
 
@@ -111,15 +112,14 @@ void Level::load_json_data() {
     int c = 0;
 
     // get the goal data from the json file
-    auto goal_position = json_data["goal"];
+    auto goal_position = sf::Vector2<float>(json_data["goal"][0], json_data["goal"][1]);
+
     if (!goal_texture.loadFromFile(GOAL_SPRITE)) {
       std::cerr << "\"" << GOAL_SPRITE << "\" doesn't exist!" << std::endl;
     }
     this->goal_texture.loadFromFile(GOAL_SPRITE);
     this->goal_sprite = sf::Sprite(this->goal_texture);
-    std::cout << "goal_position: " << goal_position << std::endl;
-    goal_sprite.setPosition(goal_position[0], goal_position[1]);
-
+    goal_sprite.setPosition(goal_position.x/2, goal_position.y/2);
 
     // load the audio sources sources
     auto audio_data = json_data["audio"];
