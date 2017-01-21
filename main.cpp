@@ -33,7 +33,6 @@ int main() {
     std::cout << "Loading level" << std::endl;
     Level level;
 
-
     float rot = 0.0f;
 
     cAudio::IAudioManager* audio_mgr = cAudio::createAudioManager(true);
@@ -42,19 +41,14 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    cAudio::IAudioSource* my_sound = audio_mgr->create("water", "audio/wood/wood1.ogg", true);
-    if (!my_sound) {
-        std::cerr << "ERROR: Could not load water.ogg" << std::endl;
-        exit(EXIT_FAILURE);
-    }
 
     cAudio::IListener* listener = audio_mgr->getListener();
     listener->setPosition(cAudio::cVector3(0, 0, 0));
 
-    my_sound->play3d(cAudio::cVector3(0, 0, 0), 2.0f, true);
-    my_sound->setVolume(1.0f);
-    my_sound->setMinDistance(1.0f);
-    my_sound->setMaxAttenuationDistance(100.0f);
+    // my_sound->play3d(cAudio::cVector3(0, 0, 0), 2.0f, true);
+    // my_sound->setVolume(1.0f);
+    // my_sound->setMinDistance(1.0f);
+    // my_sound->setMaxAttenuationDistance(100.0f);
 
     // Start the game loop
 

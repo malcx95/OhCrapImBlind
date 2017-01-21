@@ -38,7 +38,7 @@ class Level {
 
 public:
 
-    Level();
+    Level(cAudio::IAudioManager* audio_manager, cAudio::IListener* listener);
     ~Level();
 
     sf::Vector2<float> get_player_pos() const;
@@ -63,6 +63,7 @@ private:
     sf::Sprite level_sprite;
 
     cAudio::IAudioManager* audio_manager;
+    cAudio::IListener* listener;
 
     /*
      * Reads keyboard input and updates the
