@@ -2,11 +2,11 @@
 #define LEVEL_H
 
 #include "ground.hpp"
-
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
 #include <cAudio/cAudio.h>
+#include "car.hpp"
 
 const float DEFAULT_PLAYER_X = 0.0;
 const float DEFAULT_PLAYER_Y = 0.0;
@@ -18,6 +18,9 @@ const sf::Vector2<float> LEFT   = sf::Vector2<float>(-1.0, 0);
 const sf::Vector2<float> STILL  = sf::Vector2<float>(0, 0);
 
 const int GOAL_RADIUS           = 50;
+
+const std::string CAR_ENGINE = "";
+const std::string CAR_HONK = "";
 
 const std::string DEFAULT_MAP = "../maps/map-default.png";
 const std::string DEFAULT_AUDIO_MAP = "../data/test_audio.json";
@@ -31,12 +34,13 @@ const sf::Color PUDDLE = sf::Color(0x00, 0x00, 0xff, 255);
 const int WIDTH = 1000;
 const int HEIGHT = 1000;
 
+// lower number = more cars
+const int CAR_SPAWN_RATE = 100;
+
 struct AudioSource {
-
     sf::Vector2<float> pos;
-
     cAudio::IAudioSource* audio;
-
+    float attenuation;
 };
 
 class Level {
@@ -52,20 +56,25 @@ public:
     void update(float dt);
 
     void draw(sf::RenderTarget* target);
-
+    
+    void change();
+    
+    
 private:
 
     bool in_dev_mode;
 
     std::vector<AudioSource> audio_sources;
+
     std::vector<cAudio::IAudioSource*> wall_collision_sources;
+
 
     sf::Vector2<float> player_pos;
     sf::Vector2<float> player_velocity;
     sf::Vector2<float> goal_position;
 
     float player_speed;
-
+    
     float step_delay;
     float step_timer;
 
@@ -79,6 +88,19 @@ private:
 
     cAudio::IAudioManager* audio_manager;
     cAudio::IListener* listener;
+    
+    int level_num {0};
+    std::string map_path;
+    bool changed_level {false};
+    
+    
+
+    cAudio::IAudioSource* car_engine;
+    cAudio::IAudioSource* car_honk;
+
+    Car* current_car;
+
+    void maybe_spawn_car();
 
     void play_audio_sources();
 
@@ -106,14 +128,7 @@ private:
      */
     void update_player_position(float dt);
 
-    Mat::Material ground_under_player();
-
-    /*
-     * Decreases step_timer and plays a random step sound
-     * when it reaches zero
-     */
-    void handle_steps(float dt);
-
+    
     void load_json_data();
 
     /*
@@ -122,10 +137,21 @@ private:
     void debug_draw_player(sf::RenderTarget* target);
 
     void debug_draw_audio_sources(sf::RenderTarget* target);
+    
+    
+    Mat::Material ground_under_player();
+
+    /*
+     * Decreases step_timer and plays a random step sound
+     * when it reaches zero
+     */
+    void handle_steps(float dt);
+    
 
     void load_collision_audio();
 
     void play_collision_sound();
+
 };
 
 #endif /* ifndef LEVEL_H */
