@@ -1,6 +1,7 @@
 #ifndef LEVEL_H
-#define LEVEL
+#define LEVEL_H
 
+#include "ground.hpp"
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
@@ -46,7 +47,7 @@ public:
     sf::Vector2<float> get_player_pos() const;
     sf::Vector2<float> get_player_velocity() const;
 
-    void update();
+    void update(float dt);
 
     void draw(sf::RenderTarget* target);
     
@@ -58,12 +59,20 @@ private:
     bool in_dev_mode;
 
     std::vector<AudioSource> audio_sources;
-    
+
+    std::vector<cAudio::IAudioSource*> wall_collision_sources;
+
+
     sf::Vector2<float> player_pos;
     sf::Vector2<float> player_velocity;
     sf::Vector2<float> goal_position;
 
     float player_speed;
+    
+    float step_delay;
+    float step_timer;
+
+    Ground* ground;
 
     sf::Image sound_map;
     sf::Texture level_texture;
@@ -125,7 +134,11 @@ private:
      */
     void handle_steps(float dt);
     
-    
+
+    void load_collision_audio();
+
+    void play_collision_sound();
+
 };
 
 #endif /* ifndef LEVEL_H */

@@ -3,6 +3,7 @@
 #include "json.hpp"
 #include <fstream>
 #include "util.hpp"
+#include <math.h>
 
 using namespace nlohmann;
 
@@ -18,6 +19,14 @@ Level::Level() {
     std::cout << "Loading audio" << std::endl;
     load_json_data();
     play_audio_sources();
+
+    ground = new Ground(this->audio_manager);
+
+    this->load_collision_audio();
+    
+    this->step_delay = 0.5f;
+    this->step_timer = 0;
+
 }
 
 Level::~Level() {
@@ -33,12 +42,13 @@ sf::Vector2<float> Level::get_player_velocity() const {
 }
 
 void Level::play_audio_sources() {
+  std::cout << "trying to play audio sources\n";
     for (AudioSource s : this->audio_sources) {
         s.audio->play3d(util::sf_to_caudio_vect(s.pos), s.attenuation, true);
     }
 }
 
-void Level::update() {
+void Level::update(float dt) {
     handle_input();
     handle_collisions();
     update_player_position();
@@ -51,6 +61,7 @@ void Level::update() {
 void Level::handle_input() {
 
     bool change_lvl = false;
+
     this->player_velocity = STILL;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
@@ -91,6 +102,7 @@ void Level::handle_collisions() {
             player_velocity.x = 0.f;
             player_velocity.y = 0.f;
             std::cout << "That there's a wall mate!" << std::endl;
+            this->play_collision_sound();
         }
     } else {
         player_velocity.x = 0.f;
@@ -130,9 +142,13 @@ void Level::load_json_data() {
     this->level_texture.loadFromImage(this->sound_map);
     this->level_sprite = sf::Sprite(this->level_texture);
     
-    
+    //reset player fields
+    this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
+    this->player_velocity = sf::Vector2<float>(0, 0);
+    this->player_speed = 1;
+        
     //get player start position from json file
-    auto start_pos = json_data["map_list"][level_num]["start_position"];
+    auto start_pos = json_data["map_list"][level_num]["start_positions"][0];
     player_pos.x = start_pos[0];
     player_pos.y = start_pos[1];
     std::cout << "start_position: " << player_pos.x <<  " " << player_pos.y << std::endl;
@@ -188,6 +204,12 @@ void Level::load_json_data() {
     }
 }
 
+void Level::load_collision_audio(){
+    this->wall_collision_sources.push_back(this->audio_manager->create(
+                    "why do you need a name", "../audio/wood.ogg", false
+                ));
+}
+
 void Level::draw(sf::RenderTarget* target)
 {
     target->draw(level_sprite);
@@ -236,6 +258,7 @@ void Level::debug_draw_audio_sources(sf::RenderTarget* target) {
     }
 }
 
+
 void Level::change() {
     std::cout << " CHANGING LEVEL \n\n\n";
     level_num ++;
@@ -251,9 +274,19 @@ void Level::handle_steps(float dt) {
     if (this->step_timer <= 0) {
         this->step_timer += this->step_delay;
         ground->play_random_step(ground_under_player());
+        std::cout << "step dt =" << dt << std::endl;
     }
 
     if (this->player_velocity != STILL) {
         this->step_timer -= dt;
     }
+}
+
+void Level::play_collision_sound() {
+    auto selected_sound = rand() % this->wall_collision_sources.size();
+
+    this->wall_collision_sources[selected_sound]->play2d(false);
+
+    std::cout << "Wall collision" << std::endl;
+    
 }

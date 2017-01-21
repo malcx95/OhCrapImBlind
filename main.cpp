@@ -9,40 +9,21 @@
 
 #include "level.hpp"
 
-void init() {
-    srand(time(NULL));
-}
-
-int generate_random_index(int last_index, unsigned int length) {
-    // A negative last_index means that you don't want to skip any index
-    if (last_index > 0) {
-        int random_n = rand() % length;
-        if (random_n >= last_index) {
-            return random_n + 1;
-        } else {
-            return random_n;
-        }
-    }
-    return rand() % (length - 1);
-}
-
-int change_lvl;
 
 int main() {
+    srand(time(nullptr));
+
     // Create the main window
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "SFML window", sf::Style::Titlebar | sf::Style::Close);
 
     std::cout << "Loading level" << std::endl;
-
-    float rot = 0.0f;
-
     Level level;
-    // Start the game loop
 
+    sf::Clock deltaClock;
     std::cout << "Starting main loop" << std::endl;
-
     while (window.isOpen())
     {
+        sf::Time dt = deltaClock.restart();
         // Process events
         sf::Event event;
         while (window.pollEvent(event))
@@ -51,14 +32,7 @@ int main() {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-
-        // Move the audio source
-        rot += 0.1f * 0.017453293f;
-        float x = 5.0f * cosf(rot);
-        float z = 5.0f * sinf(rot);
-
-        level.update();
-
+        level.update(dt.asSeconds());
 
         // Clear screen
         window.clear();
