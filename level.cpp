@@ -79,14 +79,14 @@ void Level::load_swears_and_cars() {
                 SWEARS[i].data(),
                 SWEARS[i].data(), false);
 
-        cAudio::IAudioSource* car_engine = 
+        cAudio::IAudioSource* car_engine =
             this->audio_manager->create(CAR_ENGINE.data(),
                 CAR_ENGINE.data(), false);
 
         cAudio::IAudioSource* car_honk = this->audio_manager->create(
                 CAR_HONK.data(),
                 CAR_HONK.data(), false);
-        
+
         Car* c = new Car(car_engine, car_honk, swear);
         this->available_cars.push_back(c);
     }
@@ -164,7 +164,7 @@ void Level::maybe_spawn_car(float dt) {
                 }
             }
 
-            RoadOrientation orientation = 
+            RoadOrientation orientation =
                 this->roads[min_index].orientation;
             float road_pos = this->roads[min_index].pos;
             int dir = this->roads[min_index].dir;
@@ -188,7 +188,7 @@ void Level::maybe_spawn_car(float dt) {
                     pos = sf::Vector2<float>(road_pos, CAR_DOMAIN_HEIGHT);
                 } else {
                     vel = sf::Vector2<float>(0, 1);
-                    pos = sf::Vector2<float>(road_pos, 
+                    pos = sf::Vector2<float>(road_pos,
                             -(CAR_DOMAIN_HEIGHT / 2));
                 }
             }
@@ -284,7 +284,6 @@ void Level::handle_collisions(float dt) {
         if (next_color == sf::Color::Black) {
             player_velocity.x = 0.f;
             player_velocity.y = 0.f;
-            std::cout << "That there's a wall mate!" << std::endl;
             this->play_collision_sound();
         }
     } else {
@@ -392,7 +391,7 @@ void Level::load_json_data() {
 #endif
             }
         }
-        
+
         //load and place sprites
         sf::Vector2<float> position(position_list[0], position_list[1]);
         auto sprite_paths = source[3];
@@ -466,7 +465,7 @@ void Level::load_collision_audio() {
     this->wall_collision_sources.push_back(this->audio_manager->create(
                     "collision4", "../audio/walls/collision4.ogg", false
                 ));
-    
+
     this->wall_collision_voices.push_back(this->audio_manager->create(
                     "collision1", "../audio/walls/voice1.ogg", false
                 ));
@@ -527,7 +526,7 @@ void Level::debug_draw_cars(sf::RenderTarget* target) {
         };
 
         sf::Vertex vline[] = {
-            sf::Vertex(sf::Vector2f(car_x, car_y - CAR_WIDTH), 
+            sf::Vertex(sf::Vector2f(car_x, car_y - CAR_WIDTH),
                     sf::Color::Blue),
             sf::Vertex(sf::Vector2f(car_x, car_y + CAR_WIDTH),
                     sf::Color::Blue)
@@ -575,7 +574,7 @@ void Level::change(bool go_to_next) {
       for (auto track : source.audio)
       {
           if (track->isPlaying())
-            track->stop(); 
+            track->stop();
       }
     }
     load_json_data();
@@ -612,14 +611,10 @@ void Level::play_collision_sound() {
     if (time_since_collision_sound > COLLISION_SOUND_INTERVAL)
     {
         auto selected_sound = rand() % this->wall_collision_sources.size();
-
         this->wall_collision_sources[selected_sound]->play2d(false);
 
-        
         selected_sound = rand() % this->wall_collision_voices.size();
-
         this->wall_collision_voices[selected_sound]->play2d(false);
-        std::cout << "Wall collision" << std::endl;
 
         time_since_collision_sound = 0;
     }
@@ -649,18 +644,18 @@ void Level::splash_you_died() {
     if (!this->sound_map.loadFromFile("../splash/you_died.png")) {
         std::cerr << "\"" << map_path << "\" doesn't exist!" << std::endl;
     }
-    
+
     this->level_texture.loadFromImage(this->sound_map);
     this->level_sprite = sf::Sprite(this->level_texture);
     this->pretty_sprite.setTexture(this->level_texture);
-    
-    
+
+
     //stop sounds
     for (AudioSource& source : audio_sources) {
       for (auto track : source.audio)
       {
           if (track->isPlaying())
-            track->stop(); 
+            track->stop();
       }
     }
 
