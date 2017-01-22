@@ -138,6 +138,33 @@
             "start_positions":[[70, 529], [654,743], [235, 881]],
             "path": "../maps/map-citychaos.png",
             "fancy_path": "../maps/map-citychaos-pretty.png"
+        },
+
+        {
+            "audio": [
+                [
+                    [680, 400],
+                    ["../audio/InTheClub.ogg"],
+                    10.0,
+                    [
+                        "../assets/nightclub-blue.png",
+                        "../assets/nightclub-pink.png",
+                        "../assets/nightclub-yellow.png"
+                    ]
+                ]
+            ],
+            "cars": [
+                ["horizontal", 0, 870],
+                ["horizontal", 1, 760],
+                ["horizontal", 0, 600],
+                ["horizontal", 1, 480],
+                ["horizontal", 0, 270],
+                ["horizontal", 1, 160]
+            ],
+            "goal": [500, 50],
+            "start_positions":[[50, 950], [500, 950], [900, 950]],
+            "path": "../maps/map-blindfrogger.png",
+            "fancy_path": "../maps/map-blindfrogger-pretty.png"
         }
     ]
 }

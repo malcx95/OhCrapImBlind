@@ -189,7 +189,7 @@ void Level::maybe_spawn_car(float dt) {
                     pos = sf::Vector2<float>(CAR_DOMAIN_WIDTH, road_pos);
                 } else {
                     vel = sf::Vector2<float>(1, 0);
-                    pos = sf::Vector2<float>(-CAR_DOMAIN_HEIGHT, road_pos);
+                    pos = sf::Vector2<float>(-(CAR_DOMAIN_HEIGHT / 2), road_pos);
                 }
             } else {
                 if (dir == 0) {
@@ -197,7 +197,8 @@ void Level::maybe_spawn_car(float dt) {
                     pos = sf::Vector2<float>(road_pos, CAR_DOMAIN_HEIGHT);
                 } else {
                     vel = sf::Vector2<float>(0, 1);
-                    pos = sf::Vector2<float>(road_pos, -CAR_DOMAIN_HEIGHT);
+                    pos = sf::Vector2<float>(road_pos, 
+                            -(CAR_DOMAIN_HEIGHT / 2));
                 }
             }
 
@@ -211,6 +212,10 @@ void Level::maybe_spawn_car(float dt) {
             car->start(pos, vel * CAR_SPEED);
 
             this->car_timer = CAR_SPAWN_DELAY;
+            std::cout << "ROADS: " << std::endl;
+            for (CarRoad r : this->roads) {
+                std::cout << r.num_cars << std::endl;
+            }
         }
     }
 }
@@ -272,7 +277,6 @@ void Level::handle_input() {
       change(go_to_next);
       changed_level = true;
     }
-    
      if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
       std::cout << "x: " << this->player_pos.x << " y: " << this->player_pos.y << std::endl;
     }

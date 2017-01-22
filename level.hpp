@@ -35,27 +35,42 @@ const sf::Color GRAVEL = sf::Color(0x4b, 0x4b, 0x4b, 255);
 const sf::Color GRASS = sf::Color(0x00, 0xff, 0x00, 255);
 const sf::Color PUDDLE = sf::Color(0x00, 0x00, 0xff, 255);
 
-const int PLAYER_SPEED = 70;
+const int PLAYER_SPEED = 55;
 
 const int WIDTH = 1000;
 const int HEIGHT = 1000;
 
-const int CAR_DOMAIN_WIDTH = 1500;
-const int CAR_DOMAIN_HEIGHT = 1500;
+const int CAR_DOMAIN_WIDTH = 1100;
+const int CAR_DOMAIN_HEIGHT = 1100;
 
-const float CAR_SPEED = 100;
+const float CAR_SPEED = 140;
 const float HONKING_DISTANCE = 200;
 const float SWEAR_DISTANCE = 170;
-const float CAR_SPAWN_DELAY = 1.5;
+const float CAR_SPAWN_DELAY = 0.4;
 
 const float DOPPLER_FACTOR = 0.1;
 
 const float AUDIO_SOURCE_ANIMATION_SPEED = 0.25;
 const float COLLISION_SOUND_INTERVAL = 0.5;
 
-const int NUM_SWEARS = 15;
+const int NUM_SWEARS = 30;
 
 const std::string SWEARS[NUM_SWEARS] {
+    "../audio/swears/australian1.ogg",
+    "../audio/swears/brittish1.ogg",
+    "../audio/swears/danish.ogg",
+    "../audio/swears/french1.ogg",
+    "../audio/swears/french2.ogg",
+    "../audio/swears/french3.ogg",
+    "../audio/swears/german1.ogg",
+    "../audio/swears/german2.ogg",
+    "../audio/swears/norwegian1.ogg",
+    "../audio/swears/russian1.ogg",
+    "../audio/swears/russian2.ogg",
+    "../audio/swears/skane1.ogg",
+    "../audio/swears/spanish1.ogg",
+    "../audio/swears/spanish2.ogg",
+    "../audio/swears/spanish3.ogg",
     "../audio/swears/australian1.ogg",
     "../audio/swears/brittish1.ogg",
     "../audio/swears/danish.ogg",
