@@ -109,8 +109,7 @@
                 [
                     [300, 550],
                     [
-                        "../audio/enviroment/hammer1.ogg",
-                        "../audio/enviroment/metal_rods1.ogg"
+                        "../audio/enviroment/construction.ogg"
                     ],
                     10.0,
                     ["../assets/construction.png"]
@@ -118,8 +117,7 @@
                 [
                     [105, 222],
                     [
-                        "../audio/enviroment/hammer3.ogg",
-                        "../audio/enviroment/metal_rods1.ogg"
+                        "../audio/enviroment/construction.ogg"
                     ],
                     10.0,
                     ["../assets/construction.png"]
