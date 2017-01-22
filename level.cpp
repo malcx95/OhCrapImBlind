@@ -16,7 +16,7 @@ Level::Level() {
 
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
-    this->player_speed = 400;
+    this->player_speed = PLAYER_SPEED;
 
     this->available_cars = std::vector<Car*>();
     this->cars_in_use = std::vector<Car*>();
@@ -162,28 +162,42 @@ void Level::maybe_spawn_car(float dt) {
         this->car_timer -= dt;
 
         if (car_timer < 0) {
-            // select a road to spawn a car on
-            int i = rand() % this->roads.size();
-            CarRoad road = this->roads[i];
+            // select the emptiest road to spawn a car on
+            size_t min_index = 0;
+            int min = this->cars_in_use.size();
+            for (size_t i = 0; i < this->roads.size(); ++i) {
+                int num_cars = this->roads[i].num_cars;
+                if (num_cars < min) {
+                    min = num_cars;
+                    min_index = i;
+                }
+            }
+
+            RoadOrientation orientation = 
+                this->roads[min_index].orientation;
+            float road_pos = this->roads[min_index].pos;
+            int dir = this->roads[min_index].dir;
+
+            this->roads[min_index].num_cars++;
 
             sf::Vector2<float> pos;
             sf::Vector2<float> vel;
 
-            if (road.direction == HORIZONTAL) {
-                if (road.dir == 0) {
+            if (orientation == HORIZONTAL) {
+                if (dir == 0) {
                     vel = sf::Vector2<float>(-1, 0);
-                    pos = sf::Vector2<float>(CAR_DOMAIN_WIDTH, road.pos);
+                    pos = sf::Vector2<float>(CAR_DOMAIN_WIDTH, road_pos);
                 } else {
                     vel = sf::Vector2<float>(1, 0);
-                    pos = sf::Vector2<float>(-CAR_DOMAIN_HEIGHT, road.pos);
+                    pos = sf::Vector2<float>(-CAR_DOMAIN_HEIGHT, road_pos);
                 }
             } else {
-                if (road.dir == 0) {
+                if (dir == 0) {
                     vel = sf::Vector2<float>(0, -1);
-                    pos = sf::Vector2<float>(road.pos, CAR_DOMAIN_HEIGHT);
+                    pos = sf::Vector2<float>(road_pos, CAR_DOMAIN_HEIGHT);
                 } else {
                     vel = sf::Vector2<float>(0, 1);
-                    pos = sf::Vector2<float>(road.pos, -CAR_DOMAIN_HEIGHT);
+                    pos = sf::Vector2<float>(road_pos, -CAR_DOMAIN_HEIGHT);
                 }
             }
 
@@ -193,6 +207,7 @@ void Level::maybe_spawn_car(float dt) {
             Car* car = this->available_cars.back();
             this->available_cars.pop_back();
             this->cars_in_use.push_back(car);
+            car->set_road_index(min_index);
             car->start(pos, vel * CAR_SPEED);
 
             this->car_timer = CAR_SPAWN_DELAY;
@@ -208,6 +223,7 @@ void Level::update_cars(float dt) {
             // remove the car from the cars in use and put it
             // back to the available cars
             car->stop();
+            this->roads[car->get_road_index()].num_cars--;
             this->cars_in_use.erase(this->cars_in_use.begin() + i);
             this->available_cars.push_back(car);
         } else {
@@ -427,14 +443,15 @@ void Level::load_json_data() {
         for (auto r : json_data["map_list"][level_num]["cars"]) {
             CarRoad road;
             if (r[0] == "horizontal") {
-                road.direction = HORIZONTAL;
+                road.orientation = HORIZONTAL;
                 std::cout << "Added horizontal road" << std::endl;
             } else {
-                road.direction = VERTICAL;
+                road.orientation = VERTICAL;
                 std::cout << "Added vertical road" << std::endl;
             }
             road.dir = r[1];
             road.pos = r[2];
+            road.num_cars = 0;
             this->roads.push_back(road);
         }
     }
