@@ -206,6 +206,15 @@
             "start_positions":[[50, 950], [500, 950], [900, 950]],
             "path": "../maps/map-blindfrogger.png",
             "fancy_path": "../maps/map-blindfrogger-pretty.png"
+        },
+
+        {
+            "audio": [
+            ],
+            "goal": [5000, 50],
+            "start_positions":[[50, 950], [500, 950], [900, 950]],
+            "path": "../maps/map-blindfrogger.png",
+            "fancy_path": "../maps/map-blindfrogger-pretty.png"
         }
     ]
 }
