@@ -8,10 +8,16 @@
                     ["../assets/nightclub-blue.png"]
                 ],
                 [
-                    [250, 550],
+                    [350, 850],
                     ["../audio/enviroment/chirp1.ogg", "../audio/enviroment/chirp2.ogg"],
                     10.0,
                     ["../assets/nightclub-blue.png"]
+                ],
+                [
+                    [250, 650],
+                    ["../audio/enviroment/hammer1.ogg", "../audio/enviroment/metal_rods1.ogg"],
+                    30.0,
+                    ["../assets/construction.png"]
                 ]
             ],     
             "goal": [850, 220],
@@ -35,11 +41,7 @@
                     [300, 10],
                     ["../audio/water_dripping/water_dripping1.ogg"],
                     5.0,
-                    [
-                        "../assets/nightclub-blue.png",
-                        "../assets/nightclub-pink.png",
-                        "../assets/nightclub-yellow.png"
-                    ]
+                    ["../assets/audio/hammer2.ogg"]
                 ]
             ],
             "cars": [
@@ -107,7 +109,7 @@
                 ]
             ],
             "goal": [800, 50],
-            "start_positions":[[100, 800], [100, 50], [20, 10]],
+            "start_positions":[[100, 800], [100, 100], [500, 500]],
             "path": "../maps/map-citywalk.png",
             "fancy_path": "../maps/map-citywalk-pretty.png"
         },
@@ -122,8 +124,8 @@
                 ],
                 [
                     [680, 630],
-                    ["../audio/water_dripping/water_dripping2.ogg"],
-                    10.0,
+                    ["../audio/enviroment/bubbles1.ogg"],
+                    30.0,
                     ["../assets/nightclub.png"]
                 ],
                 [
