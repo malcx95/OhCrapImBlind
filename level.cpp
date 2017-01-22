@@ -34,7 +34,7 @@ Level::Level() {
     this->level_texture.loadFromImage(this->sound_map);
     this->level_sprite = sf::Sprite(this->level_texture);*/
 
-    //orientation arrow 
+    //orientation arrow
     if (!this->arrow_texture.loadFromFile(ARROW_SPRITE)) {
         std::cerr << "\"" << ARROW_SPRITE << "\" doesn't exist!" << std::endl;
     }
@@ -45,9 +45,9 @@ Level::Level() {
 
     map_path = DEFAULT_MAP;
 
-    this->car_engine = this->audio_manager->create(CAR_ENGINE.data(), 
+    this->car_engine = this->audio_manager->create(CAR_ENGINE.data(),
             CAR_ENGINE.data(), false);
-    this->car_honk = this->audio_manager->create(CAR_HONK.data(), 
+    this->car_honk = this->audio_manager->create(CAR_HONK.data(),
             CAR_HONK.data(), false);
     load_swears();
 
@@ -121,12 +121,12 @@ void Level::maybe_spawn_car() {
             // select a road to spawn a car on
             int i = rand() % this->roads.size();
             CarRoad road = this->roads[i];
-            
+
             float d = (float)(rand() % 2);
 
             sf::Vector2<float> pos;
             sf::Vector2<float> vel;
-            
+
             if (road.direction == HORIZONTAL) {
                 if (d == 0.0) {
                     vel = sf::Vector2<float>(-1, 0);
@@ -147,11 +147,11 @@ void Level::maybe_spawn_car() {
 
             int swear = rand() % NUM_SWEARS;
 
-            this->current_car = new Car(pos, vel * CAR_SPEED, 
-                    this->car_engine, 
+            this->current_car = new Car(pos, vel * CAR_SPEED,
+                    this->car_engine,
                     this->car_honk, this->swear_sources[swear]);
             this->current_car->start();
-            std::cout << "Created a car at " << 
+            std::cout << "Created a car at " <<
                 this->current_car->get_position().x << "," <<
                 this->current_car->get_position().y << std::endl;
         }
@@ -294,7 +294,7 @@ void Level::load_json_data() {
 
         std::cout << "Loading " << file_name << std::endl;
         cAudio::IAudioSource* sound = this->audio_manager->create(
-            std::to_string(c).data(), file_name.data(), false
+            std::to_string(c).data(), file_name.data(), true
         );
 
         if (!sound) {
