@@ -458,7 +458,10 @@ void Level::change() {
         delete this->current_car;
         this->current_car = nullptr;
     }
-
+    for (AudioSource source : audio_sources) {
+      if (source.audio->isPlaying())
+        source.audio->stop(); 
+    }
     load_json_data();
 
     play_audio_sources();
