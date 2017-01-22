@@ -15,7 +15,7 @@ Level::Level() {
 
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
-    this->player_speed = 50;
+    this->player_speed = 80;
 
     this->current_car = nullptr;
 
@@ -25,14 +25,6 @@ Level::Level() {
     this->listener = this->audio_manager->getListener();
 
     std::cout << "Loading world from Json" << std::endl;
-
-    /*std::cout << "Loading map texture" << std::endl;
-    if (!this->sound_map.loadFromFile(DEFAULT_MAP)) {
-        std::cerr << "\"" << DEFAULT_MAP << "\" doesn't exist!" << std::endl;
-    }
-
-    this->level_texture.loadFromImage(this->sound_map);
-    this->level_sprite = sf::Sprite(this->level_texture);*/
 
     //orientation arrow
     if (!this->arrow_texture.loadFromFile(ARROW_SPRITE)) {
@@ -174,6 +166,12 @@ void Level::update_car(float dt) {
                     this->player_pos, HONKING_DISTANCE);
             this->current_car->swear_if_close_to(
                     this->player_pos, SWEAR_DISTANCE);
+            if (this->current_car->collides_with(player_pos)) {
+                play_collision_sound();
+                //reset current level
+                level_num --;
+                change();
+            }
         }
     }
 }
@@ -272,7 +270,7 @@ void Level::load_json_data() {
     std::cout << "start_position: " << player_pos.x <<  " " << player_pos.y << std::endl;
 
 
-    // get the goal data from the json file + handle goal sprite
+    // get the goal data from the json file + handle goal sprite + handle goal sound
     this->goal_position = sf::Vector2<float>(json_data["map_list"][level_num]["goal"][0],
                                             json_data["map_list"][level_num]["goal"][1]);
 
