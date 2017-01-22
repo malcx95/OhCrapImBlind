@@ -87,7 +87,7 @@ void Level::load_swears() {
 }
 
 void Level::play_audio_sources() {
-  std::cout << "trying to play audio sources\n";
+    std::cout << "trying to play audio sources\n";
     for (AudioSource s : this->audio_sources) {
         //s.audio->play3d(util::sf_to_caudio_vect(s.pos), s.attenuation, true);
         for(auto sound : s.audio)
@@ -334,6 +334,12 @@ void Level::load_json_data() {
             textures.push_back(texture);
         }
 
+        float play_rate = 0;
+        if(source.size() > 4)
+        {
+            play_rate = source[4];
+        }
+
         AudioSource as = {
             position,
             sounds,
@@ -341,7 +347,8 @@ void Level::load_json_data() {
             textures,
             sprites,
             0,
-            0.0
+            0.0,
+            play_rate
         };
         audio_sources.push_back(as);
     }

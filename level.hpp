@@ -80,6 +80,8 @@ struct AudioSource {
 
     void draw(sf::RenderTarget* target);
     void update(float dt);
+
+    float play_rate;
 };
 
 enum RoadDirection {VERTICAL, HORIZONTAL};
