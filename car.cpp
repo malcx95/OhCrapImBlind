@@ -2,12 +2,9 @@
 #include "util.hpp"
 #include <cmath>
 
-Car::Car(sf::Vector2<float> pos, sf::Vector2<float> velocity,
-        cAudio::IAudioSource* audio_source,
+Car::Car(cAudio::IAudioSource* audio_source,
         cAudio::IAudioSource* honk_audio_source,
         cAudio::IAudioSource* swear_audio_source) {
-    this->pos = pos;
-    this->velocity = velocity;
     this->audio_source = audio_source;
     this->honk_audio_source = honk_audio_source;
     this->swear_audio_source = swear_audio_source;
@@ -60,7 +57,9 @@ bool Car::collides_with(sf::Vector2<float> pos) const {
     return sqrt(p_pos.x * p_pos.x + p_pos.y * p_pos.y) < CAR_WIDTH;
 }
 
-void Car::start() {
+void Car::start(sf::Vector2<float> pos, sf::Vector2<float> velocity) {
+    this->pos = pos;
+    this->velocity = velocity;
     this->audio_source->play3d(
             util::sf_to_caudio_vect(this->pos), ENGINE_NOISE_STRENGTH, true);
 }
@@ -70,6 +69,7 @@ void Car::stop() {
 }
 
 bool Car::out_of_bounds(int width, int height) const {
-    return pos.x < 0 || pos.y < 0 || pos.x > width || pos.y > height;
+    return pos.x < -width || pos.y < -width || 
+        pos.x > width * 2 || pos.y > height * 2;
 }
 
