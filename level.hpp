@@ -110,7 +110,8 @@ public:
 
     void draw(sf::RenderTarget* target);
 
-    void change();
+    //pass true to restart next level. pass false to restart current level
+    void change(bool go_to_next);
 
     void turn_player(int amount);
 
@@ -221,6 +222,9 @@ private:
     void update_cars(float dt);
 
     void load_swears_and_cars();
+    
+    //displays game over screen offers to restart level or go to next level
+    void splash_you_died();
 
 };
 

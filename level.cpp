@@ -111,7 +111,7 @@ void Level::update(float dt) {
     maybe_spawn_car();
     if (has_reached_goal()) {
         std::cout << "Reached Goal" << std::endl;
-        change();
+        change(true);
     }
 
     for (auto& source : this->audio_sources)
@@ -178,11 +178,9 @@ void Level::update_cars(float dt) {
                     this->player_pos, HONKING_DISTANCE);
             car->swear_if_close_to(
                     this->player_pos, SWEAR_DISTANCE);
-            if (this->current_car->collides_with(player_pos)) {
+            if (car->collides_with(player_pos)) {
                 play_collision_sound();
-                //reset current level
-                level_num --;
-                change();
+                splash_you_died();
             }
         }
     }
@@ -191,6 +189,7 @@ void Level::update_cars(float dt) {
 void Level::handle_input() {
 
     bool change_lvl = false;
+    bool go_to_next = true;
 
     this->player_velocity = STILL;
 
@@ -206,7 +205,9 @@ void Level::handle_input() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         this->player_velocity += RIGHT;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::N)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::N) || sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+            go_to_next = false;
         change_lvl = true;
     }
     else {
@@ -215,7 +216,7 @@ void Level::handle_input() {
     }
 
     if (change_lvl && !changed_level) {
-      change();
+      change(go_to_next);
       changed_level = true;
     }
 }
@@ -489,9 +490,10 @@ void Level::debug_draw_audio_sources(sf::RenderTarget* target) {
 }
 
 
-void Level::change() {
+void Level::change(bool go_to_next) {
     std::cout << " CHANGING LEVEL \n\n\n";
-    level_num ++;
+    if (go_to_next)
+        level_num ++;
 
     // Stop the cars in use
     while (this->cars_in_use.size() > 0) {
@@ -577,4 +579,27 @@ void AudioSource::update(float dt)
         current_sprite = (current_sprite + 1) % sprites.size();
         last_switch = 0;
     }
+}
+
+
+void Level::splash_you_died() {
+    //change texture
+    std::cout << "Loading death splashscreen" << std::endl;
+    if (!this->sound_map.loadFromFile("../splash/you_died.png")) {
+        std::cerr << "\"" << map_path << "\" doesn't exist!" << std::endl;
+    }
+    
+    this->level_texture.loadFromImage(this->sound_map);
+    this->level_sprite = sf::Sprite(this->level_texture);
+    this->pretty_sprite.setTexture(this->level_texture);
+    
+    //stop sounds
+    for (AudioSource& source : audio_sources) {
+      for (auto track : source.audio)
+      {
+          if (track->isPlaying())
+            track->stop(); 
+      }
+    }
+
 }
