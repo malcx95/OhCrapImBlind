@@ -36,15 +36,6 @@ Level::Level() {
 
     std::cout << "Loading world from Json" << std::endl;
 
-    //orientation arrow
-    if (!this->arrow_texture.loadFromFile(ARROW_SPRITE)) {
-        std::cerr << "\"" << ARROW_SPRITE << "\" doesn't exist!" << std::endl;
-    }
-    this->arrow_sprite = sf::Sprite(this->arrow_texture);
-    this->arrow_sprite.setPosition(sf::Vector2f(WIDTH - 100, 100));
-    auto arrow_size = this->arrow_texture.getSize();
-    this->arrow_sprite.setOrigin(arrow_size.x / 2, arrow_size.y / 2);
-
     map_path = DEFAULT_MAP;
 
     load_swears_and_cars();
@@ -492,9 +483,6 @@ void Level::draw(sf::RenderTarget* target)
     target->draw(pretty_sprite);
     target->draw(goal_sprite);
 
-    this->arrow_sprite.setRotation(player_angle);
-    target->draw(arrow_sprite);
-
     if (this->in_dev_mode) {
         debug_draw_player(target);
         debug_draw_audio_sources(target);
@@ -598,16 +586,6 @@ void Level::change(bool go_to_next) {
 
     this->step_delay = 0.5f;
     this->step_timer = 0;
-}
-
-void Level::turn_player(int amount) {
-    // This calculation is totally fucked up...
-    // But at least it works
-    this->player_angle += amount * PLAYER_TURN_SPEED;
-    float angle_radians = (player_angle + 90) / 180 * M_PI;
-    this->listener->setDirection(
-        cAudio::cVector3(-cosf(angle_radians), 0.0f, -sinf(angle_radians)
-    ));
 }
 
 Mat::Material Level::ground_under_player() {

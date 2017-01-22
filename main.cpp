@@ -14,7 +14,6 @@ int main() {
 
     // Create the main window
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "SFML window", sf::Style::Titlebar | sf::Style::Close);
-    window.setMouseCursorVisible(false);
 
     std::cout << "Loading level" << std::endl;
     Level level;
@@ -37,11 +36,6 @@ int main() {
                 break;
             }
         }
-
-        const auto center = sf::Vector2i(WIDTH / 2, HEIGHT / 2);
-        const auto current = sf::Mouse::getPosition(window);
-        sf::Mouse::setPosition(center, window);
-        level.turn_player((current - center).x);
 
         level.update(dt.asSeconds());
 

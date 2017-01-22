@@ -136,8 +136,6 @@ public:
     //pass true to restart next level. pass false to restart current level
     void change(bool go_to_next);
 
-    void turn_player(int amount);
-
 private:
 
     bool in_dev_mode;
@@ -148,7 +146,6 @@ private:
     std::vector<cAudio::IAudioSource*> wall_collision_voices;
     std::vector<cAudio::IAudioSource*> night_clubs;
 
-    float player_angle;
     sf::Vector2<float> player_pos;
     sf::Vector2<float> player_velocity;
     sf::Vector2<float> goal_position;
@@ -167,8 +164,6 @@ private:
     sf::Sprite level_sprite;
     sf::Texture goal_texture;
     sf::Sprite goal_sprite;
-    sf::Texture arrow_texture;
-    sf::Sprite arrow_sprite;
     sf::Texture pretty_texture;
     sf::Sprite pretty_sprite;
 
