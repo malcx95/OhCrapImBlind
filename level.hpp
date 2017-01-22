@@ -35,6 +35,8 @@ const sf::Color GRAVEL = sf::Color(0x4b, 0x4b, 0x4b, 255);
 const sf::Color GRASS = sf::Color(0x00, 0xff, 0x00, 255);
 const sf::Color PUDDLE = sf::Color(0x00, 0x00, 0xff, 255);
 
+const int PLAYER_SPEED = 70;
+
 const int WIDTH = 1000;
 const int HEIGHT = 1000;
 
@@ -51,7 +53,7 @@ const float DOPPLER_FACTOR = 0.1;
 const float AUDIO_SOURCE_ANIMATION_SPEED = 0.25;
 const float COLLISION_SOUND_INTERVAL = 0.5;
 
-const int NUM_SWEARS = 11;
+const int NUM_SWEARS = 15;
 
 const std::string SWEARS[NUM_SWEARS] {
     "../audio/swears/australian1.ogg",
@@ -59,12 +61,16 @@ const std::string SWEARS[NUM_SWEARS] {
     "../audio/swears/danish.ogg",
     "../audio/swears/french1.ogg",
     "../audio/swears/french2.ogg",
+    "../audio/swears/french3.ogg",
     "../audio/swears/german1.ogg",
     "../audio/swears/german2.ogg",
     "../audio/swears/norwegian1.ogg",
     "../audio/swears/russian1.ogg",
     "../audio/swears/russian2.ogg",
-    "../audio/swears/skane1.ogg"
+    "../audio/swears/skane1.ogg",
+    "../audio/swears/spanish1.ogg",
+    "../audio/swears/spanish2.ogg",
+    "../audio/swears/spanish3.ogg"
 };
 
 struct AudioSource {
@@ -88,11 +94,13 @@ enum RoadOrientation {VERTICAL, HORIZONTAL};
 
 struct CarRoad {
 
-    RoadOrientation direction;
+    RoadOrientation orientation;
 
     float pos;
 
     int dir;
+
+    int num_cars;
 };
 
 
@@ -110,7 +118,8 @@ public:
 
     void draw(sf::RenderTarget* target);
 
-    void change();
+    //pass true to restart next level. pass false to restart current level
+    void change(bool go_to_next);
 
     void turn_player(int amount);
 
@@ -221,6 +230,9 @@ private:
     void update_cars(float dt);
 
     void load_swears_and_cars();
+    
+    //displays game over screen offers to restart level or go to next level
+    void splash_you_died();
 
 };
 
