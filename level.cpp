@@ -16,7 +16,7 @@ Level::Level() {
 
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
-    this->player_speed = 50;
+    this->player_speed = 400;
 
     this->available_cars = std::vector<Car*>();
     this->cars_in_use = std::vector<Car*>();
@@ -214,6 +214,9 @@ void Level::handle_input() {
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::N)) {
         change_lvl = true;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
+      std::cout << "x: " << this->player_pos.x << " y: " << this->player_pos.y << std::endl;
     }
     else {
         changed_level = false;
