@@ -46,7 +46,12 @@
             ],
             "cars": [
                 ["horizontal", 0, 500],
-                ["horizontal", 1, 480]
+                ["horizontal", 1, 480],
+                ["horizontal", 0, 460],
+                ["horizontal", 1, 440],
+                ["horizontal", 0, 420],
+                ["horizontal", 1, 400],
+                ["vertical", 1, 480]
             ],
             "goal": [15,100],
             "start_positions":[[0,0], [100, 50], [20, 10]],

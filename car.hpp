@@ -44,6 +44,9 @@ public:
 
     void swear_if_close_to(sf::Vector2<float> pos, float distance);
 
+    int get_road_index() const;
+
+    void set_road_index(int index);
 
     /*
      * Checks whether this car is colliding with something at position
@@ -60,6 +63,7 @@ private:
     cAudio::IAudioSource* audio_source;
     cAudio::IAudioSource* honk_audio_source;
     cAudio::IAudioSource* swear_audio_source;
+    int road_index;
 
     float honk_distance;
 
