@@ -86,7 +86,7 @@
                     ["../assets/bubbles1.png"]
                 ],
                 [
-                    [500, 240],
+                    [500, 280],
                     ["../audio/enviroment/birds.ogg"],
                     5.0,
                     ["../assets/tree.png"]
@@ -104,7 +104,7 @@
                     ]
                 ],
                 [
-                    [450, 50],
+                    [400, 150],
                     ["../audio/water_dripping/water_dripping3.ogg"],
                     10.0,
                     ["../assets/bubbles1.png"]
@@ -177,13 +177,11 @@
         {
             "audio": [
                 [
-                    [680, 400],
+                    [450, 400],
                     ["../audio/March.ogg"],
-                    10.0,
+                    50.0,
                     [
-                        "../assets/nightclub-blue.png",
-                        "../assets/nightclub-pink.png",
-                        "../assets/nightclub-yellow.png"
+                        "../assets/band.png"
                     ]
                 ],
                 [
