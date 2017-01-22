@@ -57,13 +57,19 @@
         {
             "audio": [
                 [
-                    [300, 550],
+                    [290, 740],
                     ["../audio/water_dripping/water_dripping1.ogg"],
                     10.0,
                     ["../assets/bubbles1.png"]
                 ],
                 [
-                    [680, 630],
+                    [500, 240],
+                    ["../audio/enviroment/chirp3.ogg"],
+                    40.0,
+                    ["../assets/tree.png"]
+                ],
+                [
+                    [700, 440],
                     ["../audio/enviroment/bubbles1.ogg"],
                     30.0,
                     [
@@ -75,7 +81,7 @@
                     ]
                 ],
                 [
-                    [550, 150],
+                    [450, 50],
                     ["../audio/water_dripping/water_dripping3.ogg"],
                     10.0,
                     ["../assets/bubbles1.png"]
