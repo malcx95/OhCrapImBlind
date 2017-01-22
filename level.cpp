@@ -84,9 +84,6 @@ void Level::load_swears() {
                     SWEARS[i].data(),
                     false));
     }
-    for (cAudio::IAudioSource* p : this->swear_sources) {
-        std::cout << "POINTER: " << p << std::endl;
-    }
 }
 
 void Level::play_audio_sources() {
