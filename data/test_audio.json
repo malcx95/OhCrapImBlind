@@ -2,12 +2,18 @@
     "map_list": [
         {"audio": [
                 [
-                    [300, 550],
-                    ["../audio/InTheClub.ogg", "../audio/enviroment/chirp1.ogg"],
+                    [600, 400],
+                    ["../audio/InTheClub.ogg"],
+                    10.0,
+                    ["../assets/nightclub-blue.png"]
+                ],
+                [
+                    [250, 550],
+                    ["../audio/enviroment/chirp1.ogg", "../audio/enviroment/chirp2.ogg"],
                     10.0,
                     ["../assets/nightclub-blue.png"]
                 ]
-            ],
+            ],     
             "goal": [850, 220],
             "start_positions":[[43, 529], [365, 932], [350, 106]],
             "path": "../maps/map-woodswalk.png"
