@@ -89,7 +89,7 @@
             ],
             "goal": [800, 50],
             "start_positions":[[100, 800], [100, 50], [20, 10]],
-            "path": "../maps/map-citywalk-pretty.png"
+            "path": "../maps/map-citywalk.png"
         },
 
         {

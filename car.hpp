@@ -41,9 +41,9 @@ public:
 
     sf::Vector2<float> get_position() const;
 
-    void honk_if_close_to(sf::Vector2<float> pos, float distance) const;
+    void honk_if_close_to(sf::Vector2<float> pos, float distance);
 
-    void swear_if_close_to(sf::Vector2<float> pos, float distance) const;
+    void swear_if_close_to(sf::Vector2<float> pos, float distance);
 
 
     /*
@@ -64,8 +64,10 @@ private:
 
     float honk_distance;
 
+    bool swore;
+
     void play_if_close_to(sf::Vector2<float> pos,
-            float distance, cAudio::IAudioSource* sound, float strength) const;
+            float distance, cAudio::IAudioSource* sound, float strength);
 
 };
 
