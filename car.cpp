@@ -50,13 +50,13 @@ void Car::play_if_close_to(sf::Vector2<float> pos,
             // the car is above pos
             
             // pos is in front if the car is traveling down
-            in_front = this->velocity.y > 0;
+            in_front = this->velocity.y < 0;
         
         } else {
             // the car is below pos
             
             // pos is in front if the car is traveling up 
-            in_front = this->velocity.y < 0;
+            in_front = this->velocity.y > 0;
         
         }
         p = fabs(this->pos.x - pos.x);
@@ -104,3 +104,10 @@ bool Car::out_of_bounds(int width, int height) const {
         pos.x > width || pos.y > height;
 }
 
+int Car::get_road_index() const {
+    return this->road_index;
+}
+
+void Car::set_road_index(int index) {
+    this->road_index = index;
+}
