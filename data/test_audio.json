@@ -83,7 +83,12 @@
                     [290, 740],
                     ["../audio/water_dripping/water_dripping1.ogg"],
                     5.0,
-                    ["../assets/bubbles1.png"]
+                    [
+                        "../assets/water1.png",
+                        "../assets/water2.png",
+                        "../assets/water3.png",
+                        "../assets/water4.png"
+                    ]
                 ],
                 [
                     [500, 280],
@@ -107,7 +112,12 @@
                     [400, 150],
                     ["../audio/water_dripping/water_dripping3.ogg"],
                     10.0,
-                    ["../assets/bubbles1.png"]
+                    [
+                        "../assets/water1.png",
+                        "../assets/water2.png",
+                        "../assets/water3.png",
+                        "../assets/water4.png"
+                    ]
                 ],
                 [
                     [85, 755 ],
