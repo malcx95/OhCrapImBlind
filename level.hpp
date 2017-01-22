@@ -43,7 +43,7 @@ const int CAR_DOMAIN_HEIGHT = 1500;
 
 const float CAR_SPEED = 100;
 const float HONKING_DISTANCE = 200;
-const float SWEAR_DISTANCE = 100;
+const float SWEAR_DISTANCE = 170;
 const float CAR_SPAWN_DELAY = 1.5;
 
 const float DOPPLER_FACTOR = 0.1;
