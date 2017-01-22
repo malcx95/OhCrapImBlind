@@ -3,13 +3,13 @@
         {"audio": [
                 [
                     [349, 907],
-                    ["../audio/enviroment/chirp1.ogg"],
+                    ["../audio/enviroment/birds.ogg"],
                     1.0,
                     ["../assets/tree.png"]
                 ],
                 [
                     [250, 550],
-                    ["../audio/enviroment/chirp2.ogg", "../audio/enviroment/chirp3.ogg"],
+                    ["../audio/enviroment/birds.ogg"],
                     1.0,
                     ["../assets/tree.png"]
                 ],
@@ -20,6 +20,7 @@
                     [
                     "../assets/bell1.png",
                     "../assets/bell2.png",
+                    "../assets/bell1.png",
                     "../assets/bell3.png"
                     ]
                 ]
@@ -33,7 +34,7 @@
             "audio": [
                 [
                     [533, 341],
-                    ["../audio/enviroment/chirp2.ogg","../audio/enviroment/chirp1.ogg"],
+                    ["../audio/enviroment/birds.ogg"],
                     10.0,
                     ["../assets/tree.png"]
                 ],
@@ -74,7 +75,7 @@
                 ],
                 [
                     [500, 240],
-                    ["../audio/enviroment/chirp3.ogg"],
+                    ["../audio/enviroment/birds.ogg"],
                     40.0,
                     ["../assets/tree.png"]
                 ],
