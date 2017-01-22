@@ -16,8 +16,8 @@
             "audio": [
                 [
                     [10, 10],
-                    ["../audio/water/water1.ogg"],
-                    5.0,
+                    ["../audio/InTheClub.ogg"],
+                    10.0,
                     [
                         "../assets/nightclub-blue.png",
                         "../assets/nightclub-pink.png",
@@ -25,8 +25,8 @@
                     ]
                 ],
                 [
-                    [60, 10],
-                    ["../audio/water/water2.ogg"],
+                    [300, 10],
+                    ["../audio/water_dripping/water_dripping1.ogg"],
                     5.0,
                     [
                         "../assets/nightclub-blue.png",
@@ -37,6 +37,9 @@
             ],
             "cars": [
                 ["horizontal", 500]
+            ],
+            "cars": [
+                ["horizontal", 450]
             ],
             "goal": [15,100],
             "start_positions":[[0,0], [100, 50], [20, 10]],
@@ -65,6 +68,9 @@
                         "../assets/nightclub-yellow.png"
                     ]
                 ]
+            ],
+            "cars": [
+                ["horizontal", 750]
             ],
             "goal": [30,200],
             "start_positions":[[300,150], [100, 50], [20, 10]],
