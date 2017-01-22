@@ -59,6 +59,8 @@ Level::Level() {
 
     this->step_delay = 0.5f;
     this->step_timer = 0;
+
+    this->car_timer = 0;
 }
 
 Level::~Level() {
@@ -116,7 +118,7 @@ void Level::update(float dt) {
     update_player_position(dt);
     handle_steps(dt);
     update_cars(dt);
-    maybe_spawn_car();
+    maybe_spawn_car(dt);
     if (has_reached_goal()) {
         std::cout << "Reached Goal" << std::endl;
         change();
@@ -130,11 +132,11 @@ void Level::update(float dt) {
     time_since_collision_sound += dt;
 }
 
-void Level::maybe_spawn_car() {
+void Level::maybe_spawn_car(float dt) {
     if (this->available_cars.size() > 0 && this->roads.size() > 0) {
-        int r = rand() % CAR_SPAWN_RATE;
+        this->car_timer -= dt;
 
-        if (r == 0) {
+        if (car_timer < 0) {
             // select a road to spawn a car on
             int i = rand() % this->roads.size();
             CarRoad road = this->roads[i];
@@ -145,18 +147,18 @@ void Level::maybe_spawn_car() {
             if (road.direction == HORIZONTAL) {
                 if (road.dir == 0) {
                     vel = sf::Vector2<float>(-1, 0);
-                    pos = sf::Vector2<float>(WIDTH * 2, road.pos);
+                    pos = sf::Vector2<float>(CAR_DOMAIN_WIDTH, road.pos);
                 } else {
                     vel = sf::Vector2<float>(1, 0);
-                    pos = sf::Vector2<float>(-WIDTH, road.pos);
+                    pos = sf::Vector2<float>(-CAR_DOMAIN_HEIGHT, road.pos);
                 }
             } else {
                 if (road.dir == 0) {
                     vel = sf::Vector2<float>(0, -1);
-                    pos = sf::Vector2<float>(road.pos, HEIGHT * 2);
+                    pos = sf::Vector2<float>(road.pos, CAR_DOMAIN_HEIGHT);
                 } else {
                     vel = sf::Vector2<float>(0, 1);
-                    pos = sf::Vector2<float>(road.pos, -HEIGHT);
+                    pos = sf::Vector2<float>(road.pos, -CAR_DOMAIN_HEIGHT);
                 }
             }
 
@@ -167,6 +169,8 @@ void Level::maybe_spawn_car() {
             this->available_cars.pop_back();
             this->cars_in_use.push_back(car);
             car->start(pos, vel * CAR_SPEED);
+
+            this->car_timer = CAR_SPAWN_DELAY;
         }
     }
 }
@@ -175,7 +179,7 @@ void Level::update_cars(float dt) {
     for (size_t i = 0; i < this->cars_in_use.size(); ++i) {
         Car* car = this->cars_in_use[i];
         car->update_position(dt);
-        if (car->out_of_bounds(WIDTH, HEIGHT)) {
+        if (car->out_of_bounds(CAR_DOMAIN_WIDTH, CAR_DOMAIN_HEIGHT)) {
             // remove the car from the cars in use and put it
             // back to the available cars
             car->stop();
@@ -392,7 +396,7 @@ void Level::load_json_data() {
     }
 }
 
-void Level::load_collision_audio(){
+void Level::load_collision_audio() {
     this->wall_collision_sources.push_back(this->audio_manager->create(
                     "collision1", "../audio/walls/collision1.ogg", false
                 ));
@@ -567,7 +571,7 @@ void Level::play_collision_sound() {
 ////////////////////////////////////////////////////////////////////////////////
 //              Audio source methods
 ////////////////////////////////////////////////////////////////////////////////
-void  AudioSource::draw(sf::RenderTarget* target)
+void AudioSource::draw(sf::RenderTarget* target)
 {
     target->draw(sprites[current_sprite]);
 }

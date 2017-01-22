@@ -70,6 +70,6 @@ void Car::stop() {
 
 bool Car::out_of_bounds(int width, int height) const {
     return pos.x < -width || pos.y < -width || 
-        pos.x > width * 2 || pos.y > height * 2;
+        pos.x > width || pos.y > height;
 }
 
