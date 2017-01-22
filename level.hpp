@@ -40,8 +40,8 @@ const int PLAYER_SPEED = 60;
 const int WIDTH = 1000;
 const int HEIGHT = 1000;
 
-const int CAR_DOMAIN_WIDTH = 1100;
-const int CAR_DOMAIN_HEIGHT = 1100;
+const int CAR_DOMAIN_WIDTH = 1200;
+const int CAR_DOMAIN_HEIGHT = 1200;
 
 const float CAR_SPEED = 130;
 const float HONKING_DISTANCE = 230;
