@@ -12,7 +12,7 @@
 using namespace nlohmann;
 
 Level::Level() {
-    this->in_dev_mode = true;
+    this->in_dev_mode = false;
 
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
@@ -397,7 +397,7 @@ void Level::load_json_data() {
             }
             sf::Sprite sprite;
             sprite.setPosition(position);
-            sprite.setOrigin(50, 50);
+            sprite.setOrigin(25, 25);
 
             sprite.setTexture(*texture);
             sprites.push_back(sprite);
