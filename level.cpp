@@ -318,6 +318,7 @@ void Level::load_json_data() {
             }
             sf::Sprite sprite;
             sprite.setPosition(position);
+            sprite.setOrigin(50, 50);
 
             sprite.setTexture(*texture);
             sprites.push_back(sprite);
