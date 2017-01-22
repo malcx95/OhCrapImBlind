@@ -87,9 +87,13 @@ void Level::load_swears() {
 }
 
 void Level::play_audio_sources() {
-  std::cout << "trying to play audio sources\n";
+    std::cout << "trying to play audio sources\n";
     for (AudioSource s : this->audio_sources) {
-        s.audio->play3d(util::sf_to_caudio_vect(s.pos), s.attenuation, true);
+        //s.audio->play3d(util::sf_to_caudio_vect(s.pos), s.attenuation, true);
+        for(auto sound : s.audio)
+        {
+            sound->play3d(util::sf_to_caudio_vect(s.pos), s.attenuation, true);
+        }
     }
 }
 
@@ -257,6 +261,13 @@ void Level::load_json_data() {
     this->level_texture.loadFromImage(this->sound_map);
     this->level_sprite = sf::Sprite(this->level_texture);
 
+    std::string pretty_path = json_data["map_list"][level_num]["fancy_path"];
+    if(!this->pretty_texture.loadFromFile(pretty_path))
+    {
+        std::cerr << "\"" << pretty_path << "\" doesn't exist!" << std::endl;
+    }
+    this->pretty_sprite.setTexture(this->pretty_texture);
+
     //reset player fields
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
@@ -273,7 +284,7 @@ void Level::load_json_data() {
                                             json_data["map_list"][level_num]["goal"][1]);
 
     if (!goal_texture.loadFromFile(GOAL_SPRITE)) {
-      std::cerr << "\"" << GOAL_SPRITE << "\" doesn't exist!" << std::endl;
+        std::cerr << "\"" << GOAL_SPRITE << "\" doesn't exist!" << std::endl;
     }
 
     this->goal_sprite = sf::Sprite(this->goal_texture);
@@ -290,16 +301,24 @@ void Level::load_json_data() {
     auto audio_data = json_data["map_list"][level_num]["audio"];
     for (auto source : audio_data) {
         auto position_list = source[0];
-        std::string file_name = source[1];
+        auto file_names = source[1];
 
-        std::cout << "Loading " << file_name << std::endl;
-        cAudio::IAudioSource* sound = this->audio_manager->create(
-            std::to_string(c).data(), file_name.data(), true
-        );
+        std::vector<cAudio::IAudioSource*> sounds;
 
-        if (!sound) {
-            std::cerr << "ERROR: Could not load " << file_name << std::endl;
-            exit(EXIT_FAILURE);
+        for (auto file_name : file_names)
+        {
+            std::string file_name_string = file_name;
+
+            std::cout << "Loading " << file_name_string << std::endl;
+            cAudio::IAudioSource* sound = this->audio_manager->create(
+                std::to_string(c).data(), file_name_string.data(), true
+            );
+
+            if (!sound) {
+                std::cerr << "ERROR: Could not load " << file_name_string << std::endl;
+                exit(EXIT_FAILURE);
+            }
+            sounds.push_back(sound);
         }
 
         sf::Vector2<float> position(position_list[0], position_list[1]);
@@ -315,20 +334,28 @@ void Level::load_json_data() {
             }
             sf::Sprite sprite;
             sprite.setPosition(position);
+            sprite.setOrigin(50, 50);
 
             sprite.setTexture(*texture);
             sprites.push_back(sprite);
             textures.push_back(texture);
         }
 
+        float play_rate = 0;
+        if(source.size() > 4)
+        {
+            play_rate = source[4];
+        }
+
         AudioSource as = {
             position,
-            sound,
+            sounds,
             source[2],
             textures,
             sprites,
             0,
-            0.0
+            0.0,
+            play_rate
         };
         audio_sources.push_back(as);
     }
@@ -368,7 +395,7 @@ void Level::load_collision_audio(){
 
 void Level::draw(sf::RenderTarget* target)
 {
-    target->draw(level_sprite);
+    target->draw(pretty_sprite);
     target->draw(goal_sprite);
 
     this->arrow_sprite.setRotation(player_angle);
@@ -455,14 +482,20 @@ void Level::change() {
         delete this->current_car;
         this->current_car = nullptr;
     }
-
+    for (AudioSource& source : audio_sources) {
+      for (auto track : source.audio)
+      {
+          if (track->isPlaying())
+            track->stop(); 
+      }
+    }
     load_json_data();
 
     play_audio_sources();
 
     ground = new Ground(this->audio_manager);
 
-    this->load_collision_audio();
+    //this->load_collision_audio();
 
     this->car_engine = this->audio_manager->create(CAR_ENGINE.data(),
             CAR_ENGINE.data(), false);

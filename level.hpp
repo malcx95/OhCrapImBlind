@@ -69,7 +69,7 @@ const std::string SWEARS[NUM_SWEARS] {
 
 struct AudioSource {
     sf::Vector2<float> pos;
-    cAudio::IAudioSource* audio;
+    std::vector<cAudio::IAudioSource*> audio;
     float attenuation;
 
     std::vector<sf::Texture*> textures;
@@ -80,16 +80,16 @@ struct AudioSource {
 
     void draw(sf::RenderTarget* target);
     void update(float dt);
+
+    float play_rate;
 };
 
 enum RoadDirection {VERTICAL, HORIZONTAL};
 
 struct CarRoad {
-    
     RoadDirection direction;
 
     float pos;
-
 };
 
 class Level {
@@ -140,6 +140,8 @@ private:
     sf::Sprite goal_sprite;
     sf::Texture arrow_texture;
     sf::Sprite arrow_sprite;
+    sf::Texture pretty_texture;
+    sf::Sprite pretty_sprite;
 
     cAudio::IAudioManager* audio_manager;
     cAudio::IListener* listener;
