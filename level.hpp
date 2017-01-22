@@ -140,6 +140,8 @@ private:
     sf::Sprite goal_sprite;
     sf::Texture arrow_texture;
     sf::Sprite arrow_sprite;
+    sf::Texture pretty_texture;
+    sf::Sprite pretty_sprite;
 
     cAudio::IAudioManager* audio_manager;
     cAudio::IListener* listener;
