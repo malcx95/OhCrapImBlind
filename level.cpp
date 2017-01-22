@@ -12,7 +12,7 @@
 using namespace nlohmann;
 
 Level::Level() {
-    this->in_dev_mode = true;
+    this->in_dev_mode = false;
 
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
@@ -189,7 +189,7 @@ void Level::maybe_spawn_car(float dt) {
                     pos = sf::Vector2<float>(CAR_DOMAIN_WIDTH, road_pos);
                 } else {
                     vel = sf::Vector2<float>(1, 0);
-                    pos = sf::Vector2<float>(-CAR_DOMAIN_HEIGHT, road_pos);
+                    pos = sf::Vector2<float>(-(CAR_DOMAIN_HEIGHT / 2), road_pos);
                 }
             } else {
                 if (dir == 0) {
@@ -197,7 +197,8 @@ void Level::maybe_spawn_car(float dt) {
                     pos = sf::Vector2<float>(road_pos, CAR_DOMAIN_HEIGHT);
                 } else {
                     vel = sf::Vector2<float>(0, 1);
-                    pos = sf::Vector2<float>(road_pos, -CAR_DOMAIN_HEIGHT);
+                    pos = sf::Vector2<float>(road_pos, 
+                            -(CAR_DOMAIN_HEIGHT / 2));
                 }
             }
 
@@ -211,6 +212,10 @@ void Level::maybe_spawn_car(float dt) {
             car->start(pos, vel * CAR_SPEED);
 
             this->car_timer = CAR_SPAWN_DELAY;
+            std::cout << "ROADS: " << std::endl;
+            for (CarRoad r : this->roads) {
+                std::cout << r.num_cars << std::endl;
+            }
         }
     }
 }
@@ -263,9 +268,6 @@ void Level::handle_input() {
             go_to_next = false;
         change_lvl = true;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
-      std::cout << "x: " << this->player_pos.x << " y: " << this->player_pos.y << std::endl;
-    }
     else {
         changed_level = false;
         change_lvl = false;
@@ -274,6 +276,9 @@ void Level::handle_input() {
     if (change_lvl && !changed_level) {
       change(go_to_next);
       changed_level = true;
+    }
+     if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
+      std::cout << "x: " << this->player_pos.x << " y: " << this->player_pos.y << std::endl;
     }
 }
 
@@ -386,6 +391,7 @@ void Level::load_json_data() {
                 std::cerr << "ERROR: Could not load " << file_name_string << std::endl;
                 exit(EXIT_FAILURE);
             }
+            sound->setVolume(2);
             sounds.push_back(sound);
 
             if (file_name_string == "../audio/InTheClub.ogg") {
@@ -468,6 +474,16 @@ void Level::load_collision_audio() {
                 ));
     this->wall_collision_sources.push_back(this->audio_manager->create(
                     "collision4", "../audio/walls/collision4.ogg", false
+                ));
+    
+    this->wall_collision_voices.push_back(this->audio_manager->create(
+                    "collision1", "../audio/walls/voice1.ogg", false
+                ));
+    this->wall_collision_voices.push_back(this->audio_manager->create(
+                    "collision2", "../audio/walls/voice2.ogg", false
+                ));
+    this->wall_collision_voices.push_back(this->audio_manager->create(
+                    "collision3", "../audio/walls/voice3.ogg", false
                 ));
 }
 
@@ -621,6 +637,10 @@ void Level::play_collision_sound() {
 
         this->wall_collision_sources[selected_sound]->play2d(false);
 
+        
+        selected_sound = rand() % this->wall_collision_voices.size();
+
+        this->wall_collision_voices[selected_sound]->play2d(false);
         std::cout << "Wall collision" << std::endl;
 
         time_since_collision_sound = 0;

@@ -3,15 +3,26 @@
         {"audio": [
                 [
                     [349, 907],
-                    ["../audio/enviroment/chirp1.ogg"],
-                    10.0,
+                    ["../audio/enviroment/birds.ogg"],
+                    1.0,
                     ["../assets/tree.png"]
                 ],
                 [
                     [250, 550],
-                    ["../audio/enviroment/chirp2.ogg", "../audio/enviroment/chirp3.ogg"],
-                    10.0,
+                    ["../audio/enviroment/birds.ogg"],
+                    1.0,
                     ["../assets/tree.png"]
+                ],
+                [
+                    [600, 175],
+                    ["../audio/enviroment/bell1.ogg", "../audio/enviroment/bell2.ogg"],
+                    1.0,
+                    [
+                    "../assets/bell1.png",
+                    "../assets/bell2.png",
+                    "../assets/bell1.png",
+                    "../assets/bell3.png"
+                    ]
                 ]
             ],
             "goal": [850, 220],
@@ -23,7 +34,7 @@
             "audio": [
                 [
                     [533, 341],
-                    ["../audio/enviroment/chirp2.ogg","../audio/enviroment/chirp1.ogg"],
+                    ["../audio/enviroment/birds.ogg"],
                     10.0,
                     ["../assets/tree.png"]
                 ],
@@ -64,7 +75,7 @@
                 ],
                 [
                     [500, 240],
-                    ["../audio/enviroment/chirp3.ogg"],
+                    ["../audio/enviroment/birds.ogg"],
                     40.0,
                     ["../assets/tree.png"]
                 ],
@@ -99,8 +110,7 @@
                 [
                     [300, 550],
                     [
-                        "../audio/enviroment/hammer1.ogg",
-                        "../audio/enviroment/metal_rods1.ogg"
+                        "../audio/enviroment/construction.ogg"
                     ],
                     10.0,
                     ["../assets/construction.png"]
@@ -108,8 +118,7 @@
                 [
                     [105, 222],
                     [
-                        "../audio/enviroment/hammer3.ogg",
-                        "../audio/enviroment/metal_rods1.ogg"
+                        "../audio/enviroment/construction.ogg"
                     ],
                     10.0,
                     ["../assets/construction.png"]
@@ -129,6 +138,33 @@
             "start_positions":[[70, 529], [654,743], [235, 881]],
             "path": "../maps/map-citychaos.png",
             "fancy_path": "../maps/map-citychaos-pretty.png"
+        },
+
+        {
+            "audio": [
+                [
+                    [680, 400],
+                    ["../audio/InTheClub.ogg"],
+                    10.0,
+                    [
+                        "../assets/nightclub-blue.png",
+                        "../assets/nightclub-pink.png",
+                        "../assets/nightclub-yellow.png"
+                    ]
+                ]
+            ],
+            "cars": [
+                ["horizontal", 0, 870],
+                ["horizontal", 1, 760],
+                ["horizontal", 0, 600],
+                ["horizontal", 1, 480],
+                ["horizontal", 0, 270],
+                ["horizontal", 1, 160]
+            ],
+            "goal": [500, 50],
+            "start_positions":[[50, 950], [500, 950], [900, 950]],
+            "path": "../maps/map-blindfrogger.png",
+            "fancy_path": "../maps/map-blindfrogger-pretty.png"
         }
     ]
 }
