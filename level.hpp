@@ -80,6 +80,8 @@ struct AudioSource {
 
     void draw(sf::RenderTarget* target);
     void update(float dt);
+
+    float play_rate;
 };
 
 enum RoadOrientation {VERTICAL, HORIZONTAL};
@@ -142,6 +144,8 @@ private:
     sf::Sprite goal_sprite;
     sf::Texture arrow_texture;
     sf::Sprite arrow_sprite;
+    sf::Texture pretty_texture;
+    sf::Sprite pretty_sprite;
 
     cAudio::IAudioManager* audio_manager;
     cAudio::IListener* listener;
