@@ -4,14 +4,24 @@
                 [
                     [349, 907],
                     ["../audio/enviroment/chirp1.ogg"],
-                    10.0,
+                    1.0,
                     ["../assets/tree.png"]
                 ],
                 [
                     [250, 550],
                     ["../audio/enviroment/chirp2.ogg", "../audio/enviroment/chirp3.ogg"],
-                    10.0,
+                    1.0,
                     ["../assets/tree.png"]
+                ],
+                [
+                    [600, 175],
+                    ["../audio/enviroment/bell1.ogg", "../audio/enviroment/bell2.ogg"],
+                    1.0,
+                    [
+                    "../assets/bell1.png",
+                    "../assets/bell2.png",
+                    "../assets/bell3.png"
+                    ]
                 ]
             ],
             "goal": [850, 220],

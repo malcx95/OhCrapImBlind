@@ -130,6 +130,7 @@ private:
     std::vector<AudioSource> audio_sources;
 
     std::vector<cAudio::IAudioSource*> wall_collision_sources;
+    std::vector<cAudio::IAudioSource*> wall_collision_voices;
     std::vector<cAudio::IAudioSource*> night_clubs;
 
     float player_angle;

@@ -471,6 +471,16 @@ void Level::load_collision_audio() {
     this->wall_collision_sources.push_back(this->audio_manager->create(
                     "collision4", "../audio/walls/collision4.ogg", false
                 ));
+    
+    this->wall_collision_voices.push_back(this->audio_manager->create(
+                    "collision1", "../audio/walls/voice1.ogg", false
+                ));
+    this->wall_collision_voices.push_back(this->audio_manager->create(
+                    "collision2", "../audio/walls/voice2.ogg", false
+                ));
+    this->wall_collision_voices.push_back(this->audio_manager->create(
+                    "collision3", "../audio/walls/voice3.ogg", false
+                ));
 }
 
 void Level::draw(sf::RenderTarget* target)
@@ -623,6 +633,10 @@ void Level::play_collision_sound() {
 
         this->wall_collision_sources[selected_sound]->play2d(false);
 
+        
+        selected_sound = rand() % this->wall_collision_voices.size();
+
+        this->wall_collision_voices[selected_sound]->play2d(false);
         std::cout << "Wall collision" << std::endl;
 
         time_since_collision_sound = 0;
