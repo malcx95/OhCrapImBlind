@@ -12,7 +12,7 @@
 using namespace nlohmann;
 
 Level::Level() {
-    this->in_dev_mode = true;
+    this->in_dev_mode = false;
 
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
@@ -387,6 +387,7 @@ void Level::load_json_data() {
                 std::cerr << "ERROR: Could not load " << file_name_string << std::endl;
                 exit(EXIT_FAILURE);
             }
+            sound->setVolume(2);
             sounds.push_back(sound);
 
             if (file_name_string == "../audio/InTheClub.ogg") {
