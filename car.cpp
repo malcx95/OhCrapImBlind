@@ -4,11 +4,13 @@
 
 Car::Car(sf::Vector2<float> pos, sf::Vector2<float> velocity,
         cAudio::IAudioSource* audio_source,
-        cAudio::IAudioSource* honk_audio_source) {
+        cAudio::IAudioSource* honk_audio_source,
+        cAudio::IAudioSource* swear_audio_source) {
     this->pos = pos;
     this->velocity = velocity;
     this->audio_source = audio_source;
     this->honk_audio_source = honk_audio_source;
+    this->swear_audio_source = swear_audio_source;
 }
 
 void Car::update_position(float dt) {
@@ -19,6 +21,9 @@ void Car::update_position(float dt) {
     this->honk_audio_source->move(util::sf_to_caudio_vect(this->pos));
     this->honk_audio_source->setVelocity(
             util::sf_to_caudio_vect(this->velocity));
+    this->swear_audio_source->move(util::sf_to_caudio_vect(this->pos));
+    this->swear_audio_source->setVelocity(
+            util::sf_to_caudio_vect(this->velocity));
 }
 
 sf::Vector2<float> Car::get_position() const {
@@ -26,6 +31,15 @@ sf::Vector2<float> Car::get_position() const {
 }
 
 void Car::honk_if_close_to(sf::Vector2<float> pos, float distance) const {
+    play_if_close_to(pos, distance, this->honk_audio_source, HONK_STRENGTH);
+}
+
+void Car::swear_if_close_to(sf::Vector2<float> pos, float distance) const {
+    play_if_close_to(pos, distance, this->swear_audio_source, SWEAR_STRENGTH);
+}
+
+void Car::play_if_close_to(sf::Vector2<float> pos,
+        float distance, cAudio::IAudioSource* sound, float strength) const {
     float dist = util::distance(pos, this->pos);
     
     // we assume the car only goes straight in the x or y direction
@@ -36,16 +50,16 @@ void Car::honk_if_close_to(sf::Vector2<float> pos, float distance) const {
         p = fabs(this->pos.y - pos.y);
     }
     if (p < CAR_WIDTH && dist < distance && 
-            !this->honk_audio_source->isPlaying()) {
-        this->honk_audio_source->play3d(
-                util::sf_to_caudio_vect(this->pos),
-                HONK_STRENGTH, false);
+            !sound->isPlaying()) {
+        sound->play3d(
+                util::sf_to_caudio_vect(this->pos), strength, false);
     }
+    
 }
 
-bool Car::collides_with(sf::Vector2<float> pos, float width) const {
+bool Car::collides_with(sf::Vector2<float> pos) const {
     sf::Vector2<float> p_pos = pos - this->pos;
-    return sqrt(p_pos.x * p_pos.x + p_pos.y * p_pos.y) < width;
+    return sqrt(p_pos.x * p_pos.x + p_pos.y * p_pos.y) < CAR_WIDTH;
 }
 
 void Car::start() {
