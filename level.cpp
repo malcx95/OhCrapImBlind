@@ -271,7 +271,8 @@ void Level::load_json_data() {
     this->player_velocity = sf::Vector2<float>(0, 0);
 
     //get player start position from json file
-    auto start_pos = json_data["map_list"][level_num]["start_positions"][0];
+    auto start_pos_index = rand() % json_data["map_list"][level_num]["start_positions"].size();
+    auto start_pos = json_data["map_list"][level_num]["start_positions"][start_pos_index];
     player_pos.x = start_pos[0];
     player_pos.y = start_pos[1];
     std::cout << "start_position: " << player_pos.x <<  " " << player_pos.y << std::endl;
