@@ -35,7 +35,7 @@ const sf::Color GRAVEL = sf::Color(0x4b, 0x4b, 0x4b, 255);
 const sf::Color GRASS = sf::Color(0x00, 0xff, 0x00, 255);
 const sf::Color PUDDLE = sf::Color(0x00, 0x00, 0xff, 255);
 
-const int PLAYER_SPEED = 55;
+const int PLAYER_SPEED = 60;
 
 const int WIDTH = 1000;
 const int HEIGHT = 1000;
@@ -43,9 +43,9 @@ const int HEIGHT = 1000;
 const int CAR_DOMAIN_WIDTH = 1100;
 const int CAR_DOMAIN_HEIGHT = 1100;
 
-const float CAR_SPEED = 140;
-const float HONKING_DISTANCE = 200;
-const float SWEAR_DISTANCE = 170;
+const float CAR_SPEED = 130;
+const float HONKING_DISTANCE = 230;
+const float SWEAR_DISTANCE = 200;
 const float CAR_SPAWN_DELAY = 0.4;
 
 const float DOPPLER_FACTOR = 0.1;
