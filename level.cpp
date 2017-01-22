@@ -376,7 +376,8 @@ void Level::load_json_data() {
 #endif
             }
         }
-
+        
+        //load and place sprites
         sf::Vector2<float> position(position_list[0], position_list[1]);
         auto sprite_paths = source[3];
         std::vector<sf::Sprite> sprites;
@@ -389,8 +390,9 @@ void Level::load_json_data() {
                 std::cout << "Failed to load texture\"" << path << "\"" << std::endl;
             }
             sf::Sprite sprite;
+            sprite.setOrigin(25, 25);
             sprite.setPosition(position);
-            sprite.setOrigin(50, 50);
+            
 
             sprite.setTexture(*texture);
             sprites.push_back(sprite);
@@ -559,8 +561,6 @@ void Level::change(bool go_to_next) {
 
     ground = new Ground(this->audio_manager);
 
-    //this->load_collision_audio();
-
     this->step_delay = 0.5f;
     this->step_timer = 0;
 }
@@ -636,6 +636,7 @@ void Level::splash_you_died() {
     this->level_texture.loadFromImage(this->sound_map);
     this->level_sprite = sf::Sprite(this->level_texture);
     this->pretty_sprite.setTexture(this->level_texture);
+    
     
     //stop sounds
     for (AudioSource& source : audio_sources) {
