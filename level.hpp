@@ -43,7 +43,7 @@ const int CAR_DOMAIN_HEIGHT = 1500;
 
 const float CAR_SPEED = 100;
 const float HONKING_DISTANCE = 200;
-const float SWEAR_DISTANCE = 100;
+const float SWEAR_DISTANCE = 170;
 const float CAR_SPAWN_DELAY = 1.5;
 
 const float DOPPLER_FACTOR = 0.1;
@@ -110,7 +110,8 @@ public:
 
     void draw(sf::RenderTarget* target);
 
-    void change();
+    //pass true to restart next level. pass false to restart current level
+    void change(bool go_to_next);
 
     void turn_player(int amount);
 
@@ -121,7 +122,7 @@ private:
     std::vector<AudioSource> audio_sources;
 
     std::vector<cAudio::IAudioSource*> wall_collision_sources;
-    // std::vector<cAudio::IAudioSource*> swear_sources;
+    std::vector<cAudio::IAudioSource*> night_clubs;
 
     float player_angle;
     sf::Vector2<float> player_pos;
@@ -149,6 +150,9 @@ private:
 
     cAudio::IAudioManager* audio_manager;
     cAudio::IListener* listener;
+#if CAUDIO_EFX_ENABLED == 1
+    cAudio::IFilter* lp_filter;
+#endif
 
     int level_num {0};
     std::string map_path;
@@ -182,6 +186,10 @@ private:
      */
     bool has_reached_goal();
 
+#if CAUDIO_EFX_ENABLED == 1
+    void handle_night_club_fx();
+#endif
+
     /*
      * Adds the player velocity scaled by the speed
      */
@@ -214,6 +222,9 @@ private:
     void update_cars(float dt);
 
     void load_swears_and_cars();
+    
+    //displays game over screen offers to restart level or go to next level
+    void splash_you_died();
 
 };
 

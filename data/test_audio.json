@@ -19,7 +19,6 @@
             "path": "../maps/map-woodswalk.png",
             "fancy_path": "../maps/map-woodswalk-pretty.png"
         },
-
         {
             "audio": [
                 [
@@ -48,7 +47,7 @@
                 ]
             ],
             "goal": [800, 50],
-            "start_positions":[[100, 800], [100, 50], [20, 10]],
+            "start_positions":[[100, 800], [100, 100], [500, 500]],
             "path": "../maps/map-citywalk.png",
             "fancy_path": "../maps/map-citywalk-pretty.png"
         },
@@ -63,8 +62,8 @@
                 ],
                 [
                     [680, 630],
-                    ["../audio/water_dripping/water_dripping2.ogg"],
-                    10.0,
+                    ["../audio/enviroment/bubbles1.ogg"],
+                    30.0,
                     ["../assets/nightclub.png"]
                 ],
                 [

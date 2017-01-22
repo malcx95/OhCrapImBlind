@@ -16,7 +16,11 @@ Level::Level() {
 
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
+<<<<<<< HEAD
     this->player_speed = 400;
+=======
+    this->player_speed = 80;
+>>>>>>> 50765386b54befdb3ea0fbb4ba298080c7aee37a
 
     this->available_cars = std::vector<Car*>();
     this->cars_in_use = std::vector<Car*>();
@@ -26,15 +30,15 @@ Level::Level() {
     this->audio_manager->setDopplerFactor(DOPPLER_FACTOR);
     this->listener = this->audio_manager->getListener();
 
+#if CAUDIO_EFX_ENABLED == 1
+    auto effects = audio_manager->getEffects();
+    this->lp_filter = effects->createFilter();
+    this->lp_filter->setHighFrequencyVolume(0.1f);
+    //this->lp_filter->setLowFrequencyVolume(0.1f);
+    this->lp_filter->setType(cAudio::EFT_LOWPASS);
+#endif
+
     std::cout << "Loading world from Json" << std::endl;
-
-    /*std::cout << "Loading map texture" << std::endl;
-    if (!this->sound_map.loadFromFile(DEFAULT_MAP)) {
-        std::cerr << "\"" << DEFAULT_MAP << "\" doesn't exist!" << std::endl;
-    }
-
-    this->level_texture.loadFromImage(this->sound_map);
-    this->level_sprite = sf::Sprite(this->level_texture);*/
 
     //orientation arrow
     if (!this->arrow_texture.loadFromFile(ARROW_SPRITE)) {
@@ -53,7 +57,7 @@ Level::Level() {
     load_json_data();
     play_audio_sources();
 
-    ground = new Ground(this->audio_manager);
+    this->ground = new Ground(this->audio_manager);
 
     this->load_collision_audio();
 
@@ -121,7 +125,7 @@ void Level::update(float dt) {
     maybe_spawn_car(dt);
     if (has_reached_goal()) {
         std::cout << "Reached Goal" << std::endl;
-        change();
+        change(true);
     }
 
     for (auto& source : this->audio_sources)
@@ -129,8 +133,33 @@ void Level::update(float dt) {
         source.update(dt);
     }
 
+#if CAUDIO_EFX_ENABLED == 1
+    handle_night_club_fx();
+#endif
+
     time_since_collision_sound += dt;
 }
+
+#if CAUDIO_EFX_ENABLED == 1
+void Level::handle_night_club_fx() {
+    auto player_x = this->player_pos.x;
+    auto player_y = this->player_pos.y;
+
+    const auto DOOR_WIDTH = 10;
+
+    for (auto club : this->night_clubs) {
+        const auto club_x = club->getPosition().x;
+        const auto club_y = club->getPosition().y;
+
+        if (abs(player_x - club_x) < DOOR_WIDTH &&
+            abs(player_y > club_y)) {
+            club->attachFilter(this->lp_filter);
+        } else {
+            club->removeFilter();
+        }
+    }
+}
+#endif
 
 void Level::maybe_spawn_car(float dt) {
     if (this->available_cars.size() > 0 && this->roads.size() > 0) {
@@ -190,6 +219,10 @@ void Level::update_cars(float dt) {
                     this->player_pos, HONKING_DISTANCE);
             car->swear_if_close_to(
                     this->player_pos, SWEAR_DISTANCE);
+            if (car->collides_with(player_pos)) {
+                play_collision_sound();
+                splash_you_died();
+            }
         }
     }
 }
@@ -197,6 +230,7 @@ void Level::update_cars(float dt) {
 void Level::handle_input() {
 
     bool change_lvl = false;
+    bool go_to_next = true;
 
     this->player_velocity = STILL;
 
@@ -212,7 +246,9 @@ void Level::handle_input() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         this->player_velocity += RIGHT;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::N)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::N) || sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+            go_to_next = false;
         change_lvl = true;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
@@ -224,7 +260,7 @@ void Level::handle_input() {
     }
 
     if (change_lvl && !changed_level) {
-      change();
+      change(go_to_next);
       changed_level = true;
     }
 }
@@ -299,7 +335,7 @@ void Level::load_json_data() {
     std::cout << "start_position: " << player_pos.x <<  " " << player_pos.y << std::endl;
 
 
-    // get the goal data from the json file + handle goal sprite
+    // get the goal data from the json file + handle goal sprite + handle goal sound
     this->goal_position = sf::Vector2<float>(json_data["map_list"][level_num]["goal"][0],
                                             json_data["map_list"][level_num]["goal"][1]);
 
@@ -339,6 +375,13 @@ void Level::load_json_data() {
                 exit(EXIT_FAILURE);
             }
             sounds.push_back(sound);
+
+            if (file_name_string == "../audio/InTheClub.ogg") {
+                night_clubs.push_back(sound);
+#if CAUDIO_EFX_ENABLED == 1
+                sound->attachFilter(this->lp_filter);
+#endif
+            }
         }
 
         sf::Vector2<float> position(position_list[0], position_list[1]);
@@ -498,9 +541,10 @@ void Level::debug_draw_audio_sources(sf::RenderTarget* target) {
 }
 
 
-void Level::change() {
+void Level::change(bool go_to_next) {
     std::cout << " CHANGING LEVEL \n\n\n";
-    level_num ++;
+    if (go_to_next)
+        level_num ++;
 
     // Stop the cars in use
     while (this->cars_in_use.size() > 0) {
@@ -586,4 +630,27 @@ void AudioSource::update(float dt)
         current_sprite = (current_sprite + 1) % sprites.size();
         last_switch = 0;
     }
+}
+
+
+void Level::splash_you_died() {
+    //change texture
+    std::cout << "Loading death splashscreen" << std::endl;
+    if (!this->sound_map.loadFromFile("../splash/you_died.png")) {
+        std::cerr << "\"" << map_path << "\" doesn't exist!" << std::endl;
+    }
+    
+    this->level_texture.loadFromImage(this->sound_map);
+    this->level_sprite = sf::Sprite(this->level_texture);
+    this->pretty_sprite.setTexture(this->level_texture);
+    
+    //stop sounds
+    for (AudioSource& source : audio_sources) {
+      for (auto track : source.audio)
+      {
+          if (track->isPlaying())
+            track->stop(); 
+      }
+    }
+
 }
