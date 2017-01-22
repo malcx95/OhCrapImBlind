@@ -35,17 +35,17 @@ const sf::Color GRAVEL = sf::Color(0x4b, 0x4b, 0x4b, 255);
 const sf::Color GRASS = sf::Color(0x00, 0xff, 0x00, 255);
 const sf::Color PUDDLE = sf::Color(0x00, 0x00, 0xff, 255);
 
-const int PLAYER_SPEED = 55;
+const int PLAYER_SPEED = 60;
 
 const int WIDTH = 1000;
 const int HEIGHT = 1000;
 
-const int CAR_DOMAIN_WIDTH = 1100;
-const int CAR_DOMAIN_HEIGHT = 1100;
+const int CAR_DOMAIN_WIDTH = 1200;
+const int CAR_DOMAIN_HEIGHT = 1200;
 
-const float CAR_SPEED = 140;
-const float HONKING_DISTANCE = 200;
-const float SWEAR_DISTANCE = 170;
+const float CAR_SPEED = 130;
+const float HONKING_DISTANCE = 230;
+const float SWEAR_DISTANCE = 200;
 const float CAR_SPAWN_DELAY = 0.4;
 
 const float DOPPLER_FACTOR = 0.1;
@@ -136,8 +136,6 @@ public:
     //pass true to restart next level. pass false to restart current level
     void change(bool go_to_next);
 
-    void turn_player(int amount);
-
 private:
 
     bool in_dev_mode;
@@ -148,7 +146,6 @@ private:
     std::vector<cAudio::IAudioSource*> wall_collision_voices;
     std::vector<cAudio::IAudioSource*> night_clubs;
 
-    float player_angle;
     sf::Vector2<float> player_pos;
     sf::Vector2<float> player_velocity;
     sf::Vector2<float> goal_position;
@@ -167,8 +164,6 @@ private:
     sf::Sprite level_sprite;
     sf::Texture goal_texture;
     sf::Sprite goal_sprite;
-    sf::Texture arrow_texture;
-    sf::Sprite arrow_sprite;
     sf::Texture pretty_texture;
     sf::Sprite pretty_sprite;
 
