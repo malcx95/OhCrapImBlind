@@ -22,7 +22,8 @@
             ],     
             "goal": [850, 220],
             "start_positions":[[43, 529], [365, 932], [350, 106]],
-            "path": "../maps/map-woodswalk.png"
+            "path": "../maps/map-woodswalk.png",
+            "fancy_path": "../maps/map-woodswalk-pretty.png"
         },
         {
             "audio": [
@@ -51,7 +52,8 @@
             ],
             "goal": [15,100],
             "start_positions":[[0,0], [100, 50], [20, 10]],
-            "path": "../maps/map-default.png"
+            "path": "../maps/map-default.png",
+            "fancy_path":  "../maps/map-default.png"
         },
 
         {
@@ -82,7 +84,8 @@
             ],
             "goal": [30,200],
             "start_positions":[[300,150], [100, 50], [20, 10]],
-            "path": "../maps/map-1.png"
+            "path": "../maps/map-1.png",
+            "fancy_path": "../maps/map-1.png"
         },
 
         {
@@ -109,7 +112,8 @@
             ],
             "goal": [800, 50],
             "start_positions":[[100, 800], [100, 50], [20, 10]],
-            "path": "../maps/map-citywalk.png"
+            "path": "../maps/map-citywalk.png",
+            "fancy_path": "../maps/map-citywalk-pretty.png"
         },
 
         {
@@ -136,7 +140,8 @@
             ],
             "goal": [50, 950],
             "start_positions":[[300, 300], [100, 50], [20, 10]],
-            "path": "../maps/map-swampwalk.png"
+            "path": "../maps/map-swampwalk.png",
+            "fancy_path": "../maps/map-swampwalk-pretty.png"
         },
 
         {
@@ -163,7 +168,8 @@
             ],
             "goal": [850, 220],
             "start_positions":[[43, 529], [365, 932], [350, 106]],
-            "path": "../maps/map-woodswalk.png"
+            "path": "../maps/map-woodswalk.png",
+            "fancy_path": "../maps/map-woodswalk-pretty.png"
         }
     ]
 }

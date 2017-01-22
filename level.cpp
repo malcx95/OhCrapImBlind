@@ -79,7 +79,7 @@ void Level::load_swears() {
 }
 
 void Level::play_audio_sources() {
-  std::cout << "trying to play audio sources\n";
+    std::cout << "trying to play audio sources\n";
     for (AudioSource s : this->audio_sources) {
         //s.audio->play3d(util::sf_to_caudio_vect(s.pos), s.attenuation, true);
         for(auto sound : s.audio)
@@ -259,6 +259,13 @@ void Level::load_json_data() {
     this->level_texture.loadFromImage(this->sound_map);
     this->level_sprite = sf::Sprite(this->level_texture);
 
+    std::string pretty_path = json_data["map_list"][level_num]["fancy_path"];
+    if(!this->pretty_texture.loadFromFile(pretty_path))
+    {
+        std::cerr << "\"" << pretty_path << "\" doesn't exist!" << std::endl;
+    }
+    this->pretty_sprite.setTexture(this->pretty_texture);
+
     //reset player fields
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
@@ -275,7 +282,7 @@ void Level::load_json_data() {
                                             json_data["map_list"][level_num]["goal"][1]);
 
     if (!goal_texture.loadFromFile(GOAL_SPRITE)) {
-      std::cerr << "\"" << GOAL_SPRITE << "\" doesn't exist!" << std::endl;
+        std::cerr << "\"" << GOAL_SPRITE << "\" doesn't exist!" << std::endl;
     }
 
     this->goal_sprite = sf::Sprite(this->goal_texture);
@@ -332,6 +339,12 @@ void Level::load_json_data() {
             textures.push_back(texture);
         }
 
+        float play_rate = 0;
+        if(source.size() > 4)
+        {
+            play_rate = source[4];
+        }
+
         AudioSource as = {
             position,
             sounds,
@@ -339,7 +352,8 @@ void Level::load_json_data() {
             textures,
             sprites,
             0,
-            0.0
+            0.0,
+            play_rate
         };
         audio_sources.push_back(as);
     }
@@ -379,7 +393,7 @@ void Level::load_collision_audio(){
 
 void Level::draw(sf::RenderTarget* target)
 {
-    target->draw(level_sprite);
+    target->draw(pretty_sprite);
     target->draw(goal_sprite);
 
     this->arrow_sprite.setRotation(player_angle);
