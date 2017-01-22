@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <cAudio/cAudio.h>
 
-const float CAR_WIDTH = 10;
+const float CAR_WIDTH = 25;
 
 const float HONK_STRENGTH = 100.0;
 const float SWEAR_STRENGTH = 100.0;
