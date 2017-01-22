@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <dirent.h>
+#include <algorithm>
 
 using namespace nlohmann;
 
@@ -17,7 +18,8 @@ Level::Level() {
     this->player_velocity = sf::Vector2<float>(0, 0);
     this->player_speed = 50;
 
-    this->current_car = nullptr;
+    this->available_cars = std::vector<Car*>();
+    this->cars_in_use = std::vector<Car*>();
 
     //init audio manager
     this->audio_manager = cAudio::createAudioManager(true);
@@ -53,11 +55,7 @@ Level::Level() {
 
     map_path = DEFAULT_MAP;
 
-    this->car_engine = this->audio_manager->create(CAR_ENGINE.data(),
-            CAR_ENGINE.data(), false);
-    this->car_honk = this->audio_manager->create(CAR_HONK.data(),
-            CAR_HONK.data(), false);
-    load_swears();
+    load_swears_and_cars();
 
     std::cout << "Loading audio" << std::endl;
     load_json_data();
@@ -69,10 +67,18 @@ Level::Level() {
 
     this->step_delay = 0.5f;
     this->step_timer = 0;
+
+    this->car_timer = 0;
 }
 
 Level::~Level() {
     cAudio::destroyAudioManager(this->audio_manager);
+    for (Car* car : this->available_cars) {
+        delete car;
+    }
+    for (Car* car : this->cars_in_use) {
+        delete car;
+    }
 }
 
 sf::Vector2<float> Level::get_player_pos() const {
@@ -83,19 +89,28 @@ sf::Vector2<float> Level::get_player_velocity() const {
     return player_velocity;
 }
 
-void Level::load_swears() {
-    this->swear_sources = std::vector<cAudio::IAudioSource*>();
+void Level::load_swears_and_cars() {
+    // Create a car for each swear
     for (int i = 0; i < NUM_SWEARS; ++i) {
-        this->swear_sources.push_back(
-                this->audio_manager->create(
-                    SWEARS[i].data(),
-                    SWEARS[i].data(),
-                    false));
+        cAudio::IAudioSource* swear = this->audio_manager->create(
+                SWEARS[i].data(),
+                SWEARS[i].data(), false);
+
+        cAudio::IAudioSource* car_engine = 
+            this->audio_manager->create(CAR_ENGINE.data(),
+                CAR_ENGINE.data(), false);
+
+        cAudio::IAudioSource* car_honk = this->audio_manager->create(
+                CAR_HONK.data(),
+                CAR_HONK.data(), false);
+        
+        Car* c = new Car(car_engine, car_honk, swear);
+        this->available_cars.push_back(c);
     }
 }
 
 void Level::play_audio_sources() {
-  std::cout << "trying to play audio sources\n";
+    std::cout << "trying to play audio sources\n";
     for (AudioSource s : this->audio_sources) {
         //s.audio->play3d(util::sf_to_caudio_vect(s.pos), s.attenuation, true);
         for(auto sound : s.audio)
@@ -110,8 +125,8 @@ void Level::update(float dt) {
     handle_collisions(dt);
     update_player_position(dt);
     handle_steps(dt);
-    update_car(dt);
-    maybe_spawn_car();
+    update_cars(dt);
+    maybe_spawn_car(dt);
     if (has_reached_goal()) {
         std::cout << "Reached Goal" << std::endl;
         change();
@@ -150,62 +165,63 @@ void Level::handle_night_club_fx() {
 }
 #endif
 
-void Level::maybe_spawn_car() {
-    if (this->current_car == nullptr && this->roads.size() > 0) {
-        int r = rand() % CAR_SPAWN_RATE;
+void Level::maybe_spawn_car(float dt) {
+    if (this->available_cars.size() > 0 && this->roads.size() > 0) {
+        this->car_timer -= dt;
 
-        if (r == 0) {
+        if (car_timer < 0) {
             // select a road to spawn a car on
             int i = rand() % this->roads.size();
             CarRoad road = this->roads[i];
-
-            float d = (float)(rand() % 2);
 
             sf::Vector2<float> pos;
             sf::Vector2<float> vel;
 
             if (road.direction == HORIZONTAL) {
-                if (d == 0.0) {
+                if (road.dir == 0) {
                     vel = sf::Vector2<float>(-1, 0);
-                    pos = sf::Vector2<float>(WIDTH - 1, road.pos);
+                    pos = sf::Vector2<float>(CAR_DOMAIN_WIDTH, road.pos);
                 } else {
                     vel = sf::Vector2<float>(1, 0);
-                    pos = sf::Vector2<float>(0, road.pos);
+                    pos = sf::Vector2<float>(-CAR_DOMAIN_HEIGHT, road.pos);
                 }
             } else {
-                if (d == 0.0) {
+                if (road.dir == 0) {
                     vel = sf::Vector2<float>(0, -1);
-                    pos = sf::Vector2<float>(road.pos, HEIGHT - 1);
+                    pos = sf::Vector2<float>(road.pos, CAR_DOMAIN_HEIGHT);
                 } else {
                     vel = sf::Vector2<float>(0, 1);
-                    pos = sf::Vector2<float>(road.pos, 0);
+                    pos = sf::Vector2<float>(road.pos, -CAR_DOMAIN_HEIGHT);
                 }
             }
 
-            int swear = rand() % NUM_SWEARS;
+            std::random_shuffle(
+                    this->available_cars.begin(),
+                    this->available_cars.end());
+            Car* car = this->available_cars.back();
+            this->available_cars.pop_back();
+            this->cars_in_use.push_back(car);
+            car->start(pos, vel * CAR_SPEED);
 
-            this->current_car = new Car(pos, vel * CAR_SPEED,
-                    this->car_engine,
-                    this->car_honk, this->swear_sources[swear]);
-            this->current_car->start();
-            std::cout << "Created a car at " <<
-                this->current_car->get_position().x << "," <<
-                this->current_car->get_position().y << std::endl;
+            this->car_timer = CAR_SPAWN_DELAY;
         }
     }
 }
 
-void Level::update_car(float dt) {
-    if (this->current_car != nullptr) {
-        this->current_car->update_position(dt);
-        if (this->current_car->out_of_bounds(WIDTH - 1, HEIGHT - 1)) {
-            this->current_car->stop();
-            delete this->current_car;
-            this->current_car = nullptr;
+void Level::update_cars(float dt) {
+    for (size_t i = 0; i < this->cars_in_use.size(); ++i) {
+        Car* car = this->cars_in_use[i];
+        car->update_position(dt);
+        if (car->out_of_bounds(CAR_DOMAIN_WIDTH, CAR_DOMAIN_HEIGHT)) {
+            // remove the car from the cars in use and put it
+            // back to the available cars
+            car->stop();
+            this->cars_in_use.erase(this->cars_in_use.begin() + i);
+            this->available_cars.push_back(car);
         } else {
-            this->current_car->honk_if_close_to(
+            car->honk_if_close_to(
                     this->player_pos, HONKING_DISTANCE);
-            this->current_car->swear_if_close_to(
+            car->swear_if_close_to(
                     this->player_pos, SWEAR_DISTANCE);
         }
     }
@@ -294,12 +310,20 @@ void Level::load_json_data() {
     this->level_texture.loadFromImage(this->sound_map);
     this->level_sprite = sf::Sprite(this->level_texture);
 
+    std::string pretty_path = json_data["map_list"][level_num]["fancy_path"];
+    if(!this->pretty_texture.loadFromFile(pretty_path))
+    {
+        std::cerr << "\"" << pretty_path << "\" doesn't exist!" << std::endl;
+    }
+    this->pretty_sprite.setTexture(this->pretty_texture);
+
     //reset player fields
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
 
     //get player start position from json file
-    auto start_pos = json_data["map_list"][level_num]["start_positions"][0];
+    auto start_pos_index = rand() % json_data["map_list"][level_num]["start_positions"].size();
+    auto start_pos = json_data["map_list"][level_num]["start_positions"][start_pos_index];
     player_pos.x = start_pos[0];
     player_pos.y = start_pos[1];
     std::cout << "start_position: " << player_pos.x <<  " " << player_pos.y << std::endl;
@@ -310,7 +334,7 @@ void Level::load_json_data() {
                                             json_data["map_list"][level_num]["goal"][1]);
 
     if (!goal_texture.loadFromFile(GOAL_SPRITE)) {
-      std::cerr << "\"" << GOAL_SPRITE << "\" doesn't exist!" << std::endl;
+        std::cerr << "\"" << GOAL_SPRITE << "\" doesn't exist!" << std::endl;
     }
 
     this->goal_sprite = sf::Sprite(this->goal_texture);
@@ -374,6 +398,12 @@ void Level::load_json_data() {
             textures.push_back(texture);
         }
 
+        float play_rate = 0;
+        if(source.size() > 4)
+        {
+            play_rate = source[4];
+        }
+
         AudioSource as = {
             position,
             sounds,
@@ -381,7 +411,8 @@ void Level::load_json_data() {
             textures,
             sprites,
             0,
-            0.0
+            0.0,
+            play_rate
         };
         audio_sources.push_back(as);
     }
@@ -389,22 +420,23 @@ void Level::load_json_data() {
     this->roads.clear();
 
     if (json_data["map_list"][level_num].count("cars") != 0) {
-        for (auto car : json_data["map_list"][level_num]["cars"]) {
+        for (auto r : json_data["map_list"][level_num]["cars"]) {
             CarRoad road;
-            if (car[0] == "horizontal") {
+            if (r[0] == "horizontal") {
                 road.direction = HORIZONTAL;
                 std::cout << "Added horizontal road" << std::endl;
             } else {
                 road.direction = VERTICAL;
                 std::cout << "Added vertical road" << std::endl;
             }
-            road.pos = car[1];
+            road.dir = r[1];
+            road.pos = r[2];
             this->roads.push_back(road);
         }
     }
 }
 
-void Level::load_collision_audio(){
+void Level::load_collision_audio() {
     this->wall_collision_sources.push_back(this->audio_manager->create(
                     "collision1", "../audio/walls/collision1.ogg", false
                 ));
@@ -421,7 +453,7 @@ void Level::load_collision_audio(){
 
 void Level::draw(sf::RenderTarget* target)
 {
-    target->draw(level_sprite);
+    target->draw(pretty_sprite);
     target->draw(goal_sprite);
 
     this->arrow_sprite.setRotation(player_angle);
@@ -430,9 +462,7 @@ void Level::draw(sf::RenderTarget* target)
     if (this->in_dev_mode) {
         debug_draw_player(target);
         debug_draw_audio_sources(target);
-        if (this->current_car != nullptr) {
-            debug_draw_car(target);
-        }
+        debug_draw_cars(target);
     }
 
     for (auto source : this->audio_sources)
@@ -460,22 +490,28 @@ void Level::debug_draw_player(sf::RenderTarget* target) {
     target->draw(vline, 2, sf::Lines);
 }
 
-void Level::debug_draw_car(sf::RenderTarget* target) {
-    float car_x = this->current_car->get_position().x;
-    float car_y = this->current_car->get_position().y;
+void Level::debug_draw_cars(sf::RenderTarget* target) {
+    for (Car* c : this->cars_in_use) {
+        float car_x = c->get_position().x;
+        float car_y = c->get_position().y;
 
-    sf::Vertex hline[] = {
-        sf::Vertex(sf::Vector2f(car_x - CAR_WIDTH, car_y), sf::Color::Blue),
-        sf::Vertex(sf::Vector2f(car_x + CAR_WIDTH, car_y), sf::Color::Blue)
-    };
+        sf::Vertex hline[] = {
+            sf::Vertex(sf::Vector2f(car_x - CAR_WIDTH, car_y),
+                    sf::Color::Blue),
+            sf::Vertex(sf::Vector2f(car_x + CAR_WIDTH, car_y),
+                    sf::Color::Blue)
+        };
 
-    sf::Vertex vline[] = {
-        sf::Vertex(sf::Vector2f(car_x, car_y - CAR_WIDTH), sf::Color::Blue),
-        sf::Vertex(sf::Vector2f(car_x, car_y + CAR_WIDTH), sf::Color::Blue)
-    };
+        sf::Vertex vline[] = {
+            sf::Vertex(sf::Vector2f(car_x, car_y - CAR_WIDTH), 
+                    sf::Color::Blue),
+            sf::Vertex(sf::Vector2f(car_x, car_y + CAR_WIDTH),
+                    sf::Color::Blue)
+        };
 
-    target->draw(hline, 2, sf::Lines);
-    target->draw(vline, 2, sf::Lines);
+        target->draw(hline, 2, sf::Lines);
+        target->draw(vline, 2, sf::Lines);
+    }
 
 }
 
@@ -503,10 +539,12 @@ void Level::change() {
     std::cout << " CHANGING LEVEL \n\n\n";
     level_num ++;
 
-    if (this->current_car != nullptr) {
-        this->current_car->stop();
-        delete this->current_car;
-        this->current_car = nullptr;
+    // Stop the cars in use
+    while (this->cars_in_use.size() > 0) {
+        Car* c = this->cars_in_use.back();
+        this->cars_in_use.pop_back();
+        c->stop();
+        this->available_cars.push_back(c);
     }
     for (AudioSource& source : audio_sources) {
       for (auto track : source.audio)
@@ -522,12 +560,6 @@ void Level::change() {
     ground = new Ground(this->audio_manager);
 
     //this->load_collision_audio();
-
-    this->car_engine = this->audio_manager->create(CAR_ENGINE.data(),
-            CAR_ENGINE.data(), false);
-    this->car_honk = this->audio_manager->create(CAR_HONK.data(),
-            CAR_HONK.data(), false);
-    this->current_car = nullptr;
 
     this->step_delay = 0.5f;
     this->step_timer = 0;
@@ -579,7 +611,7 @@ void Level::play_collision_sound() {
 ////////////////////////////////////////////////////////////////////////////////
 //              Audio source methods
 ////////////////////////////////////////////////////////////////////////////////
-void  AudioSource::draw(sf::RenderTarget* target)
+void AudioSource::draw(sf::RenderTarget* target)
 {
     target->draw(sprites[current_sprite]);
 }

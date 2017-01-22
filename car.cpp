@@ -2,12 +2,9 @@
 #include "util.hpp"
 #include <cmath>
 
-Car::Car(sf::Vector2<float> pos, sf::Vector2<float> velocity,
-        cAudio::IAudioSource* audio_source,
+Car::Car(cAudio::IAudioSource* audio_source,
         cAudio::IAudioSource* honk_audio_source,
         cAudio::IAudioSource* swear_audio_source) {
-    this->pos = pos;
-    this->velocity = velocity;
     this->audio_source = audio_source;
     this->honk_audio_source = honk_audio_source;
     this->swear_audio_source = swear_audio_source;
@@ -45,12 +42,43 @@ void Car::play_if_close_to(sf::Vector2<float> pos,
     
     // we assume the car only goes straight in the x or y direction
     float p;
+    bool in_front;
     if (this->velocity.x == 0) {
+        // The car is moving along the y direction
+
+        if (this->pos.y > pos.y) {
+            // the car is above pos
+            
+            // pos is in front if the car is traveling down
+            in_front = this->velocity.y > 0;
+        
+        } else {
+            // the car is below pos
+            
+            // pos is in front if the car is traveling up 
+            in_front = this->velocity.y < 0;
+        
+        }
         p = fabs(this->pos.x - pos.x);
     } else {
+        // The car is moving along the x direction
+
+        if (this->pos.x > pos.x) {
+            // the car is above pos
+            
+            // pos is in front if the car is traveling down
+            in_front = this->velocity.x < 0;
+        
+        } else {
+            // the car is below pos
+            
+            // pos is in front if the car is traveling up 
+            in_front = this->velocity.x > 0;
+        
+        }
         p = fabs(this->pos.y - pos.y);
     }
-    if (p < CAR_WIDTH && dist < distance && !sound->isPlaying()) {
+    if (in_front && p < CAR_WIDTH && dist < distance && !sound->isPlaying()) {
         sound->play3d(util::sf_to_caudio_vect(this->pos), strength, false);
     }
 }
@@ -60,7 +88,9 @@ bool Car::collides_with(sf::Vector2<float> pos) const {
     return sqrt(p_pos.x * p_pos.x + p_pos.y * p_pos.y) < CAR_WIDTH;
 }
 
-void Car::start() {
+void Car::start(sf::Vector2<float> pos, sf::Vector2<float> velocity) {
+    this->pos = pos;
+    this->velocity = velocity;
     this->audio_source->play3d(
             util::sf_to_caudio_vect(this->pos), ENGINE_NOISE_STRENGTH, true);
 }
@@ -70,6 +100,7 @@ void Car::stop() {
 }
 
 bool Car::out_of_bounds(int width, int height) const {
-    return pos.x < 0 || pos.y < 0 || pos.x > width || pos.y > height;
+    return pos.x < -width || pos.y < -width || 
+        pos.x > width || pos.y > height;
 }
 

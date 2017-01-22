@@ -24,7 +24,6 @@ const int GOAL_RADIUS           = 50;
 
 const std::string CAR_ENGINE = "../audio/car.ogg";
 const std::string CAR_HONK = "../audio/horn.ogg";
-const std::string SWEAR_DIR = "../audio/swears/";
 
 const std::string DEFAULT_MAP = "../maps/map-default.png";
 const std::string DEFAULT_AUDIO_MAP = "../data/test_audio.json";
@@ -39,12 +38,13 @@ const sf::Color PUDDLE = sf::Color(0x00, 0x00, 0xff, 255);
 const int WIDTH = 1000;
 const int HEIGHT = 1000;
 
-// lower number = more cars
-const int CAR_SPAWN_RATE = 100;
+const int CAR_DOMAIN_WIDTH = 1500;
+const int CAR_DOMAIN_HEIGHT = 1500;
 
 const float CAR_SPEED = 100;
 const float HONKING_DISTANCE = 200;
-const float SWEAR_DISTANCE = 100;
+const float SWEAR_DISTANCE = 170;
+const float CAR_SPAWN_DELAY = 1.5;
 
 const float DOPPLER_FACTOR = 0.1;
 
@@ -80,15 +80,21 @@ struct AudioSource {
 
     void draw(sf::RenderTarget* target);
     void update(float dt);
+
+    float play_rate;
 };
 
-enum RoadDirection {VERTICAL, HORIZONTAL};
+enum RoadOrientation {VERTICAL, HORIZONTAL};
 
 struct CarRoad {
-    RoadDirection direction;
+
+    RoadOrientation direction;
 
     float pos;
+
+    int dir;
 };
+
 
 class Level {
 
@@ -115,7 +121,6 @@ private:
     std::vector<AudioSource> audio_sources;
 
     std::vector<cAudio::IAudioSource*> wall_collision_sources;
-    std::vector<cAudio::IAudioSource*> swear_sources;
     std::vector<cAudio::IAudioSource*> night_clubs;
 
     float player_angle;
@@ -139,6 +144,8 @@ private:
     sf::Sprite goal_sprite;
     sf::Texture arrow_texture;
     sf::Sprite arrow_sprite;
+    sf::Texture pretty_texture;
+    sf::Sprite pretty_sprite;
 
     cAudio::IAudioManager* audio_manager;
     cAudio::IListener* listener;
@@ -149,17 +156,13 @@ private:
     int level_num {0};
     std::string map_path;
     bool changed_level {false};
-
-
-
-    cAudio::IAudioSource* car_engine;
-    cAudio::IAudioSource* car_honk;
-
-    Car* current_car;
-
+    
+    std::vector<Car*> available_cars;
+    std::vector<Car*> cars_in_use;
     std::vector<CarRoad> roads;
+    float car_timer;
 
-    void maybe_spawn_car();
+    void maybe_spawn_car(float dt);
 
     void play_audio_sources();
 
@@ -201,7 +204,7 @@ private:
 
     void debug_draw_audio_sources(sf::RenderTarget* target);
 
-    void debug_draw_car(sf::RenderTarget* target);
+    void debug_draw_cars(sf::RenderTarget* target);
     
     Mat::Material ground_under_player();
 
@@ -215,9 +218,9 @@ private:
 
     void play_collision_sound();
 
-    void update_car(float dt);
+    void update_cars(float dt);
 
-    void load_swears();
+    void load_swears_and_cars();
 
 };
 

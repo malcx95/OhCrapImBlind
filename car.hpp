@@ -19,9 +19,8 @@ public:
      * The car will travel as fast as the magnitude of velocity and in
      * that direction.
      */
-    Car(sf::Vector2<float> pos, sf::Vector2<float> velocity,
-            cAudio::IAudioSource* source,
-            cAudio::IAudioSource* honk_audio_source,
+    Car(cAudio::IAudioSource* source, 
+            cAudio::IAudioSource* honk_audio_source, 
             cAudio::IAudioSource* swear_audio_source);
 
     /*
@@ -32,7 +31,7 @@ public:
     /*
      * Starts the engine noise
      */
-    void start();
+    void start(sf::Vector2<float> pos, sf::Vector2<float> velocity);
 
     /*
      * Stops the engine noise.
