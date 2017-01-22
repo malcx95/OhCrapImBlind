@@ -16,7 +16,7 @@ Level::Level() {
 
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
-    this->player_speed = 400;
+    this->player_speed = PLAYER_SPEED;
 
     this->available_cars = std::vector<Car*>();
     this->cars_in_use = std::vector<Car*>();
