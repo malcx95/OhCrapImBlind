@@ -130,15 +130,26 @@
                         "../audio/enviroment/construction.ogg"
                     ],
                     5.0,
-                    ["../assets/construction.png"]
+                    [
+                        "../assets/construction1.png",
+                        "../assets/construction2.png",
+                        "../assets/construction3.png",
+                        "../assets/construction4.png"
+                    ]
                 ],
                 [
                     [105, 222],
                     [
                         "../audio/enviroment/construction.ogg"
                     ],
+
                     5.0,
-                    ["../assets/construction.png"]
+                    [
+                        "../assets/construction1.png",
+                        "../assets/construction2.png",
+                        "../assets/construction3.png",
+                        "../assets/construction4.png"
+                    ]
                 ],
                 [
                     [680, 630],
