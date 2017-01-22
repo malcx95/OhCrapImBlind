@@ -23,6 +23,12 @@
                     "../assets/bell1.png",
                     "../assets/bell3.png"
                     ]
+                ],
+                [
+                    [825, 195],
+                    ["../audio/goals/goal1.ogg"],
+                    1.5,
+                    ["../assets/goal.png"]
                 ]
             ],
             "goal": [850, 220],
@@ -57,6 +63,12 @@
                         "../assets/nightclub-pink.png",
                         "../assets/nightclub-yellow.png"
                     ]
+                ],
+                [
+                    [775, 25],
+                    ["../audio/goals/goal2.ogg"],
+                    2.5,
+                    ["../assets/goal.png"]
                 ]
             ],
             "goal": [800, 50],
@@ -70,19 +82,19 @@
                 [
                     [290, 740],
                     ["../audio/water_dripping/water_dripping1.ogg"],
-                    10.0,
+                    5.0,
                     ["../assets/bubbles1.png"]
                 ],
                 [
-                    [500, 240],
+                    [500, 280],
                     ["../audio/enviroment/birds.ogg"],
-                    40.0,
+                    5.0,
                     ["../assets/tree.png"]
                 ],
                 [
                     [700, 440],
                     ["../audio/enviroment/bubbles1.ogg"],
-                    30.0,
+                    10.0,
                     [
                         "../assets/bubbles1.png",
                         "../assets/bubbles2.png",
@@ -92,14 +104,19 @@
                     ]
                 ],
                 [
-                    [450, 50],
+                    [400, 150],
                     ["../audio/water_dripping/water_dripping3.ogg"],
                     10.0,
                     ["../assets/bubbles1.png"]
+                ],
+                [
+                    [85, 755 ],
+                    ["../audio/goals/goal1.ogg"],
+                    1.5,
+                    ["../assets/goal.png"]
                 ]
-
             ],
-            "goal": [110, 779],
+            "goal": [110, 780],
             "start_positions":[[300, 322], [470, 304]],
             "path": "../maps/map-swampwalk.png",
             "fancy_path": "../maps/map-swampwalk-pretty.png"
@@ -112,7 +129,7 @@
                     [
                         "../audio/enviroment/construction.ogg"
                     ],
-                    10.0,
+                    5.0,
                     [
                         "../assets/construction1.png",
                         "../assets/construction2.png",
@@ -125,7 +142,8 @@
                     [
                         "../audio/enviroment/construction.ogg"
                     ],
-                    10.0,
+
+                    5.0,
                     [
                         "../assets/construction1.png",
                         "../assets/construction2.png",
@@ -142,6 +160,12 @@
                         "../assets/nightclub-pink.png",
                         "../assets/nightclub-yellow.png"
                     ]
+                ],
+                [
+                    [825, 195 ],
+                    ["../audio/goals/goal3.ogg"],
+                    1.5,
+                    ["../assets/goal.png"]
                 ]
             ],
             "goal": [850, 220],
@@ -153,14 +177,18 @@
         {
             "audio": [
                 [
-                    [680, 400],
-                    ["../audio/InTheClub.ogg"],
-                    10.0,
+                    [450, 400],
+                    ["../audio/March.ogg"],
+                    50.0,
                     [
-                        "../assets/nightclub-blue.png",
-                        "../assets/nightclub-pink.png",
-                        "../assets/nightclub-yellow.png"
+                        "../assets/band.png"
                     ]
+                ],
+                [
+                    [475, 25 ],
+                    ["../audio/goals/goal3.ogg"],
+                    1.5,
+                    ["../assets/goal.png"]
                 ]
             ],
             "cars": [
@@ -171,7 +199,17 @@
                 ["horizontal", 0, 270],
                 ["horizontal", 1, 160]
             ],
+
             "goal": [500, 50],
+            "start_positions":[[50, 950], [500, 950], [900, 950]],
+            "path": "../maps/map-blindfrogger.png",
+            "fancy_path": "../maps/map-blindfrogger-pretty.png"
+        },
+
+        {
+            "audio": [
+            ],
+            "goal": [5000, 50],
             "start_positions":[[50, 950], [500, 950], [900, 950]],
             "path": "../maps/map-blindfrogger.png",
             "fancy_path": "../maps/map-blindfrogger-pretty.png"
