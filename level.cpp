@@ -247,9 +247,6 @@ void Level::handle_input() {
             go_to_next = false;
         change_lvl = true;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
-      std::cout << "x: " << this->player_pos.x << " y: " << this->player_pos.y << std::endl;
-    }
     else {
         changed_level = false;
         change_lvl = false;
@@ -258,6 +255,10 @@ void Level::handle_input() {
     if (change_lvl && !changed_level) {
       change(go_to_next);
       changed_level = true;
+    }
+    
+     if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
+      std::cout << "x: " << this->player_pos.x << " y: " << this->player_pos.y << std::endl;
     }
 }
 
