@@ -12,15 +12,11 @@
 using namespace nlohmann;
 
 Level::Level() {
-    this->in_dev_mode = false;
+    this->in_dev_mode = true;
 
     this->player_pos = sf::Vector2<float>(DEFAULT_PLAYER_X, DEFAULT_PLAYER_Y);
     this->player_velocity = sf::Vector2<float>(0, 0);
-<<<<<<< HEAD
     this->player_speed = 400;
-=======
-    this->player_speed = 80;
->>>>>>> 50765386b54befdb3ea0fbb4ba298080c7aee37a
 
     this->available_cars = std::vector<Car*>();
     this->cars_in_use = std::vector<Car*>();

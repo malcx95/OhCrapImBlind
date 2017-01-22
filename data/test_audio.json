@@ -58,24 +58,28 @@
                     [300, 550],
                     ["../audio/water_dripping/water_dripping1.ogg"],
                     10.0,
-                    ["../assets/nightclub.png"]
+                    ["../assets/bubbles1.png"]
                 ],
                 [
                     [680, 630],
                     ["../audio/enviroment/bubbles1.ogg"],
                     30.0,
-                    ["../assets/nightclub.png"]
+                    ["../assets/bubbles1.png",
+                     "../assets/bubbles2.png",
+                     "../assets/bubbles3.png",
+                     "../assets/bubbles4.png",
+                     "../assets/bubbles5.png"]
                 ],
                 [
                     [550, 150],
                     ["../audio/water_dripping/water_dripping3.ogg"],
                     10.0,
-                    ["../assets/nightclub.png"]
+                    ["../assets/bubbles1.png"]
                 ]
 
             ],
             "goal": [110, 779],
-            "start_positions":[[300, 300], [100, 50], [20, 10]],
+            "start_positions":[[300, 322], [470, 304]],
             "path": "../maps/map-swampwalk.png",
             "fancy_path": "../maps/map-swampwalk-pretty.png"
         },
