@@ -116,6 +116,7 @@ private:
 
     std::vector<cAudio::IAudioSource*> wall_collision_sources;
     std::vector<cAudio::IAudioSource*> swear_sources;
+    std::vector<cAudio::IAudioSource*> night_clubs;
 
     float player_angle;
     sf::Vector2<float> player_pos;
@@ -141,6 +142,9 @@ private:
 
     cAudio::IAudioManager* audio_manager;
     cAudio::IListener* listener;
+#if CAUDIO_EFX_ENABLED == 1
+    cAudio::IFilter* lp_filter;
+#endif
 
     int level_num {0};
     std::string map_path;
@@ -177,6 +181,10 @@ private:
      * goal.
      */
     bool has_reached_goal();
+
+#if CAUDIO_EFX_ENABLED == 1
+    void handle_night_club_fx();
+#endif
 
     /*
      * Adds the player velocity scaled by the speed

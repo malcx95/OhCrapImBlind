@@ -24,6 +24,14 @@ Level::Level() {
     this->audio_manager->setDopplerFactor(DOPPLER_FACTOR);
     this->listener = this->audio_manager->getListener();
 
+#if CAUDIO_EFX_ENABLED == 1
+    auto effects = audio_manager->getEffects();
+    this->lp_filter = effects->createFilter();
+    this->lp_filter->setHighFrequencyVolume(0.1f);
+    //this->lp_filter->setLowFrequencyVolume(0.1f);
+    this->lp_filter->setType(cAudio::EFT_LOWPASS);
+#endif
+
     std::cout << "Loading world from Json" << std::endl;
 
     /*std::cout << "Loading map texture" << std::endl;
@@ -55,7 +63,7 @@ Level::Level() {
     load_json_data();
     play_audio_sources();
 
-    ground = new Ground(this->audio_manager);
+    this->ground = new Ground(this->audio_manager);
 
     this->load_collision_audio();
 
@@ -114,8 +122,33 @@ void Level::update(float dt) {
         source.update(dt);
     }
 
+#if CAUDIO_EFX_ENABLED == 1
+    handle_night_club_fx();
+#endif
+
     time_since_collision_sound += dt;
 }
+
+#if CAUDIO_EFX_ENABLED == 1
+void Level::handle_night_club_fx() {
+    auto player_x = this->player_pos.x;
+    auto player_y = this->player_pos.y;
+
+    const auto DOOR_WIDTH = 10;
+
+    for (auto club : this->night_clubs) {
+        const auto club_x = club->getPosition().x;
+        const auto club_y = club->getPosition().y;
+
+        if (abs(player_x - club_x) < DOOR_WIDTH &&
+            abs(player_y > club_y)) {
+            club->attachFilter(this->lp_filter);
+        } else {
+            club->removeFilter();
+        }
+    }
+}
+#endif
 
 void Level::maybe_spawn_car() {
     if (this->current_car == nullptr && this->roads.size() > 0) {
@@ -312,6 +345,13 @@ void Level::load_json_data() {
                 exit(EXIT_FAILURE);
             }
             sounds.push_back(sound);
+
+            if (file_name_string == "../audio/InTheClub.ogg") {
+                night_clubs.push_back(sound);
+#if CAUDIO_EFX_ENABLED == 1
+                sound->attachFilter(this->lp_filter);
+#endif
+            }
         }
 
         sf::Vector2<float> position(position_list[0], position_list[1]);
