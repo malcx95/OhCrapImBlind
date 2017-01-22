@@ -89,7 +89,11 @@ void Level::load_swears() {
 void Level::play_audio_sources() {
   std::cout << "trying to play audio sources\n";
     for (AudioSource s : this->audio_sources) {
-        s.audio->play3d(util::sf_to_caudio_vect(s.pos), s.attenuation, true);
+        //s.audio->play3d(util::sf_to_caudio_vect(s.pos), s.attenuation, true);
+        for(auto sound : s.audio)
+        {
+            sound->play3d(util::sf_to_caudio_vect(s.pos), s.attenuation, true);
+        }
     }
 }
 
@@ -290,16 +294,24 @@ void Level::load_json_data() {
     auto audio_data = json_data["map_list"][level_num]["audio"];
     for (auto source : audio_data) {
         auto position_list = source[0];
-        std::string file_name = source[1];
+        auto file_names = source[1];
 
-        std::cout << "Loading " << file_name << std::endl;
-        cAudio::IAudioSource* sound = this->audio_manager->create(
-            std::to_string(c).data(), file_name.data(), true
-        );
+        std::vector<cAudio::IAudioSource*> sounds;
 
-        if (!sound) {
-            std::cerr << "ERROR: Could not load " << file_name << std::endl;
-            exit(EXIT_FAILURE);
+        for (auto file_name : file_names)
+        {
+            std::string file_name_string = file_name;
+
+            std::cout << "Loading " << file_name_string << std::endl;
+            cAudio::IAudioSource* sound = this->audio_manager->create(
+                std::to_string(c).data(), file_name_string.data(), true
+            );
+
+            if (!sound) {
+                std::cerr << "ERROR: Could not load " << file_name_string << std::endl;
+                exit(EXIT_FAILURE);
+            }
+            sounds.push_back(sound);
         }
 
         sf::Vector2<float> position(position_list[0], position_list[1]);
@@ -324,7 +336,7 @@ void Level::load_json_data() {
 
         AudioSource as = {
             position,
-            sound,
+            sounds,
             source[2],
             textures,
             sprites,

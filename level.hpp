@@ -69,7 +69,7 @@ const std::string SWEARS[NUM_SWEARS] {
 
 struct AudioSource {
     sf::Vector2<float> pos;
-    cAudio::IAudioSource* audio;
+    std::vector<cAudio::IAudioSource*> audio;
     float attenuation;
 
     std::vector<sf::Texture*> textures;
@@ -85,11 +85,9 @@ struct AudioSource {
 enum RoadDirection {VERTICAL, HORIZONTAL};
 
 struct CarRoad {
-    
     RoadDirection direction;
 
     float pos;
-
 };
 
 class Level {
